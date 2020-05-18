@@ -46,6 +46,7 @@
     "start": "Zaczynajmy",
     "title": "Wpisz tytuł",
     "category": "Wybierz kategorię",
+    "condition": "Wybierz stan",
     "price": "Cena",
     "description": "Opis",
     "contactData": "Dane kontaktowe",
@@ -53,7 +54,8 @@
     "email": "Adres e-mail",
     "name": "Podaj swoje imię",
     "phone": "Numer telefonu",
-    "photo": "Zdjęcie"
+    "photo": "Zdjęcie",
+    "save": "ZAPISZ"
   },
   "dragAndDrop": {
     "string": "Upuść tutaj pliki lub kliknij",

@@ -5,6 +5,8 @@ import {AuctionService} from '../../../../shared/services/auction.service';
 import {CategoryAttributes} from '../../../../shared/models/category-attributes';
 import {Attachment} from '../../../../shared/models/attachment';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {ApiService} from '../../../../core/authentication/api.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-new-auction',
@@ -22,8 +24,11 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   countryCode: any;
   selectedValues: CategoryAttributes[];
   show = false;
+  conditions: string[];
+  name: string;
 
-  constructor(private navigationService: NavigationService, private auctionService: AuctionService, private attachmentService: AttachmentService) {
+  constructor(private navigationService: NavigationService, private auctionService: AuctionService,
+              private attachmentService: AttachmentService, private router: Router) {
     navigationService.show = false;
     this.maxSizeOfImages = 4;
   }
@@ -41,9 +46,11 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   }
 
   private getCategories() {
-    this.auctionService.getCategories().subscribe(
+    this.auctionService.getAuctionForm().subscribe(
       res => {
-        this.categories = res;
+        this.categories = res.category;
+        this.conditions = res.condition;
+        this.name = res.name[0];
         console.log(this.categories);
       },
       err => {
@@ -89,7 +96,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       res => {
         attachment.auctionId = Number(res);
         this.saveAttachment(attachment);
-        console.log('Aukcja zapisano');
+        this.router.navigateByUrl("/");
       },
       err => {
         alert('TODO');

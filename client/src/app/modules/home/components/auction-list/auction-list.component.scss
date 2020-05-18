@@ -5,8 +5,8 @@ mat-card {
 }
 
 img {
-  max-height: 85%;
-  max-width: 85%;
+  height: 80%;
+  width: 80%;
   position: relative;
   left: 50%;
   top: 50%;
@@ -35,6 +35,19 @@ mat-card-title {
   img {
     max-height: 75%;
     max-width: 75%;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .hide-params {
+    display: none !important;
+  }
+  mat-card {
+    height: 160px;
+  }
+  img {
+    min-height: 65%;
+    min-width: 65%;
   }
 }
 

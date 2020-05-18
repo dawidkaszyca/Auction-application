@@ -3,13 +3,13 @@
     <mat-card appMaterialElevation class="rounded-0">
       <mat-card-content class="h-100">
         <div class="row h-100">
-          <div class="col-4 p-0">
+          <div class="col-4">
             <img *ngIf="!auction.photoUrl" src="./assets/LOGO.jpg" class="figure-img rounded"/>
             <img *ngIf="auction.photoUrl" [src]="auction.photoUrl" class="figure-img rounded"/>
           </div>
           <div class="col-8 position-relative">
             <mat-card-title class="mt-2 text-left">{{auction.title}}</mat-card-title>
-            <h1 class="text-right pr-5 m-0 text font-weight-bold">{{auction.price}}zł</h1>
+            <h1 class="text-right pr-5 m-0 text font-weight-bold pt-1">{{auction.price}}zł</h1>
             <h3 class="text-right pr-5 m-0 ">{{auction.city}}</h3>
             <div class="hide-params row position-absolute fixed-bottom font-weight-bold mb-2">
               <div class="col-md-4">

@@ -108,6 +108,11 @@ public class UserService {
         return login.map(userRepository::findOneByLogin).orElse(null);
     }
 
+    public String getCurrentUserName() {
+        Optional<User> user = getCurrentUserObject();
+        return user.map(User::getFirstName).orElse(null);
+    }
+
     private boolean removeNonActivatedUser(User existingUser) {
         if (existingUser.getActivated()) {
             return false;

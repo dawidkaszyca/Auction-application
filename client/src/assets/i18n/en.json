@@ -46,6 +46,7 @@
     "start": "let's get started",
     "title": "Insert title",
     "category": "Select category",
+    "condition": "Select condition",
     "price": "Price",
     "description": "Description",
     "contactData": "Contact details",
@@ -53,7 +54,8 @@
     "email": "Address e-mail",
     "name": "Enter your name",
     "phone": "Phone number",
-    "photo": "Photo"
+    "photo": "Photo",
+    "save": "SAVE"
   },
   "dragAndDrop": {
     "string": "Drop file here or click !!!",

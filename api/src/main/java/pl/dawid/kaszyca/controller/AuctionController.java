@@ -10,6 +10,7 @@ import pl.dawid.kaszyca.service.AuctionService;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -54,6 +55,18 @@ public class AuctionController {
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting  auction by id");
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/auctions/form")
+    public ResponseEntity getNewAuctionData() {
+        try {
+            Map<String, List<String>> auctionData = auctionService.getAuctionData();
+            if(!auctionData.isEmpty())
+                return new ResponseEntity(auctionData, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during getting auctionsDetail");
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

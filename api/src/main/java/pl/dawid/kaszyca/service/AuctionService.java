@@ -14,9 +14,7 @@ import pl.dawid.kaszyca.repository.CityRepository;
 import pl.dawid.kaszyca.util.MapperUtils;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AuctionService {
@@ -86,5 +84,16 @@ public class AuctionService {
         else
             auctions = auctionRepository.findAllByCategoryCategory(category, pageable);
         return MapperUtils.mapAll(auctions.getContent(), AuctionBaseDTO.class);
+    }
+
+    public Map<String, List<String>> getAuctionData() {
+        Map<String, List<String>> data = new HashMap<>();
+        List<String> category = categoryService.getCategoriesName();
+        data.put("category", category);
+        String name = userService.getCurrentUserName();
+        if(name != null)
+            data.put("name", Collections.singletonList(name));
+        data.put("condition", Arrays.asList("Nowy", "Używany"));
+        return data;
     }
 }

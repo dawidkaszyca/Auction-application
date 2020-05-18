@@ -5,9 +5,24 @@
   font-size: 16px;
 }
 
+mat-form-field {
+  border-radius: 35px !important;
+}
+
 mat-card {
   margin-top: 2rem;
+}
+
+.image {
   min-height: 210px;
+}
+
+.submit {
+  background-color: lightgrey;
+  min-height: 50%;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 ::ng-deep .mat-card {
@@ -50,6 +65,10 @@ img {
   ::ng-deep .mat-card {
     border: 3px solid red !important;
   }
+}
+
+.submit {
+  height: 10%;
 }
 
 .dropdown_btn {
