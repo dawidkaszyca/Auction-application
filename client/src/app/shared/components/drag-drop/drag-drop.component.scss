@@ -1,0 +1,21 @@
+.upload-file-container {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dbead5 !important;
+  border: 55px solid #000;
+  border-radius: 35px !important;
+  border: #000 !important;
+}
+
+.upload-file-container:hover {
+  cursor: pointer;
+  background-color: #a4d4ff !important;
+  opacity: 0.8;
+}
+
+.upload-file-container mat-icon {
+  margin-left: -40px;
+  font-size: 6rem;
+}

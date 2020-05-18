@@ -1,0 +1,64 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="offset-3"></div>
+    <div class="col-md-6 mt-3">
+      <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && login()" novalidate class="feedback-form">
+        <div *ngIf="invalidSignIn" class="invalid-input text-danger">{{'register.incorrect' | translate}}</div>
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">{{'register.login' | translate}}</label>
+          <input type="text"
+                 id="username"
+                 class="form-control"
+                 name="username"
+                 placeholder="{{'register.urLogin' | translate}}"
+                 [(ngModel)]="model.username"
+                 required minlength="5"
+                 #username="ngModel"
+                 [ngClass]="{ 'is-invalid': f.submitted && username.invalid }"
+                 required/>
+          <!-- input validation group -->
+          <div *ngIf="f.submitted && username.invalid" class="invalid-input">
+            <!-- individual validation errors -->
+            <div *ngIf="username.errors?.required">{{'register.isEmpty' | translate}}</div>
+            <div *ngIf="username.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+          </div>
+        </div>
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">{{'register.password' | translate}}</label>
+          <input type="password"
+                 id="password"
+                 class="form-control"
+                 name="password"
+                 placeholder="{{'register.urPassword' | translate}}"
+
+                 [(ngModel)]="model.password"
+                 #password="ngModel"
+                 required minlength="7"
+                 [ngClass]="{ 'is-invalid': f.submitted && password.invalid }"
+                 required/>
+          <!-- input validation group -->
+          <div *ngIf="f.submitted && password.invalid" class="invalid-input">
+            <!-- individual validation errors -->
+            <div *ngIf="username.errors?.required">{{'register.isEmpty' | translate}}</div>
+            <div *ngIf="username.errors?.minlength">{{'register.toSmall7' | translate}}</div>
+          </div>
+        </div>
+        <div>
+          <label class="form-check-label ml-4 mt-2 float-left" for="rememberMe">
+            <input class="form-check-input " [(ngModel)]="model.rememberMe" type="checkbox" name="rememberMe" id="rememberMe">
+            <span>{{'register.remember' | translate}}</span>
+          </label>
+          <button type="submit" class="btn btn-info ml-3 float-right">
+            <span>{{'register.signIn' | translate}}</span>
+          </button>
+          <button routerLink="/register" class="btn btn-info float-right">
+            <span>{{'register.signUp' | translate}}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="offset-3"></div>
+  </div>
+</div>

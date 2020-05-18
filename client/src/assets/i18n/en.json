@@ -1,0 +1,63 @@
+{
+  "Navigation": {
+    "newAuction": "Add new auction",
+    "Myprofile": "My profile"
+  },
+  "search": {
+    "looking": "Search for anything",
+    "location": "location",
+    "Search": "Search"
+  },
+  "categories": {
+    "phone": "Mobile phones",
+    "tablet": "Tablets",
+    "tv": "TVs",
+    "pc": "Laptops & Netbooks",
+    "consoleGames": "Video Games & Consoles",
+    "photo": "Photography"
+  },
+  "register": {
+    "incorrect": "Incorrect username or password.",
+    "login": "Username",
+    "isEmpty": "Field is required",
+    "toSmall5": "Field is too small (try min 5 characters)",
+    "password": "Password",
+    "toSmall7": "Field is too small (try min 7 characters)",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "createAccount": "Create account",
+    "email": "Email",
+    "validEmail": "This email is incorrect",
+    "firstName": "Firstname",
+    "lastName": "Lastname",
+    "urLogin": "Your username",
+    "urPassword": "Your password",
+    "urEmail": "Your email",
+    "urName": "Your name",
+    "urLastName": "Your lastname",
+    "remember": "Remember Me"
+  },
+  "auction": {
+    "condition": "Condition ",
+    "views" : "Views ",
+    "date" : "Added date "
+  },
+  "newAuction": {
+    "start": "let's get started",
+    "title": "Insert title",
+    "category": "Select category",
+    "price": "Price",
+    "description": "Description",
+    "contactData": "Contact details",
+    "city": "Enter the city",
+    "email": "Address e-mail",
+    "name": "Enter your name",
+    "phone": "Phone number",
+    "photo": "Photo"
+  },
+  "dragAndDrop": {
+    "string": "Drop file here or click !!!",
+    "size": "Maximum size of file is 2MB",
+    "extension": "Accepted extension: jpg, jpeg"
+  }
+}

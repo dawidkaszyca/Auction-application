@@ -1,0 +1,10 @@
+<mat-card class="rounded-0" *ngIf="show">
+<form>
+  <div class="form-group" *ngFor="let attribute of attributes">
+    <label>{{attribute.id}}</label><br>
+    <mat-select  class="form-control w-50" (selectionChange)="doSomething($event, attribute.id)">
+      <mat-option *ngFor="let values of attribute.attributeValues" [value]="values.value">{{values.value}}</mat-option>
+    </mat-select>
+  </div>
+</form>
+</mat-card>

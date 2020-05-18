@@ -1,0 +1,63 @@
+{
+  "Navigation": {
+    "newAuction": "Dodaj nową aukcje",
+    "Myprofile": "Mój profil"
+  },
+  "search": {
+    "looking": "Czego szukasz?",
+    "location": "Lokalizacja",
+    "Search": "szukaj"
+  },
+  "categories": {
+    "phone": "Telefony",
+    "tablet": "Tablety",
+    "tv": "Telewizory",
+    "pc": "Laptopy",
+    "consoleGames": "Gry i konsole",
+    "photo": "Fotografia"
+  },
+  "register": {
+    "incorrect": "Nieprawidłowa nazwa użytkownika lub hasło",
+    "login": "Login",
+    "isEmpty": "Pole jest wymagane",
+    "toSmall5": "Minimalna ilość znaków 5",
+    "password": "Hasło",
+    "toSmall7": "Minimalna ilość znaków 7",
+    "signIn": "Zaloguj",
+    "signUp": "Zarejestruj",
+    "urLogin": "Twój login",
+    "createAccount": "Stwórz konto",
+    "email": "Email",
+    "validEmail": "Podany email jest niepoprawny",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "urPassword": "Twoje hasło",
+    "urEmail": "Twój email",
+    "urName": "Twoje imie",
+    "urLastName": "Twoje nazwisko",
+    "remember": "Pamiętaj Mnie"
+  },
+  "auction": {
+    "condition": "Stan ",
+    "views" : "Wyświetleń ",
+    "date" : "Data dodania "
+  },
+  "newAuction": {
+    "start": "Zaczynajmy",
+    "title": "Wpisz tytuł",
+    "category": "Wybierz kategorię",
+    "price": "Cena",
+    "description": "Opis",
+    "contactData": "Dane kontaktowe",
+    "city": "Podaj miasto",
+    "email": "Adres e-mail",
+    "name": "Podaj swoje imię",
+    "phone": "Numer telefonu",
+    "photo": "Zdjęcie"
+  },
+  "dragAndDrop": {
+    "string": "Upuść tutaj pliki lub kliknij",
+    "size": "Maksymalny rozmiar pliku to 2MB",
+    "extension": "Akceptowalne rozrzesznia plików to: jpg, jpeg"
+  }
+}

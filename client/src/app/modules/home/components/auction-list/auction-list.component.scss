@@ -1,0 +1,42 @@
+mat-card {
+  margin-top: 1rem;
+  width: 100%;
+  height: 240px;
+}
+
+img {
+  max-height: 85%;
+  max-width: 85%;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+mat-card-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+::ng-deep .mat-card{
+  border: 55px solid #000;
+  border-radius: 35px !important;
+  border: #000 !important;
+}
+
+@media screen and (max-width: 1024px) {
+  .hide-params {
+    display: none !important;
+  }
+  mat-card {
+    height: 120px;
+  }
+  img {
+    max-height: 75%;
+    max-width: 75%;
+  }
+}
+
+
+

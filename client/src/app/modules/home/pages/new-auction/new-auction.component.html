@@ -1,0 +1,81 @@
+<div class="w-90-center">
+  <h2 class="mt-4 text-left ml-2"> {{'newAuction.start' | translate}}</h2>
+
+  <mat-card>
+    <form>
+      <div class="form-group">
+        <label>{{'newAuction.title' | translate}}</label>
+        <input class="form-control w-50" [(ngModel)]="auction.title" name="title">
+      </div>
+      <div class="form-group">
+        <label>{{'newAuction.category' | translate}}</label><br>
+        <mat-select class="form-control w-50" [(ngModel)]="auction.category" name="category">
+          <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
+        </mat-select>
+      </div>
+      <div class="form-group">
+        <label>{{'newAuction.price' | translate}}</label>
+        <input class="form-control w-25" [(ngModel)]="auction.price" name="price">
+      </div>
+    </form>
+  </mat-card>
+
+  <app-dynamic-panel *ngIf="auction.category" [category]="auction.category"
+                     (selectEmitter)="receiveSelectedData($event)"></app-dynamic-panel>
+
+  <mat-card>
+    <div class="form-group w-50">
+      <label for="comment">{{'newAuction.description' | translate}}</label>
+      <textarea class="form-control" rows="5" id="comment" [(ngModel)]="auction.description"
+                name="description"></textarea>
+    </div>
+  </mat-card>
+
+  <mat-card>
+    <form>
+      <label>{{'newAuction.contactData' | translate}}</label>
+      <div class="form-group mt-2">
+        <label>{{'newAuction.city' | translate}}</label>
+        <input class="form-control w-50" [(ngModel)]="auction.city" name="city">
+      </div>
+      <div class="form-group">
+        <label>{{'newAuction.email' | translate}}</label>
+        <input class="form-control w-50" [(ngModel)]="auction.email" name="email">
+      </div>
+      <div class="form-group">
+        <label>{{'newAuction.name' | translate}}</label>
+        <input class="form-control w-25">
+      </div>
+      <div class="form-group">
+        <label>{{'newAuction.phone' | translate}}</label>
+        <input class="form-control w-25" [(ngModel)]="auction.phone" name="phone">
+      </div>
+    </form>
+  </mat-card>
+
+  <mat-card>
+    <app-drag-drop [maxAmountOfImages]="maxSizeOfImages" (filesEmitter)="receiveImages($event)"></app-drag-drop>
+    <div class="row">
+      <div class="col-3" *ngFor="let number of [0,1,2,3]">
+
+        <div *ngIf="selected!=number">
+          <mat-card class="w-100" (click)="selectMainPhoto(number)">
+            <img class="figure-img rounded" *ngIf="previewUrl[number]" [src]="previewUrl[number]"/>
+          </mat-card>
+        </div>
+
+        <div class="selected" *ngIf="selected == number && previewUrl[number]">
+          <mat-card class="w-100" (click)="selectMainPhoto(number)">
+            <img class="figure-img rounded" *ngIf="previewUrl[number]" [src]="previewUrl[number]">
+            <span class="dropdown_btn"></span>
+          </mat-card>
+        </div>
+
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="text-center" (click)="saveAuction()">
+    ZAPISZ OGLOSZENIE
+  </mat-card>
+</div>

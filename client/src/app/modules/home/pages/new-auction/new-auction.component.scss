@@ -1,0 +1,63 @@
+.w-90-center {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 16px;
+}
+
+mat-card {
+  margin-top: 2rem;
+  min-height: 210px;
+}
+
+::ng-deep .mat-card {
+  border: 55px solid #000;
+  border-radius: 35px !important;
+  border: #000 !important;
+}
+
+textarea {
+  border-radius: 35px !important;
+}
+
+input {
+  border-radius: 35px !important;
+}
+
+mat-select {
+  border-radius: 35px !important;
+}
+
+@media screen and (max-width: 800px) {
+  .w-50 {
+    width: 75% !important;
+  }
+  .w-25 {
+    width: 50% !important;
+  }
+}
+
+img {
+  height: 85%;
+  width: 85%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.selected {
+  ::ng-deep .mat-card {
+    border: 3px solid red !important;
+  }
+}
+
+.dropdown_btn {
+  width: 20px;
+  height: 24px;
+  margin-right: -20px;
+  float: right;
+  display: inline-block;
+  cursor: pointer;
+  background-color: red;
+}

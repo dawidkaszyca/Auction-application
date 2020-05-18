@@ -1,0 +1,79 @@
+import {Component, OnInit} from '@angular/core';
+import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
+import {AuctionService} from '../../../../shared/services/auction.service';
+import {AttachmentService} from '../../../../shared/services/attachment.service';
+
+@Component({
+  selector: 'app-auction-list',
+  templateUrl: './auction-list.component.html',
+  styleUrls: ['./auction-list.component.scss']
+})
+export class AuctionListComponent implements OnInit {
+
+  private pageSize = 10;
+  private page = 0;
+  private category = 'all';
+  auctions: AuctionBaseField[];
+
+  constructor(private auctionService: AuctionService, private attachmentService: AttachmentService) {
+  }
+
+  ngOnInit(): void {
+    this.loadAuctionsData();
+  }
+
+  private loadAuctionsData() {
+    this.auctionService.getAuctions(this.pageSize, this.page, this.category).subscribe(
+      res => {
+        this.auctions = res;
+        this.loadPhotos();
+      },
+      err => {
+        alert('TODO');
+      });
+  }
+
+  private loadPhotos() {
+    this.attachmentService.getPhotos(this.getAuctionIdList()).subscribe(
+      res => {
+        const response = new Map(Object.entries(res));
+        this.setImages(response);
+      },
+      err => {
+        alert('TODO');
+      });
+  }
+
+  private setImages(response: Map<string, string>) {
+    this.auctions.forEach(it => {
+      if (response.has(it.id.toString())) {
+        it.photoUrl = response.get(it.id.toString());
+      }
+    });
+  }
+
+  private getAuctionIdList() {
+    const arrayId = [];
+    this.auctions.forEach(it => {
+      arrayId.push(it.id);
+    });
+    return arrayId;
+  }
+
+  pushExtraData() {
+    const a = new AuctionBaseField();
+    a.city = 'Katowice';
+    a.condition = 'Nowy';
+    a.createdDate = new Date().toDateString();
+    a.title = 'Huawei Y5p miętowy';
+    a.price = '399,00 zł';
+    a.category = 'Telefony';
+    a.viewers = 2111;
+    this.auctions.push(a);
+    this.auctions.push(a);
+    this.auctions.push(a);
+    this.auctions.push(a);
+    this.auctions.push(a);
+    this.auctions.push(a);
+  }
+}
