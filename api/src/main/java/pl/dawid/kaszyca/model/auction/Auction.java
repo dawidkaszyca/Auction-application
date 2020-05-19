@@ -7,6 +7,7 @@ import org.hibernate.annotations.Cascade;
 import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.lang.NonNull;
+import pl.dawid.kaszyca.dto.AuctionDetailsDTO;
 import pl.dawid.kaszyca.model.*;
 
 import javax.annotation.Nullable;

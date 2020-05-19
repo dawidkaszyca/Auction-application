@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
     Optional<Image> findFirstByAuctionIdAndIsMainAuctionPhoto(Long id, boolean isMainAuctionPhoto);
+
+    List<Image> findAllByAuctionId(Long id);
 }

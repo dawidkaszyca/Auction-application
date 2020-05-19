@@ -56,22 +56,37 @@ public class AttachmentService {
             Image image = new Image();
             image.setAttachment(attachment);
             image.setAuction(auction);
-            if(i == mainPhotoId)
+            if (i == mainPhotoId)
                 image.setIsMainAuctionPhoto(true);
             imageList.add(image);
         }
         return imageList;
     }
 
-    public Map<String, String> getPhotosUrl(List<Long> idOfAuctionMainPhotoToGet) {
+    public Map<String, String> getPhotosByListId(List<Long> idOfAuctionMainPhotoToGet) {
         Map<String, String> photosUrl = new HashMap<>();
-        for(Long id: idOfAuctionMainPhotoToGet) {
+        for (Long id : idOfAuctionMainPhotoToGet) {
             Optional<Image> image = imageRepository.findFirstByAuctionIdAndIsMainAuctionPhoto(id, true);
-            if(image.isPresent()) {
+            if (image.isPresent()) {
                 String url = convertImageToResponseIfExist(image.get().getAttachment());
-                if(url != null)
+                if (url != null)
                     photosUrl.put(id.toString(), url);
             }
+        }
+        return photosUrl;
+    }
+
+    public Map<String, String> getPhotosForAuctionById(long auctionId) {
+        Map<String, String> photosUrl = new HashMap<>();
+        List<Image> images = imageRepository.findAllByAuctionId(auctionId);
+        int it = 2;
+        for (Image image : images) {
+            String url = convertImageToResponseIfExist(image.getAttachment());
+            if (image.getIsMainAuctionPhoto())
+                photosUrl.put("1", url);
+            else
+                photosUrl.put(String.valueOf(it), url);
+            it++;
         }
         return photosUrl;
     }

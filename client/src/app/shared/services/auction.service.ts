@@ -38,6 +38,10 @@ export class AuctionService {
     return this.http.get<AuctionBaseField[]>(this.AUCTIONS, {params: httpParams});
   }
 
+  getAuctionWithDetailsById(id: number) {
+    return this.http.get<any>(this.AUCTIONS + '/' + id);
+  }
+
   getAuctionForm() {
     return this.http.get<any>(this.AUCTIONS + '/' + 'form');
   }

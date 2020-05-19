@@ -9,6 +9,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { ImageComponent } from './components/image/image.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import {MatCardModule} from '@angular/material/card';
 
 
 
@@ -24,13 +25,15 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     CommonModule,
     MatIconModule,
     MatProgressBarModule,
-    TranslateModule
+    TranslateModule,
+    MatCardModule
   ],
   providers: [],
-    exports: [
-        MaterialElevationDirective,
-        DragDropComponent
-    ],
+  exports: [
+    MaterialElevationDirective,
+    DragDropComponent,
+    ImageComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class SharedModule { }

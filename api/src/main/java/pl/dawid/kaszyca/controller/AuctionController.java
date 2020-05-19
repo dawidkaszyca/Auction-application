@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionDTO;
+import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.service.AuctionService;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
@@ -50,7 +51,7 @@ public class AuctionController {
     @GetMapping("/auctions/{id}")
     public ResponseEntity getAuctionById(@PathVariable long id) {
         try {
-            AuctionDTO auction = auctionService.getAuctionById(id);
+            AuctionWithDetailsDTO auction = auctionService.getAuctionById(id);
             if( auction != null)
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {

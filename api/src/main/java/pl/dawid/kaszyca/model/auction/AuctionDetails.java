@@ -18,7 +18,7 @@ public class AuctionDetails implements Serializable {
     @ManyToOne
     private Auction auction;
 
-    private String categoryAttributes;
+    private String categoryAttribute;
 
-    private String attributeValues;
+    private String attributeValue;
 }

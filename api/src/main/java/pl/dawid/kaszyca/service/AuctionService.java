@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionDTO;
+import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.model.City;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
@@ -32,9 +33,9 @@ public class AuctionService {
         this.cityRepository = cityRepository;
     }
 
-    public AuctionDTO getAuctionById(long id) {
+    public AuctionWithDetailsDTO getAuctionById(long id) {
         Optional<Auction> auction = auctionRepository.findFirstById(id);
-        return auction.map(value -> MapperUtils.map(value, AuctionDTO.class)).orElse(null);
+        return auction.map(value -> MapperUtils.map(value, AuctionWithDetailsDTO.class)).orElse(null);
     }
 
     public Long saveAuction(NewAuctionVM auctionVM) {
@@ -57,8 +58,8 @@ public class AuctionService {
             for (AttributeValues attributeValues : categoryAttributes.getAttributeValues()) {
                 AuctionDetails auctionDetails = new AuctionDetails();
                 auctionDetails.setAuction(auction);
-                auctionDetails.setCategoryAttributes(categoryAttributes.getAttribute());
-                auctionDetails.setAttributeValues(attributeValues.getValue());
+                auctionDetails.setCategoryAttribute(categoryAttributes.getAttribute());
+                auctionDetails.setAttributeValue(attributeValues.getValue());
                 detailsToSave.add(auctionDetails);
             }
         }
