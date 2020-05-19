@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.annotations.Cascade;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.lang.NonNull;
 import pl.dawid.kaszyca.model.*;
@@ -60,7 +61,7 @@ public class Auction implements Serializable {
     @NonNull
     private String phone;
 
-    @OneToMany(mappedBy = "id", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "id", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @Nullable
     private List<Image> images;
 

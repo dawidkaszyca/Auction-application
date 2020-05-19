@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CategoryAttributesDTO {
 
-    private String id;
+    private String attribute;
 
     private List<AttributeValuesDTO> attributeValues;
 

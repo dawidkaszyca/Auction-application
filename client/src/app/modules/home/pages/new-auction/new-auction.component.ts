@@ -58,23 +58,24 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       });
   }
 
-  receiveImages($event) {
-    this.files.push($event[0]);
-    this.preview($event[0]);
+  receiveImages($event: File[]) {
+    $event.forEach(it => {
+      if (this.files.length < this.maxSizeOfImages) {
+        this.files.push(it);
+        this.preview(it);
+      }
+    });
   }
 
-  private preview($event): void {
-    this.previewUrl = [];
-    for (const file of this.files) {
+  private preview(file: File): void {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.previewUrl.push(reader.result);
-        if (this.files.length === 1) {
+        if (this.previewUrl.length === 1) {
           this.selectMainPhoto(0);
         }
       };
-    }
   }
 
   selectMainPhoto(photoNumber: number) {
@@ -96,7 +97,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       res => {
         attachment.auctionId = Number(res);
         this.saveAttachment(attachment);
-        this.router.navigateByUrl("/");
+        this.router.navigateByUrl('/');
       },
       err => {
         alert('TODO');

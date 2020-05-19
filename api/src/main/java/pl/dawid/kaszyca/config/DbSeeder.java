@@ -50,7 +50,7 @@ class DbSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws IOException {
         addRolesAndUser();
-        setCategories();
+        createCategories();
         createExampleAuctions();
         System.out.println("Initialized database");
     }
@@ -72,44 +72,98 @@ class DbSeeder implements CommandLineRunner {
         userRepository.save(user);
     }
 
-    private void setCategories() {
-        categoryRepository.save(new Category("phone"));
-        categoryRepository.save(new Category("tablet"));
-        categoryRepository.save(new Category("tv"));
-        categoryRepository.save(new Category("pc"));
-        categoryRepository.save(new Category("consoleGames"));
-        categoryRepository.save(new Category("photo"));
-        categoryRepository.save(createCategory());
+    private void createCategories() {
+        categoryRepository.save(createCategory("Telefony"));
+        categoryRepository.save(createCategory("Tablety"));
+        categoryRepository.save(createCategory("Telewizory"));
+        categoryRepository.save(createCategory("Laptopy"));
+        categoryRepository.save(createCategory("Gry i konsole"));
+        categoryRepository.save(new Category("Fotografia"));
     }
 
-    private Category createCategory() {
-        Category category = new Category();
-        category.setCategory("category1");
-        category.setCategoryAttributes(createCategoryAttributes(category));
+    private Category createCategory(String value) {
+        Category category = new Category(value);
+        category.setCategoryAttributes(getAttributeArray(value, category));
         return category;
     }
 
-    private List<CategoryAttributes> createCategoryAttributes(Category category) {
-        List<CategoryAttributes> categoryAttributesList = new ArrayList();
-        for (int i = 0; i < 10; i++) {
-            CategoryAttributes categoryAttributes = new CategoryAttributes();
-            categoryAttributes.setId("attribute" + i);
-            categoryAttributes.setCategory(category);
-            categoryAttributes.setAttributeValues(createAttributeValues(categoryAttributes, i + 1));
-            categoryAttributesList.add(categoryAttributes);
+    private List<CategoryAttributes> getAttributeArray(String attr, Category category) {
+        List<String> attributes;
+        List<CategoryAttributes> categoryAttributes = new ArrayList<>();
+        switch (attr) {
+            case ("Telefony"):
+            case ("Tablety"):
+                attributes = Arrays.asList("Marka", "Ram", "Aparat");
+                break;
+            case ("Laptopy"):
+                attributes = Arrays.asList("Marka", "Ram", "Wyświetlacz", "Dysk", "Grafika");
+                break;
+            case ("Telewizory"):
+                attributes = Arrays.asList("Marka", "Wyświetlacz", "Roździelczośc");
+                break;
+            case ("Gry i konsole"):
+                attributes = Arrays.asList("Wersja gry", "Tryb gry", "Platforma", "Kategoria");
+                break;
+            default:
+                attributes = new ArrayList<>();
         }
-        return categoryAttributesList;
+        for (String value : attributes) {
+            CategoryAttributes categoryAttribute = new CategoryAttributes();
+            categoryAttribute.setAttribute(value);
+            categoryAttribute.setCategory(category);
+            categoryAttribute.setAttributeValues(getValuesByKey(value, categoryAttribute));
+            categoryAttributes.add(categoryAttribute);
+        }
+        return categoryAttributes;
     }
 
-    private List<AttributeValues> createAttributeValues(CategoryAttributes categoryAttributes, int number) {
-        List<AttributeValues> attributeValuesList = new ArrayList<>();
-        for (int i = 0; i < 1 * number; i++) {
-            AttributeValues attributeValues = new AttributeValues();
-            attributeValues.setValue("values" + i);
-            attributeValues.setCategoryAttributes(categoryAttributes);
-            attributeValuesList.add(attributeValues);
+    private List<AttributeValues> getValuesByKey(String value, CategoryAttributes categoryAttribute) {
+        List<AttributeValues> attributeValues = new ArrayList<>();
+        List<String> listOfValues;
+        switch (value) {
+            case ("Marka"):
+                listOfValues = Arrays.asList("Samsung ", "Apple", "Huawei", "LG", "Sony", "Xiaomi", "HTC");
+                break;
+            case ("Grafika"):
+                listOfValues = Arrays.asList("1GB", "2GB", "4GB", "8GB");
+                break;
+            case ("Ram"):
+                listOfValues = Arrays.asList("1GB", "2GB", "4GB", "8GB", "16GB", "32GB");
+                break;
+            case ("Wyświetlacz"):
+                listOfValues = Arrays.asList("15 ", "17", "19");
+                break;
+            case ("Aparat"):
+                listOfValues = Arrays.asList("3px", "5px", "10px", "13px", "15px", "20px", ">20px");
+                break;
+            case ("Dysk"):
+                listOfValues = Arrays.asList("64GB", "128GB", "256GB", "512GB", "1TB", "2TB", "4TB");
+                break;
+            case ("Roździelczośc"):
+                listOfValues = Arrays.asList("1024×768", "1280×720", "1920×1080", "4096×2304", "4096×2048", "4096×2048");
+                break;
+            case ("Wersja gry"):
+                listOfValues = Arrays.asList("pudełkowa", "cyfrowa");
+                break;
+            case ("Tryb gry"):
+                listOfValues = Arrays.asList("singleplayer", "multiplayer");
+                break;
+            case ("Platforma"):
+                listOfValues = Arrays.asList("Pc", "Ps1", "Ps2", "Ps3 ", "Ps4", "Xbox", "Xbox 360", "Xbox One", "PSP", "Nintendo Switch");
+                break;
+            case ("Kategoria"):
+                listOfValues = Arrays.asList("Bijatyki", "Strzelanki", "MMORPG", "Gry wyścigowe", "Gry sportowe", "Strategiczne", "Muzyczne", "Przygodowe", "Dla dzieci");
+                break;
+            default:
+                listOfValues = new ArrayList<>();
         }
-        return attributeValuesList;
+        for (String val : listOfValues) {
+            AttributeValues att = new AttributeValues();
+            att.setValue(val);
+            att.setCategoryAttributes(categoryAttribute);
+            attributeValues.add(att);
+        }
+        return attributeValues;
     }
 
     private void createExampleAuctions() throws IOException {
@@ -119,7 +173,7 @@ class DbSeeder implements CommandLineRunner {
 
         City city = new City("Katowice");
         Condition condition = new Condition("Używane");
-        Optional<Category> category = categoryRepository.findFirstByCategory("phone");
+        Optional<Category> category = categoryRepository.findFirstByCategory("Telefony");
         if (category.isPresent())
             auction.setCategory(category.get());
         auction.setCity(city);
@@ -139,11 +193,10 @@ class DbSeeder implements CommandLineRunner {
         attachmentService.saveAuctionAttachments(list, attachmentSaveVM);
 
 
-
         auction = new Auction();
         city = new City("Mysłowice");
         condition = new Condition("Nowy");
-        category = categoryRepository.findFirstByCategory("tablet");
+        category = categoryRepository.findFirstByCategory("Tablety");
         if (category.isPresent())
             auction.setCategory(category.get());
         auction.setCity(city);
@@ -165,7 +218,7 @@ class DbSeeder implements CommandLineRunner {
         auction = new Auction();
         city = new City("Sosnowiec");
         condition = new Condition("Nowy");
-        category = categoryRepository.findFirstByCategory("pc");
+        category = categoryRepository.findFirstByCategory("Laptopy");
         if (category.isPresent())
             auction.setCategory(category.get());
         auction.setCity(city);
@@ -187,7 +240,7 @@ class DbSeeder implements CommandLineRunner {
         auction = new Auction();
         city = new City("Kraków");
         condition = new Condition("Używany");
-        category = categoryRepository.findFirstByCategory("tv");
+        category = categoryRepository.findFirstByCategory("Telewizory");
         if (category.isPresent())
             auction.setCategory(category.get());
         auction.setCity(city);

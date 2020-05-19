@@ -12,15 +12,16 @@ import java.util.List;
 
 @Entity
 @Data
-@Getter
-@Setter
 public class CategoryAttributes implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(unique = true, columnDefinition = "VARCHAR(64)")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @Column(columnDefinition = "VARCHAR(64)")
+    private String attribute;
 
     @OneToMany(mappedBy = "categoryAttributes", cascade ={CascadeType.ALL})
     private List<AttributeValues> attributeValues;

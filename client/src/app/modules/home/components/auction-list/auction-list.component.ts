@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-auction-list',
@@ -15,7 +16,7 @@ export class AuctionListComponent implements OnInit {
   private category = 'all';
   auctions: AuctionBaseField[];
 
-  constructor(private auctionService: AuctionService, private attachmentService: AttachmentService) {
+  constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -60,20 +61,7 @@ export class AuctionListComponent implements OnInit {
     return arrayId;
   }
 
-  pushExtraData() {
-    const a = new AuctionBaseField();
-    a.city = 'Katowice';
-    a.condition = 'Nowy';
-    a.createdDate = new Date().toDateString();
-    a.title = 'Huawei Y5p miętowy';
-    a.price = '399,00 zł';
-    a.category = 'Telefony';
-    a.viewers = 2111;
-    this.auctions.push(a);
-    this.auctions.push(a);
-    this.auctions.push(a);
-    this.auctions.push(a);
-    this.auctions.push(a);
-    this.auctions.push(a);
+  openAuctionPage(auction: AuctionBaseField) {
+    this.router.navigate(['auction'], {queryParams: {'title': auction.title, 'category': auction.category, 'id': auction.id}});
   }
 }

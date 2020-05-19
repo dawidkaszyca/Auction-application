@@ -18,7 +18,7 @@ public class AttributeValues implements Serializable {
 
     private String value;
 
-    @ManyToOne()
+    @ManyToOne
     @JsonIgnore
     private CategoryAttributes categoryAttributes;
 

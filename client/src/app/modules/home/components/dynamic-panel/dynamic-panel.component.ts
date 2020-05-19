@@ -47,7 +47,7 @@ export class DynamicPanelComponent implements OnInit, OnChanges{
     this.selectedValues = [];
     for (const attribute of this.attributes) {
       const categoryObj = new CategoryAttributes();
-      categoryObj.id = attribute.id;
+      categoryObj.attribute = attribute.attribute;
       categoryObj.isSingleSelect = attribute.isSingleSelect;
       if (attribute.isSingleSelect) {
         categoryObj.attributeValues = [];
@@ -64,7 +64,7 @@ export class DynamicPanelComponent implements OnInit, OnChanges{
 
   doSomething($event: MatSelectChange, id: string) {
     for (const attribute of this.selectedValues) {
-      if (attribute.id === id) {
+      if (attribute.attribute === id) {
         attribute.attributeValues[0].value = $event.value;
         break;
       }

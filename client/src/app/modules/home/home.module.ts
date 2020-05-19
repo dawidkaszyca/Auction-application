@@ -1,23 +1,24 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MainPageComponent } from './pages/main-page/main-page.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {MainPageComponent} from './pages/main-page/main-page.component';
 import {RouterModule, Routes} from '@angular/router';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from '../../app-routing.module';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpLoaderFactory} from '../../app.module';
-import { AuctionListComponent } from './components/auction-list/auction-list.component';
+import {AuctionListComponent} from './components/auction-list/auction-list.component';
 import {MatCardModule} from '@angular/material/card';
 import {SharedModule} from '../../shared/shared.module';
-import { NewAuctionComponent } from './pages/new-auction/new-auction.component';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { DynamicPanelComponent } from './components/dynamic-panel/dynamic-panel.component';
-import {MatOptionModule} from "@angular/material/core";
-import {MatSelectModule} from "@angular/material/select";
-import { FilterBarComponent } from './components/filter-bar/filter-bar.component';
-import { FilterComponent } from './components/filter-bar/filter/filter.component';
+import {NewAuctionComponent} from './pages/new-auction/new-auction.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {DynamicPanelComponent} from './components/dynamic-panel/dynamic-panel.component';
+import {MatOptionModule} from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
+import {FilterBarComponent} from './components/filter-bar/filter-bar.component';
+import {FilterComponent} from './components/filter-bar/filter/filter.component';
+import {AuctionPreviewComponent} from './pages/auction-preview/auction-preview.component';
 
 const appRoutes: Routes = [
   {
@@ -28,10 +29,14 @@ const appRoutes: Routes = [
     path: 'new-auction',
     component: NewAuctionComponent,
   },
+  {
+    path: 'auction',
+    component: AuctionPreviewComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, FilterComponent],
+  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, FilterComponent, AuctionPreviewComponent],
   imports: [
     CommonModule,
     BrowserModule,
@@ -54,4 +59,5 @@ const appRoutes: Routes = [
     MatSelectModule,
   ]
 })
-export class HomeModule { }
+export class HomeModule {
+}

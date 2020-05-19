@@ -1,7 +1,7 @@
 import {AttributesValues} from './attributes-values';
 
 export class CategoryAttributes {
-  id: string;
+  attribute: string;
   attributeValues: AttributesValues[];
   isSingleSelect: boolean;
 }

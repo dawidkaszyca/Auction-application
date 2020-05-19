@@ -34,10 +34,7 @@ public class AuctionService {
 
     public AuctionDTO getAuctionById(long id) {
         Optional<Auction> auction = auctionRepository.findFirstById(id);
-        if (auction.isPresent()) {
-            return MapperUtils.map(auction.get(), AuctionDTO.class);
-        }
-        return null;
+        return auction.map(value -> MapperUtils.map(value, AuctionDTO.class)).orElse(null);
     }
 
     public Long saveAuction(NewAuctionVM auctionVM) {
@@ -60,7 +57,7 @@ public class AuctionService {
             for (AttributeValues attributeValues : categoryAttributes.getAttributeValues()) {
                 AuctionDetails auctionDetails = new AuctionDetails();
                 auctionDetails.setAuction(auction);
-                auctionDetails.setCategoryAttributes(categoryAttributes.getId());
+                auctionDetails.setCategoryAttributes(categoryAttributes.getAttribute());
                 auctionDetails.setAttributeValues(attributeValues.getValue());
                 detailsToSave.add(auctionDetails);
             }
