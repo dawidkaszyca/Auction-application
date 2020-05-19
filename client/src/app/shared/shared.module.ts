@@ -8,6 +8,7 @@ import { MaterialElevationDirective } from './directives/material-elevation.dire
 import {TranslateModule} from '@ngx-translate/core';
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { ImageComponent } from './components/image/image.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 
 
@@ -16,7 +17,8 @@ import { ImageComponent } from './components/image/image.component';
     DragDropComponent,
     MaterialElevationDirective,
     DragDropDirective,
-    ImageComponent
+    ImageComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     CommonModule,

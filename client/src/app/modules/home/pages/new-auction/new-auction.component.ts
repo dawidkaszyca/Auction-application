@@ -1,5 +1,5 @@
 import {Component, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {NavigationService} from '../../../../core/navigation/navigation.service';
+import {NavigationService} from '../../../../core/header/navigation/navigation.service';
 import {NewAuction} from '../../../../shared/models/new-auction';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {CategoryAttributes} from '../../../../shared/models/category-attributes';

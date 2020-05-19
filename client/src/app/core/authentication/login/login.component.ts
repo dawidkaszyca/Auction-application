@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {NavigationService} from '../../navigation/navigation.service';
+import {NavigationService} from '../../header/navigation/navigation.service';
 import {AuthService} from '../../security/auth.service';
 
 @Component({

@@ -14,7 +14,7 @@
         <a  *ngIf="!authService.isLogged()" class="nav-link"
                                             routerLink="/login">{{'Navigation.newAuction' | translate}}</a>
         <a  *ngIf="authService.isLogged()" class="nav-link"
-                                           routerLink="/newAuction">{{'Navigation.newAuction' | translate}}</a>
+                                           routerLink="/new-auction">{{'Navigation.newAuction' | translate}}</a>
       </li>
       <li [routerLinkActive]="['active']" *ngIf="!authService.isLogged()" class="nav-item ml-md-auto">
         <a class="nav-link" routerLink="/login">{{'Navigation.Myprofile' | translate}}</a>
@@ -23,20 +23,18 @@
         <a [matMenuTriggerFor]="menu" class="nav-link">{{'Navigation.Myprofile' | translate}}</a>
         <mat-menu #menu="matMenu">
           <button mat-menu-item routerLink="/auth/">My account</button>
-          <button mat-menu-item routerLink="/auth/">Oracle Jobs</button>
-          <button mat-menu-item routerLink="/auth/">Oracle employees</button>
-          <button mat-menu-item routerLink="/auth/">Top 10 employees</button>
           <button mat-menu-item (click)="authService.logout()">Logout</button>
         </mat-menu>
       </li>
     </ul>
   </div>
 </nav>
-
-<nav *ngIf="navigationService.show" class="navbar navbar-expand-lg navbar-light bg-light">
-  <app-search></app-search>
-</nav>
-<nav *ngIf="navigationService.show" class="navbar navbar-expand-lg navbar-light bg-light w-100">
-  <app-categories></app-categories>
-</nav>
+<div class="container bg-light">
+  <nav *ngIf="navigationService.show" class="navbar">
+    <app-search class="w-100"></app-search>
+  </nav>
+  <nav *ngIf="navigationService.show" class="navbar">
+    <app-categories class="w-100"></app-categories>
+  </nav>
+</div>
 

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {UserViewModel} from '../../security/model/user-view-model';
 import {AuthService} from '../../security/auth.service';
-import {NavigationService} from '../../navigation/navigation.service';
+import {NavigationService} from '../../header/navigation/navigation.service';
 
 
 @Component({

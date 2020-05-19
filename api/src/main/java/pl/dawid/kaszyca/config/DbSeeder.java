@@ -59,8 +59,6 @@ class DbSeeder implements CommandLineRunner {
         Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.USER);
         authorityRepository.save(authority);
-        authority.setName(AuthoritiesConstants.ADMIN);
-        authorityRepository.save(authority);
         Set<Authority> authorities = new HashSet<>(authorityRepository.findAll());
         User user = new User();
         user.setActivated(true);

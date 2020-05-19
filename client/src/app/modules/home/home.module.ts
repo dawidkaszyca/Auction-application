@@ -16,6 +16,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { DynamicPanelComponent } from './components/dynamic-panel/dynamic-panel.component';
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
+import { FilterBarComponent } from './components/filter-bar/filter-bar.component';
+import { FilterComponent } from './components/filter-bar/filter/filter.component';
 
 const appRoutes: Routes = [
   {
@@ -23,13 +25,13 @@ const appRoutes: Routes = [
     component: MainPageComponent,
   },
   {
-    path: 'newAuction',
+    path: 'new-auction',
     component: NewAuctionComponent,
   },
 ];
 
 @NgModule({
-  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent],
+  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, FilterComponent],
   imports: [
     CommonModule,
     BrowserModule,

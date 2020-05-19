@@ -31,5 +31,19 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+button {
+  border-radius: 35px !important;
+}
+
+input {
+  border-radius: 35px !important;
+}
+
 html, body { height: 100%;}
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
+body {
+  margin: 0;
+  font-family: Roboto,
+  "Helvetica Neue", sans-serif;
+  background-color: #F8F9FA;
+}
+
