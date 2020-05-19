@@ -51,19 +51,9 @@ mat-select {
     width: 50% !important;
   }
 }
-
-img {
-  height: 85%;
-  width: 85%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .selected {
   ::ng-deep .mat-card {
-    border: 3px solid red !important;
+    border: 1px solid red !important;
   }
 }
 
@@ -71,6 +61,7 @@ img {
   height: 10%;
 }
 
+/*
 .dropdown_btn {
   width: 20px;
   height: 24px;
@@ -80,3 +71,4 @@ img {
   cursor: pointer;
   background-color: red;
 }
+*/

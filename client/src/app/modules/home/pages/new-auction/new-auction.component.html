@@ -130,14 +130,13 @@
 
           <div *ngIf="selected!=number">
             <mat-card class="image w-100" (click)="selectMainPhoto(number)">
-              <img class="figure-img rounded" *ngIf="previewUrl[number]" [src]="previewUrl[number]"/>
+              <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
             </mat-card>
           </div>
 
           <div class="selected" *ngIf="selected == number && previewUrl[number]">
             <mat-card class="image w-100" (click)="selectMainPhoto(number)">
-              <img class="figure-img rounded" *ngIf="previewUrl[number]" [src]="previewUrl[number]">
-              <span class="dropdown_btn"></span>
+              <app-image *ngIf="previewUrl[number]" [path]=previewUrl[number]></app-image>
             </mat-card>
           </div>
 

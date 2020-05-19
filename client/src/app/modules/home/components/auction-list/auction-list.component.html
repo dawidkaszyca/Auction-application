@@ -4,8 +4,12 @@
       <mat-card-content class="h-100">
         <div class="row h-100">
           <div class="col-4">
-            <img *ngIf="!auction.photoUrl" src="./assets/LOGO.jpg" class="figure-img rounded"/>
-            <img *ngIf="auction.photoUrl" [src]="auction.photoUrl" class="figure-img rounded"/>
+            <!--<mat-card>-->
+            <div>
+              <app-image *ngIf="!auction.photoUrl" path="./assets/LOGO.jpg"></app-image>
+              <app-image *ngIf="auction.photoUrl" [path]="auction.photoUrl"></app-image>
+            </div>
+            <!--  </mat-card>-->
           </div>
           <div class="col-8 position-relative">
             <mat-card-title class="mt-2 text-left">{{auction.title}}</mat-card-title>
