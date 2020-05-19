@@ -2,7 +2,7 @@
 <form>
   <div class="form-group" *ngFor="let attribute of attributes">
     <label>{{attribute.attribute}}</label><br>
-    <mat-select  class="form-control w-50" (selectionChange)="doSomething($event, attribute.id)">
+    <mat-select  class="form-control w-50" (selectionChange)="doSomething($event, attribute.attribute)">
       <mat-option *ngFor="let values of attribute.attributeValues" [value]="values.value">{{values.value}}</mat-option>
     </mat-select>
   </div>
