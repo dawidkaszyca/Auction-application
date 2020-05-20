@@ -84,9 +84,10 @@ public class AttachmentService {
             String url = convertImageToResponseIfExist(image.getAttachment());
             if (image.getIsMainAuctionPhoto())
                 photosUrl.put("1", url);
-            else
+            else {
                 photosUrl.put(String.valueOf(it), url);
-            it++;
+                it++;
+            }
         }
         return photosUrl;
     }

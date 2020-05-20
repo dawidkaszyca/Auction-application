@@ -1,5 +1,5 @@
 export class AuctionDetails {
 
-  categoryAttributes: string;
-  attributeValues: string;
+  categoryAttribute: string;
+  attributeValue: string;
 }

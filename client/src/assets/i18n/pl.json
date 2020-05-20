@@ -39,8 +39,8 @@
   },
   "auction": {
     "condition": "Stan ",
-    "views" : "Wyświetleń ",
-    "date" : "Data dodania "
+    "views": "Wyświetleń ",
+    "date": "Data dodania "
   },
   "newAuction": {
     "start": "Zaczynajmy",
@@ -61,5 +61,10 @@
     "string": "Upuść tutaj pliki lub kliknij",
     "size": "Maksymalny rozmiar pliku to 2MB",
     "extension": "Akceptowalne rozrzesznia plików to: jpg, jpeg"
-  }
+  },
+  "preview": {
+  "category": "Kategoria",
+  "condition": "Stan"
 }
+}
+

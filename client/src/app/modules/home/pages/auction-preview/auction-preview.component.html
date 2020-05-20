@@ -1,12 +1,58 @@
-<div>
-  <div class="row">
+<div class="container">
+  <div class="row" *ngIf="auction.title">
     <div class="col-7 h-100">
-      <mat-card class="aaa mt-2">
-        <app-image *ngIf="photosUrl" [path]="photosUrl[1]"></app-image>
+      <mat-card class="aaa mt-5">
+        <app-image *ngIf="photosUrl" [path]="photosUrl[selected]"></app-image>
       </mat-card>
+      <div class="row mt-4">
+        <div class="col-4" *ngFor="let id of [1, 2, 3]">
+          <mat-card *ngIf="(selected == id || selected < id) && photosUrl[id + 1] " class="image-container"
+                    (click)="select(id + 1)">
+            <app-image *ngIf="photosUrl" [path]="photosUrl[id + 1]"></app-image>
+          </mat-card>
+          <mat-card *ngIf="selected > id && photosUrl[id]" class="image-container" (click)="select(id)">
+            <app-image *ngIf="photosUrl" [path]="photosUrl[id]"></app-image>
+          </mat-card>
+        </div>
+      </div>
     </div>
-    <div class="col-5 h-100 badge-dark">
+    <div class="col-5 h-100 badge-dark mt-5">
       dasdasdasda
     </div>
   </div>
+  <mat-card class="mt-4">
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-6">
+            <label>{{'preview.category' | translate}}</label>
+            <input class="form-control w-100" [value]="auction.category" disabled>
+          </div>
+          <div class="col-6">
+            <label>{{'preview.condition' | translate}}</label>
+            <input class="form-control w-100" [value]="auction.condition" disabled>
+          </div>
+        </div>
+        <div class="row" *ngFor="let id of auctionDetails; let l = index">
+          <div *ngIf="auctionDetails.length > l * 2" class="col-6">
+            <label class="mt-2">{{auctionDetails[l * 2].categoryAttribute}}</label>
+            <input class="form-control w-100" [value]="auctionDetails[l * 2].attributeValue" disabled>
+          </div>
+          <div *ngIf="auctionDetails.length > l * 2 + 1" class="col-6">
+             <label class="mt-2">{{auctionDetails[l * 2 + 1].categoryAttribute}}</label>
+            <input class="form-control w-100" [value]="auctionDetails[l * 2 + 1].attributeValue" disabled>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group w-100">
+          <label>{{'newAuction.description' | translate}}</label>
+          <textarea class="form-control"
+                    autosize
+                    [(ngModel)]="auction.description"
+                    name="description" disabled></textarea>
+        </div>
+      </div>
+    </div>
+  </mat-card>
 </div>

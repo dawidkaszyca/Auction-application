@@ -61,5 +61,9 @@
     "string": "Drop file here or click !!!",
     "size": "Maximum size of file is 2MB",
     "extension": "Accepted extension: jpg, jpeg"
+  },
+  "preview": {
+    "category": "Category",
+    "condition": "Condition"
   }
 }

@@ -19,6 +19,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {FilterBarComponent} from './components/filter-bar/filter-bar.component';
 import {FilterComponent} from './components/filter-bar/filter/filter.component';
 import {AuctionPreviewComponent} from './pages/auction-preview/auction-preview.component';
+import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
 
 const appRoutes: Routes = [
   {
@@ -57,6 +58,7 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     MatOptionModule,
     MatSelectModule,
+    TextareaAutosizeModule
   ]
 })
 export class HomeModule {
