@@ -7,6 +7,7 @@ import {map} from 'rxjs/operators';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {SERVER_API_URL} from '../../app.constants';
 import {Router} from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -18,8 +19,6 @@ interface JwtToken {
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-
-  private logged = false;
 
   private CREATE_NEW_USER = `${SERVER_API_URL}/register`;
   private LOGIN = `${SERVER_API_URL}/authenticate`;
@@ -44,12 +43,10 @@ export class AuthService {
   logout(): void {
       this.localStorage.clear('authenticationToken');
       this.sessionStorage.clear('authenticationToken');
-      this.logged = false;
     }
 
   private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
     const jwt = response.id_token;
-    this.logged = true;
     if (rememberMe) {
       this.localStorage.store('authenticationToken', jwt);
     } else {
@@ -64,10 +61,16 @@ export class AuthService {
 
   checkIfTokenIsNotExpired(): boolean {
     const token = this.getTokenFromStorage();
-    return (token) ? true : false;
+    if (token != null) {
+      const helper = new JwtHelperService();
+      console.error(helper.getTokenExpirationDate(token));
+      console.error(!helper.isTokenExpired(token));
+      return !helper.isTokenExpired(token);
+    }
+    return false;
   }
 
   isLogged(): boolean {
-    return this.logged || this.getTokenFromStorage() != null;
+    return this.checkIfTokenIsNotExpired();
   }
 }

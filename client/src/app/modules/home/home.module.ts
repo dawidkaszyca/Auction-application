@@ -20,6 +20,7 @@ import {FilterBarComponent} from './components/filter-bar/filter-bar.component';
 import {FilterComponent} from './components/filter-bar/filter/filter.component';
 import {AuctionPreviewComponent} from './pages/auction-preview/auction-preview.component';
 import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
+import {CanActivateRouteGuard} from '../../core/security/can-activate-route-guard';
 
 const appRoutes: Routes = [
   {
@@ -29,6 +30,7 @@ const appRoutes: Routes = [
   {
     path: 'new-auction',
     component: NewAuctionComponent,
+    canActivate: [CanActivateRouteGuard]
   },
   {
     path: 'auction',

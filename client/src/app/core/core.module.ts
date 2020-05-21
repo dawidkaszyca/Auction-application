@@ -14,8 +14,8 @@ import {HttpLoaderFactory} from '../app.module';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../shared/shared.module';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {AuthExpiredInterceptor} from "./security/interceptor/auth-expired.interceptor";
-import {AuthInterceptor} from "./security/interceptor/auth.interceptor";
+import {AuthExpiredInterceptor} from './security/interceptor/auth-expired.interceptor';
+import {AuthInterceptor} from './security/interceptor/auth.interceptor';
 import { FooterComponent } from './footer/footer.component';
 
 
