@@ -1,23 +1,31 @@
 <div class="container">
-  <div class="row" *ngIf="auction.title">
-    <div class="col-7 h-100">
-      <mat-card class="aaa mt-5">
-        <app-image *ngIf="photosUrl" [path]="photosUrl[selected]"></app-image>
-      </mat-card>
-      <div class="row mt-4">
+  <div class="row" #div5 >
+    <div class="col-7">
+      <div #div [ngStyle]="{'height.px': div.offsetWidth }">
+        <mat-card class="mt-5 h-100">
+          <app-image *ngIf="photosUrl" [path]="photosUrl.get(selected.toString())"></app-image>
+        </mat-card>
+      </div>
+      <div class="row mt-4" #div5>
         <div class="col-4" *ngFor="let id of [1, 2, 3]">
-          <mat-card *ngIf="(selected == id || selected < id) && photosUrl[id + 1] " class="image-container"
-                    (click)="select(id + 1)">
-            <app-image *ngIf="photosUrl" [path]="photosUrl[id + 1]"></app-image>
-          </mat-card>
-          <mat-card *ngIf="selected > id && photosUrl[id]" class="image-container" (click)="select(id)">
-            <app-image *ngIf="photosUrl" [path]="photosUrl[id]"></app-image>
-          </mat-card>
+          <div class="mini-image" *ngIf="photosUrl?.size > 1" #div1 [ngStyle]="{'height.px': div1.offsetWidth  * 2 / 3}">
+            <mat-card *ngIf="(selected == id || selected < id) && photosUrl.get((id + 1).toString())" class="h-100"
+                      (click)="select(id + 1)">
+              <app-image *ngIf="photosUrl" [path]="photosUrl.get((id + 1).toString())"></app-image>
+            </mat-card>
+            <mat-card *ngIf="selected > id && photosUrl.get(id.toString())" class="h-100" (click)="select(id)">
+              <app-image *ngIf="photosUrl" [path]="photosUrl.get(id.toString())"></app-image>
+            </mat-card>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-5 h-100 badge-dark mt-5">
-      dasdasdasda
+    <div class="col-5 mt-5">
+      <div [ngStyle]="{'height.px': div.offsetHeight}">
+        <mat-card class="h-100">
+          <mat-card-title class="mt-2 text-center">{{auction?.title}}</mat-card-title>
+        </mat-card>
+      </div>
     </div>
   </div>
   <mat-card class="mt-4">
@@ -26,21 +34,21 @@
         <div class="row">
           <div class="col-6">
             <label>{{'preview.category' | translate}}</label>
-            <input class="form-control w-100" [value]="auction.category" disabled>
+            <input class="form-control w-100" [value]="auction?.category" disabled>
           </div>
           <div class="col-6">
             <label>{{'preview.condition' | translate}}</label>
-            <input class="form-control w-100" [value]="auction.condition" disabled>
+            <input class="form-control w-100" [value]="auction?.condition" disabled>
           </div>
         </div>
-        <div class="row" *ngFor="let id of auctionDetails; let l = index">
-          <div *ngIf="auctionDetails.length > l * 2" class="col-6">
-            <label class="mt-2">{{auctionDetails[l * 2].categoryAttribute}}</label>
-            <input class="form-control w-100" [value]="auctionDetails[l * 2].attributeValue" disabled>
+        <div class="row" *ngFor="let id of auctionDetails; let i = index">
+          <div *ngIf="auctionDetails.length > i * 2" class="col-6">
+            <label class="mt-2">{{auctionDetails[i * 2].categoryAttribute}}</label>
+            <input class="form-control w-100" [value]="auctionDetails[i * 2].attributeValue" disabled>
           </div>
-          <div *ngIf="auctionDetails.length > l * 2 + 1" class="col-6">
-             <label class="mt-2">{{auctionDetails[l * 2 + 1].categoryAttribute}}</label>
-            <input class="form-control w-100" [value]="auctionDetails[l * 2 + 1].attributeValue" disabled>
+          <div *ngIf="auctionDetails.length > i * 2 + 1" class="col-6">
+            <label class="mt-2">{{auctionDetails[i * 2 + 1].categoryAttribute}}</label>
+            <input class="form-control w-100" [value]="auctionDetails[i * 2 + 1].attributeValue" disabled>
           </div>
         </div>
       </div>
@@ -49,7 +57,7 @@
           <label>{{'newAuction.description' | translate}}</label>
           <textarea class="form-control"
                     autosize
-                    [(ngModel)]="auction.description"
+                    [value]="auction?.description"
                     name="description" disabled></textarea>
         </div>
       </div>
