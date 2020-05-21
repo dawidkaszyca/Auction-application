@@ -1,13 +1,13 @@
 package pl.dawid.kaszyca.security.response;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-@Getter
-@Setter
+@Data
 public class JwtResponse {
     private String token;
     private String type = "Bearer";

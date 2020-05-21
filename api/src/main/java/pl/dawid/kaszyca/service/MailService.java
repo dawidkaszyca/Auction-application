@@ -1,4 +1,4 @@
-package pl.dawid.kaszyca.service.mail;
+package pl.dawid.kaszyca.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;

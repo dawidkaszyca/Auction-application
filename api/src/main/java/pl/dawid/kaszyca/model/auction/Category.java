@@ -8,10 +8,9 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;

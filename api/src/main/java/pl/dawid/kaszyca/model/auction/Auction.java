@@ -3,12 +3,11 @@ package pl.dawid.kaszyca.model.auction;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
-import org.hibernate.annotations.Cascade;
-import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.lang.NonNull;
-import pl.dawid.kaszyca.dto.AuctionDetailsDTO;
-import pl.dawid.kaszyca.model.*;
+import pl.dawid.kaszyca.model.City;
+import pl.dawid.kaszyca.model.Image;
+import pl.dawid.kaszyca.model.User;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;

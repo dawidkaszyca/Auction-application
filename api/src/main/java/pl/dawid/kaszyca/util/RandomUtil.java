@@ -1,9 +1,11 @@
 package pl.dawid.kaszyca.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 
+@Component
 public final class RandomUtil {
     private static final int DEF_COUNT = 20;
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();

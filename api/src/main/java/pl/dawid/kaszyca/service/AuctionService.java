@@ -5,7 +5,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
-import pl.dawid.kaszyca.dto.AuctionDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.model.City;
 import pl.dawid.kaszyca.model.User;

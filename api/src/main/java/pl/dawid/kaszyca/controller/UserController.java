@@ -9,7 +9,7 @@ import pl.dawid.kaszyca.exception.UserNotExistException;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.repository.UserRepository;
 import pl.dawid.kaszyca.service.UserService;
-import pl.dawid.kaszyca.service.mail.MailService;
+import pl.dawid.kaszyca.service.MailService;
 import pl.dawid.kaszyca.vm.RegisterFormVM;
 
 import javax.validation.Valid;

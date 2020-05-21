@@ -5,12 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.dawid.kaszyca.config.AuthoritiesConstants;
-import pl.dawid.kaszyca.model.User;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@Component
 public final class SecurityUtils {
 
     private SecurityUtils() {

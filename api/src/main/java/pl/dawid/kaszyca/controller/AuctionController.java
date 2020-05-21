@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
-import pl.dawid.kaszyca.dto.AuctionDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.service.AuctionService;
 import pl.dawid.kaszyca.vm.NewAuctionVM;

@@ -1,6 +1,5 @@
 package pl.dawid.kaszyca.service;
 
-import org.aspectj.weaver.bcel.AtAjAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

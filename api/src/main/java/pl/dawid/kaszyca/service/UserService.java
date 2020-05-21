@@ -14,7 +14,6 @@ import pl.dawid.kaszyca.model.Authority;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.repository.AuthorityRepository;
 import pl.dawid.kaszyca.repository.UserRepository;
-import pl.dawid.kaszyca.service.mail.MailService;
 import pl.dawid.kaszyca.util.RandomUtil;
 import pl.dawid.kaszyca.util.SecurityUtils;
 
