@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Category} from '../models/category';
 import {NewAuction} from '../models/new-auction';
 import {AuctionBaseField} from '../models/auction-base-field';
@@ -15,7 +15,10 @@ export class AuctionService {
   private CATEGORIES = this.BASE_URL + '/categories';
   private AUCTIONS = this.BASE_URL + '/auctions';
 
+  selectedCategory: BehaviorSubject<string>;
+
   constructor(private http: HttpClient) {
+    this.selectedCategory = new BehaviorSubject('all');
   }
 
   getCategories(): Observable<string[]> {
@@ -44,5 +47,9 @@ export class AuctionService {
 
   getAuctionForm() {
     return this.http.get<any>(this.AUCTIONS + '/' + 'form');
+  }
+
+  updateSelectedCategory(category: string) {
+    this.selectedCategory.next(category);
   }
 }

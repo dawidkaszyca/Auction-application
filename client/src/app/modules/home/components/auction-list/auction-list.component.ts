@@ -11,16 +11,19 @@ import {Router} from '@angular/router';
 })
 export class AuctionListComponent implements OnInit {
 
+  private category;
   private pageSize = 10;
   private page = 0;
-  private category = 'all';
   auctions: AuctionBaseField[];
 
   constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router) {
   }
 
   ngOnInit(): void {
-    this.loadAuctionsData();
+    this.auctionService.selectedCategory.subscribe(cat => {
+      this.category = cat;
+      this.loadAuctionsData();
+    });
   }
 
   private loadAuctionsData() {
