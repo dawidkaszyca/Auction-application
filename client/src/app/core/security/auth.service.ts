@@ -63,8 +63,6 @@ export class AuthService {
     const token = this.getTokenFromStorage();
     if (token != null) {
       const helper = new JwtHelperService();
-      console.error(helper.getTokenExpirationDate(token));
-      console.error(!helper.isTokenExpired(token));
       return !helper.isTokenExpired(token);
     }
     return false;

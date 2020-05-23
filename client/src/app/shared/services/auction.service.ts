@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {Category} from '../models/category';
 import {NewAuction} from '../models/new-auction';
 import {AuctionBaseField} from '../models/auction-base-field';
+import {Filter} from '../models/filter';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,11 @@ export class AuctionService {
 
   selectedCategory: BehaviorSubject<string>;
 
+  filter: BehaviorSubject<Filter>;
+
   constructor(private http: HttpClient) {
     this.selectedCategory = new BehaviorSubject('all');
+    this.filter = new BehaviorSubject(new Filter());
   }
 
   getCategories(): Observable<string[]> {
@@ -51,5 +55,9 @@ export class AuctionService {
 
   updateSelectedCategory(category: string) {
     this.selectedCategory.next(category);
+  }
+
+  updateFilterObj(filter: Filter) {
+    this.filter.next(filter);
   }
 }
