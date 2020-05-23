@@ -5,11 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.dawid.kaszyca.model.auction.Auction;
+import pl.dawid.kaszyca.repository.impl.AuctionRepositoryCustom;
 
 import java.util.Optional;
 
 @Repository
-public interface AuctionRepository  extends JpaRepository<Auction, Long> {
+public interface AuctionRepository  extends JpaRepository<Auction, Long>, AuctionRepositoryCustom {
 
     Optional<Auction> findFirstById(Long id);
 
