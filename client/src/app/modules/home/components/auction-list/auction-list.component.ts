@@ -25,7 +25,7 @@ export class AuctionListComponent implements OnInit {
       this.loadAuctionsData();
     });
   }
-
+  
   private loadAuctionsData() {
     this.auctionService.getAuctions(this.pageSize, this.page, this.category).subscribe(
       res => {

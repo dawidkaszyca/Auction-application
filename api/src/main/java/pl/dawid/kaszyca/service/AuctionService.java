@@ -34,7 +34,16 @@ public class AuctionService {
 
     public AuctionWithDetailsDTO getAuctionById(long id) {
         Optional<Auction> auction = auctionRepository.findFirstById(id);
+        incrementViewersAmount(auction);
         return auction.map(value -> MapperUtils.map(value, AuctionWithDetailsDTO.class)).orElse(null);
+    }
+
+    private void incrementViewersAmount(Optional<Auction> auctionOptional) {
+        if (auctionOptional.isPresent()) {
+            Auction auction = auctionOptional.get();
+            auction.setViewers(auction.getViewers() + 1);
+            auctionRepository.save(auction);
+        }
     }
 
     public Long saveAuction(NewAuctionVM auctionVM) {
@@ -72,6 +81,7 @@ public class AuctionService {
         City city = auction.getCity();
         auction.setCity(cityRepository.save(city));
     }
+
     //TODO if category is empty find by views!!!
     public List<AuctionBaseDTO> getAuctionsByCategoryAndPage(String category, int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
@@ -88,7 +98,7 @@ public class AuctionService {
         List<String> category = categoryService.getCategoriesName();
         data.put("category", category);
         String name = userService.getCurrentUserName();
-        if(name != null)
+        if (name != null)
             data.put("name", Collections.singletonList(name));
         data.put("condition", Arrays.asList("Nowy", "Używany"));
         return data;
