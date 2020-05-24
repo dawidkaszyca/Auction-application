@@ -1,5 +1,6 @@
 package pl.dawid.kaszyca.controller;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.service.AuctionService;
+import pl.dawid.kaszyca.vm.FilterVM;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
 import java.util.List;
@@ -25,9 +27,11 @@ public class AuctionController {
     }
 
     @GetMapping("/auctions")
-    public ResponseEntity getAuction(@RequestParam String category, Integer pageSize, Integer page) {
+    public ResponseEntity getAuction(@RequestParam String criteria) {
         try {
-            List<AuctionBaseDTO> auction = auctionService.getAuctionsByCategoryAndPage(category, page, pageSize);
+            Gson g = new Gson();
+            FilterVM filterVM = g.fromJson(criteria, FilterVM.class);
+            List<AuctionBaseDTO> auction = auctionService.getAuctionsFilter(filterVM);
             if(!auction.isEmpty())
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {

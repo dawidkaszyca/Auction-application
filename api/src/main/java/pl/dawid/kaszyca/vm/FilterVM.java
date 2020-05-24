@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.dawid.kaszyca.config.SortEnum;
+import pl.dawid.kaszyca.dto.CategoryAttributesDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 public class FilterVM {
+
+    String category;
 
     String sortByFieldName;
 
@@ -26,7 +29,7 @@ public class FilterVM {
      * key - filter field name
      * value - list of filters value (OR)
      */
-    Map<String, List<String>> filters;
+    List<CategoryAttributesDTO> filters;
 
     List<String> searchWords;
 

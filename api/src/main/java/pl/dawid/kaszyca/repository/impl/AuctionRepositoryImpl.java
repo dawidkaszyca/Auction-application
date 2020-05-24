@@ -3,6 +3,8 @@ package pl.dawid.kaszyca.repository.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import pl.dawid.kaszyca.config.SortEnum;
+import pl.dawid.kaszyca.dto.AttributeValuesDTO;
+import pl.dawid.kaszyca.dto.CategoryAttributesDTO;
 import pl.dawid.kaszyca.model.auction.Auction;
 import pl.dawid.kaszyca.model.auction.AuctionDetails;
 import pl.dawid.kaszyca.vm.FilterVM;
@@ -42,12 +44,12 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             String fieldName = "condition";
             predicates.add(getEqualPredicate(fieldName, filterVM.getCondition(), auction, cb));
         }
-        if (filterVM.isPriceFilter()) {
+        if (filterVM.isPriceFilter())
             predicates.add(getPricePredicate(filterVM, auction, cb));
-        }
-        if (filterVM.getFilters() != null && !filterVM.getFilters().isEmpty()) {
+        if (filterVM.getFilters() != null && !filterVM.getFilters().isEmpty())
             predicates.add(getAttributesPredicate(filterVM, auction, cb));
-        }
+        if(!StringUtils.isEmpty(filterVM.getCategory()) && !filterVM.getCategory().equals("all"))
+            predicates.add(getCategoryPredicate(filterVM, auction, cb));
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
@@ -98,16 +100,19 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         List<Predicate> attributesPredicate = new ArrayList<>();
         Join<Auction, AuctionDetails> join = auction.join("auctionDetails", JoinType.LEFT);
         List<String> values;
-        for (String key : filterVM.getFilters().keySet()) {
-            values = filterVM.getFilters().get(key);
-            Predicate predicate = cb.equal(join.get("categoryAttribute"), key);
+        for (CategoryAttributesDTO obj : filterVM.getFilters()) {
+            Predicate predicate = cb.equal(join.get("categoryAttribute"), obj.getAttribute());
             List<Predicate> att = new ArrayList<>();
-            for (String value : values) {
-                att.add(cb.or(cb.equal(join.get("attributeValue"), value)));
+            for (AttributeValuesDTO value : obj.getAttributeValues()) {
+                att.add(cb.or(cb.equal(join.get("attributeValue"), value.getValue())));
             }
             Predicate attr = cb.or(att.toArray(new Predicate[att.size()]));
             attributesPredicate.add(cb.and(attr, predicate));
         }
         return cb.and(attributesPredicate.toArray(new Predicate[attributesPredicate.size()]));
+    }
+
+    private Predicate getCategoryPredicate(FilterVM filterVM, Root<Auction> auction, CriteriaBuilder cb) {
+        return cb.equal(auction.get("category").get("category"), filterVM.getCategory());
     }
 }

@@ -12,6 +12,7 @@ import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
 import pl.dawid.kaszyca.repository.CityRepository;
 import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.vm.FilterVM;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
 import java.util.*;
@@ -83,14 +84,9 @@ public class AuctionService {
     }
 
     //TODO if category is empty find by views!!!
-    public List<AuctionBaseDTO> getAuctionsByCategoryAndPage(String category, int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<Auction> auctions;
-        if (category.equals("all"))
-            auctions = auctionRepository.findAll(pageable);
-        else
-            auctions = auctionRepository.findAllByCategoryCategory(category, pageable);
-        return MapperUtils.mapAll(auctions.getContent(), AuctionBaseDTO.class);
+    public List<AuctionBaseDTO> getAuctionsFilter(FilterVM filterVM) {
+        List<Auction> auctions = auctionRepository.findByFilters(filterVM);
+        return MapperUtils.mapAll(auctions, AuctionBaseDTO.class);
     }
 
     public Map<String, List<String>> getAuctionData() {
