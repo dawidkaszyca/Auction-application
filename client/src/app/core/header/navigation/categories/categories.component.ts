@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuctionService} from '../../../../shared/services/auction.service';
+import {Filter} from '../../../../shared/models/filter';
 
 @Component({
   selector: 'app-categories',
@@ -7,15 +8,21 @@ import {AuctionService} from '../../../../shared/services/auction.service';
   styleUrls: ['./categories.component.scss']
 })
 export class CategoriesComponent implements OnInit {
+  filter: Filter;
 
-  constructor(private auctionService: AuctionService) { }
+  constructor(private auctionService: AuctionService) {
+  }
 
   ngOnInit(): void {
 
   }
 
   sendSelectedCategory(category: string) {
-    this.auctionService.updateSelectedCategory(category);
+    if (category !== this.filter?.category) {
+      this.filter = new Filter();
+      this.filter.category = category;
+      this.auctionService.updateFilterObj(this.filter);
+    }
   }
 
 }

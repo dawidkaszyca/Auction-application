@@ -39,8 +39,8 @@
   },
   "auction": {
     "condition": "Condition ",
-    "views" : "Views ",
-    "date" : "Added date "
+    "views": "Views ",
+    "date": "Added date "
   },
   "newAuction": {
     "start": "let's get started",
@@ -65,5 +65,11 @@
   "preview": {
     "category": "Category",
     "condition": "Condition"
+  },
+  "filter": {
+    "minPrice": "min Price",
+    "maxPrice": "max Price",
+    "from": "from",
+    "to": "to"
   }
 }

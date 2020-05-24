@@ -1,10 +1,12 @@
+import {CategoryAttributes} from './category-attributes';
+
 export class Filter {
 
   sortByFieldName: string;
 
-  pageSize: number;
+  pageSize = 10;
 
-  page: number;
+  page = 0;
 
   sort = 'NONE';
 
@@ -13,13 +15,15 @@ export class Filter {
    * key - filter field name
    * value - list of filters value (OR)
    */
-  filters: Map<string, []>;
+  filters: CategoryAttributes[];
 
   searchWords: string[];
 
   city: string;
 
   condition: string;
+
+  category = 'all';
 
   priceFilter = false;
 

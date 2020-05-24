@@ -3,6 +3,7 @@ import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
 import {Router} from '@angular/router';
+import {Filter} from '../../../../shared/models/filter';
 
 @Component({
   selector: 'app-auction-list',
@@ -14,20 +15,22 @@ export class AuctionListComponent implements OnInit {
   private category;
   private pageSize = 10;
   private page = 0;
+  private filter: Filter;
   auctions: AuctionBaseField[];
 
   constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router) {
   }
 
   ngOnInit(): void {
-    this.auctionService.selectedCategory.subscribe(cat => {
-      this.category = cat;
+    this.auctionService.filter.subscribe(data => {
+      this.filter = data;
+      this.category = data.category;
       this.loadAuctionsData();
     });
   }
-  
+
   private loadAuctionsData() {
-    this.auctionService.getAuctions(this.pageSize, this.page, this.category).subscribe(
+    this.auctionService.getAuctions(this.filter).subscribe(
       res => {
         this.auctions = res;
         this.loadPhotos();
@@ -42,9 +45,6 @@ export class AuctionListComponent implements OnInit {
       res => {
         const response = new Map(Object.entries(res));
         this.setImages(response);
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -58,7 +58,7 @@ export class AuctionListComponent implements OnInit {
 
   private getAuctionIdList() {
     const arrayId = [];
-    this.auctions.forEach(it => {
+    this.auctions?.forEach(it => {
       arrayId.push(it.id);
     });
     return arrayId;

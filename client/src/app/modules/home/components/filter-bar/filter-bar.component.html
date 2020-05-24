@@ -1,3 +1,40 @@
 <mat-card class="w-100">
-  FILTER BAR
+  <form #f="ngForm" (ngSubmit)="f.form.valid" novalidate class="feedback-form">
+    <label>{{'newAuction.price' | translate}}</label>
+    <div class="row">
+      <div class="col-6 form-group">
+        <input type="number"
+               name="minPrice"
+               class="form-control w-100"
+               [(ngModel)]="minPrice"
+               placeholder="{{'filter.from' | translate}}"/>
+      </div>
+      <div class="col-6 form-group">
+        <input type="number"
+               name="maxPrice"
+               class="form-control w-100"
+               [(ngModel)]="maxPrice"
+               placeholder="{{'filter.to' | translate}}"/>
+      </div>
+    </div>
+    <label *ngIf="minPrice > maxPrice">{{'newAuction.price' | translate}}</label>
+
+    <div class="form-group">
+      <label>{{'newAuction.condition' | translate}}</label><br>
+      <mat-select class="form-control w-100"
+                  [(ngModel)]="selectedCondition"
+                  name="condition">
+        <mat-option *ngFor="let condition of conditions" [value]="condition">{{condition}}</mat-option>
+      </mat-select>
+    </div>
+    <div *ngIf="category != 'ALL'">
+      <div class="form-group" *ngFor="let attribute of attributes">
+        <label>{{attribute.attribute}}</label><br>
+        <mat-select class="form-control" (selectionChange)="selectValues($event, attribute.attribute)" multiple>
+          <mat-option *ngFor="let value of attribute.attributeValues" [value]="value.value">{{value.value}}</mat-option>
+        </mat-select>
+      </div>
+    </div>
+    <button (submit)="f" (click)="setFilters()" type="button" class="w-100 h-100 btn btn-primary mt-4">{{"search.Search" | translate}}</button>
+  </form>
 </mat-card>

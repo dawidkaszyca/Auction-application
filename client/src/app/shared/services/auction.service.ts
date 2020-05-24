@@ -16,12 +16,9 @@ export class AuctionService {
   private CATEGORIES = this.BASE_URL + '/categories';
   private AUCTIONS = this.BASE_URL + '/auctions';
 
-  selectedCategory: BehaviorSubject<string>;
-
   filter: BehaviorSubject<Filter>;
 
   constructor(private http: HttpClient) {
-    this.selectedCategory = new BehaviorSubject('all');
     this.filter = new BehaviorSubject(new Filter());
   }
 
@@ -37,13 +34,12 @@ export class AuctionService {
     return this.http.post<NewAuction>(this.AUCTIONS, auction);
   }
 
-  getAuctions(pageSize: number, page: number, category: string): Observable<AuctionBaseField[]> {
+  getAuctions(filter: Filter): Observable<AuctionBaseField[]> {
     let httpParams = new HttpParams();
-    httpParams = httpParams.append('pageSize', pageSize.toString());
-    httpParams = httpParams.append('page', page.toString());
-    httpParams = httpParams.append('category', category.toString());
+    httpParams = httpParams.append('criteria', JSON.stringify(filter));
     return this.http.get<AuctionBaseField[]>(this.AUCTIONS, {params: httpParams});
   }
+
 
   getAuctionWithDetailsById(id: number) {
     return this.http.get<any>(this.AUCTIONS + '/' + id);
@@ -51,10 +47,6 @@ export class AuctionService {
 
   getAuctionForm() {
     return this.http.get<any>(this.AUCTIONS + '/' + 'form');
-  }
-
-  updateSelectedCategory(category: string) {
-    this.selectedCategory.next(category);
   }
 
   updateFilterObj(filter: Filter) {

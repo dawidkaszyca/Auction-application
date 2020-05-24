@@ -25,6 +25,7 @@ export class SearchComponent implements OnInit {
   }
 
   updateFilter() {
+    this.filter = new Filter();
     if (this.isNonEmptyString(this.city)) {
       this.filter.city = this.city;
     }

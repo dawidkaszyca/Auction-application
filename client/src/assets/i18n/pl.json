@@ -63,8 +63,14 @@
     "extension": "Akceptowalne rozrzesznia plików to: jpg, jpeg"
   },
   "preview": {
-  "category": "Kategoria",
-  "condition": "Stan"
-}
+    "category": "Kategoria",
+    "condition": "Stan"
+  },
+  "filter": {
+    "minPrice": "minimalna cena",
+    "maxPrice": "maksymalna cena",
+    "from": "od",
+    "to": "do"
+  }
 }
 

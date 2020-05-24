@@ -17,7 +17,6 @@ import {DynamicPanelComponent} from './components/dynamic-panel/dynamic-panel.co
 import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {FilterBarComponent} from './components/filter-bar/filter-bar.component';
-import {FilterComponent} from './components/filter-bar/filter/filter.component';
 import {AuctionPreviewComponent} from './pages/auction-preview/auction-preview.component';
 import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
 import {CanActivateRouteGuard} from '../../core/security/can-activate-route-guard';
@@ -39,7 +38,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, FilterComponent, AuctionPreviewComponent],
+  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, AuctionPreviewComponent],
   imports: [
     CommonModule,
     BrowserModule,

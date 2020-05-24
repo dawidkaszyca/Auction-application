@@ -5,7 +5,6 @@ import {AuctionService} from '../../../../shared/services/auction.service';
 import {CategoryAttributes} from '../../../../shared/models/category-attributes';
 import {Attachment} from '../../../../shared/models/attachment';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
-import {ApiService} from '../../../../core/authentication/api.service';
 import {Router} from '@angular/router';
 
 @Component({
@@ -23,7 +22,6 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   categories: string[];
   countryCode: any;
   selectedValues: CategoryAttributes[];
-  show = false;
   conditions: string[];
   name: string;
 
@@ -68,14 +66,14 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   }
 
   private preview(file: File): void {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.previewUrl.push(reader.result);
-        if (this.previewUrl.length === 1) {
-          this.selectMainPhoto(0);
-        }
-      };
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      this.previewUrl.push(reader.result);
+      if (this.previewUrl.length === 1) {
+        this.selectMainPhoto(0);
+      }
+    };
   }
 
   selectMainPhoto(photoNumber: number) {
