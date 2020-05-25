@@ -175,7 +175,7 @@ class DbSeeder implements CommandLineRunner {
         list.add(getMultipartFile("pc.png"));
 
         City city = new City("Katowice");
-        Condition condition = new Condition("Używane");
+        Condition condition = new Condition("Używany");
         Optional<Category> category = categoryRepository.findFirstByCategory("Telefony");
         if (category.isPresent())
             auction.setCategory(category.get());

@@ -30,10 +30,19 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         Predicate predicate = getPredicateByFilters(filterVM, auction, cb);
         criteriaQuery.select(auction).where(predicate);
         setSort(criteriaQuery, filterVM, cb, auction);
+        if (filterVM.getFilters() != null && !filterVM.getFilters().isEmpty()) {
+            addGroupBy(cb, criteriaQuery, filterVM, auction);
+        }
+        //criteriaQuery.groupBy(auction.get("id"))
         return entityManager.createQuery(criteriaQuery)
                 .setFirstResult(filterVM.getPage())
                 .setMaxResults(filterVM.getPageSize())
                 .getResultList();
+    }
+
+    private void addGroupBy(CriteriaBuilder cb, CriteriaQuery criteriaQuery, FilterVM filterVM, Root<Auction> auction) {
+        criteriaQuery.groupBy(auction.get("id"));
+        criteriaQuery.having(cb.greaterThanOrEqualTo(cb.count(auction.get("id")), Long.valueOf(filterVM.getFilters().size())));
     }
 
     private Predicate getPredicateByFilters(FilterVM filterVM, Root<Auction> auction, CriteriaBuilder cb) {
@@ -48,7 +57,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             predicates.add(getPricePredicate(filterVM, auction, cb));
         if (filterVM.getFilters() != null && !filterVM.getFilters().isEmpty())
             predicates.add(getAttributesPredicate(filterVM, auction, cb));
-        if(!StringUtils.isEmpty(filterVM.getCategory()) && !filterVM.getCategory().equals("all"))
+        if (!StringUtils.isEmpty(filterVM.getCategory()) && !filterVM.getCategory().equals("all"))
             predicates.add(getCategoryPredicate(filterVM, auction, cb));
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
@@ -109,7 +118,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             Predicate attr = cb.or(att.toArray(new Predicate[att.size()]));
             attributesPredicate.add(cb.and(attr, predicate));
         }
-        return cb.and(attributesPredicate.toArray(new Predicate[attributesPredicate.size()]));
+        return cb.or(attributesPredicate.toArray(new Predicate[attributesPredicate.size()]));
     }
 
     private Predicate getCategoryPredicate(FilterVM filterVM, Root<Auction> auction, CriteriaBuilder cb) {

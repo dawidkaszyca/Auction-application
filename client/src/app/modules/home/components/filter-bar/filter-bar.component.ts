@@ -57,25 +57,21 @@ export class FilterBarComponent implements OnInit {
   }
 
   selectValues(event: MatSelectChange, attribute: string) {
-    if (event.value.length === 0) {
-      this.attributesFilters = this.removeObjByAttr(attribute);
-    } else {
-      if (event.value.length > 1) {
-        this.attributesFilters = this.removeObjByAttr(attribute);
-      }
+    this.attributesFilters = this.removeObjByAttr(attribute);
+    let selectValues = [];
+    selectValues = event.value;
+    if (selectValues.length > 0) {
       const obj = new CategoryAttributes();
       obj.attribute = attribute;
-      obj.attributeValues = this.getValuesObj(event);
+      obj.attributeValues = this.getValuesObj(event, selectValues);
       this.attributesFilters.push(obj);
     }
     console.error(attribute);
   }
 
-  private getValuesObj(event: MatSelectChange) {
-    let array = [];
+  private getValuesObj(event: MatSelectChange, selectValues: string[]) {
     const attributeValues = [];
-    array = event.value;
-    array.forEach(it => {
+    selectValues.forEach(it => {
       const cat = new AttributesValues();
       cat.value = it;
       attributeValues.push(cat);
