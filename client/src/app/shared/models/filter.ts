@@ -30,4 +30,6 @@ export class Filter {
   minPrice: number;
 
   maxPrice: number;
+
+  isSearchFilter = false;
 }

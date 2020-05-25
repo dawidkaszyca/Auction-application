@@ -20,6 +20,7 @@ export class FilterBarComponent implements OnInit {
   category = 'all';
   attributes: CategoryAttributes[];
   conditions: string[];
+  isSearch: boolean;
 
   constructor(private auctionService: AuctionService) {
   }
@@ -30,8 +31,18 @@ export class FilterBarComponent implements OnInit {
     this.auctionService.filter.subscribe(data => {
       this.filter = data;
       if (this.category !== data.category && data.category !== 'all') {
+        this.maxPrice = null;
+        this.maxPrice = null;
+        this.selectedCondition = null;
         this.category = data.category;
         this.loadFiltersByCategory();
+      }
+      if (this.isSearch !==  this.filter.isSearchFilter) {
+        this.isSearch = this.filter.isSearchFilter;
+        this.maxPrice = null;
+        this.maxPrice = null;
+        this.selectedCondition = null;
+        this.attributes = [];
       }
     });
   }

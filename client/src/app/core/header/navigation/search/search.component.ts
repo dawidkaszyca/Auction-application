@@ -20,7 +20,6 @@ export class SearchComponent implements OnInit {
   ngOnInit(): void {
     this.auctionService.filter.subscribe(cat => {
       this.filter = cat;
-      console.error('zmiana filtru');
     });
   }
 
@@ -32,6 +31,7 @@ export class SearchComponent implements OnInit {
     if (this.isNonEmptyString(this.search)) {
       this.filter.searchWords = this.search.split(' ').filter(Boolean);
     }
+    this.filter.isSearchFilter = !this.filter.isSearchFilter;
     this.auctionService.updateFilterObj(this.filter);
     this.clearVariable();
   }
