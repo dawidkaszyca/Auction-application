@@ -6,8 +6,7 @@
           <div class="col-4">
             <!--<mat-card>-->
             <div>
-              <app-image *ngIf="!auction.photoUrl" path="./assets/LOGO.jpg"></app-image>
-              <app-image *ngIf="auction.photoUrl" [path]="auction.photoUrl"></app-image>
+              <app-image [path]="auction.photoUrl"></app-image>
             </div>
             <!--  </mat-card>-->
           </div>

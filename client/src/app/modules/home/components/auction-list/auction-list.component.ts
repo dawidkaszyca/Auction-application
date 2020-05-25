@@ -1,43 +1,27 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
 import {Router} from '@angular/router';
-import {Filter} from '../../../../shared/models/filter';
 
 @Component({
   selector: 'app-auction-list',
   templateUrl: './auction-list.component.html',
   styleUrls: ['./auction-list.component.scss']
 })
-export class AuctionListComponent implements OnInit {
+export class AuctionListComponent implements OnInit, OnChanges {
 
-  private category;
-  private pageSize = 10;
-  private page = 0;
-  private filter: Filter;
+  @Input()
   auctions: AuctionBaseField[];
 
   constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router) {
   }
 
   ngOnInit(): void {
-    this.auctionService.filter.subscribe(data => {
-      this.filter = data;
-      this.category = data.category;
-      this.loadAuctionsData();
-    });
   }
 
-  private loadAuctionsData() {
-    this.auctionService.getAuctions(this.filter).subscribe(
-      res => {
-        this.auctions = res;
-        this.loadPhotos();
-      },
-      err => {
-        alert('TODO');
-      });
+  ngOnChanges(changes: SimpleChanges): void {
+    this.loadPhotos();
   }
 
   private loadPhotos() {

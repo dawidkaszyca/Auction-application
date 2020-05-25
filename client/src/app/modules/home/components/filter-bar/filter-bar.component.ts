@@ -110,7 +110,7 @@ export class FilterBarComponent implements OnInit {
         this.filter.priceFilter = false;
       }
     }
-    if (this.selectedCondition) {
+    if (this.selectedCondition && this.selectedCondition !== '------------') {
       this.filter.condition = this.selectedCondition;
     } else {
       this.filter.condition = null;
