@@ -1,0 +1,9 @@
+<div class="container h-100">
+  <mat-card class="w-100 h-100" (click)="openAuctionPage()">
+    <mat-card-title class="text-center">{{auction.title}}</mat-card-title>
+    <mat-card class="remove-shadow">
+      <app-image [path]="auction.photoUrl"></app-image>
+    </mat-card>
+    <h2 class="text-center">{{auction.price}}zł</h2>
+  </mat-card>
+</div>
