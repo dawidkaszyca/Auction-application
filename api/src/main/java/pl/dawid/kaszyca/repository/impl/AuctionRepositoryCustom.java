@@ -9,4 +9,6 @@ public interface AuctionRepositoryCustom {
 
     List<Auction> findByFilters(FilterVM filterVM);
 
+    List<Auction> findTop4ByCategoryOrderByViewers(String category);
+
 }

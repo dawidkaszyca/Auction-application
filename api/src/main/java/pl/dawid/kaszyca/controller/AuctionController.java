@@ -32,7 +32,19 @@ public class AuctionController {
             Gson g = new Gson();
             FilterVM filterVM = g.fromJson(criteria, FilterVM.class);
             List<AuctionBaseDTO> auction = auctionService.getAuctionsFilter(filterVM);
-            if(!auction.isEmpty())
+            if (!auction.isEmpty())
+                return new ResponseEntity(auction, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during getting  auctions");
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/auctions/top")
+    public ResponseEntity getTopAuctions(@RequestParam String category) {
+        try {
+            List<AuctionBaseDTO> auction = auctionService.getTopAuction(category);
+            if (!auction.isEmpty())
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting  auctions");
@@ -55,7 +67,7 @@ public class AuctionController {
     public ResponseEntity getAuctionById(@PathVariable long id) {
         try {
             AuctionWithDetailsDTO auction = auctionService.getAuctionById(id);
-            if( auction != null)
+            if (auction != null)
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting  auction by id");
@@ -67,7 +79,7 @@ public class AuctionController {
     public ResponseEntity getNewAuctionData() {
         try {
             Map<String, List<String>> auctionData = auctionService.getAuctionData();
-            if(!auctionData.isEmpty())
+            if (!auctionData.isEmpty())
                 return new ResponseEntity(auctionData, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting auctionsDetail");

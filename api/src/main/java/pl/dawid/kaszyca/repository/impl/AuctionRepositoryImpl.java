@@ -22,6 +22,20 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Override
+    public List findTop4ByCategoryOrderByViewers(String category) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery criteriaQuery = cb.createQuery();
+        Root<Auction> auction = criteriaQuery.from(Auction.class);
+        Predicate predicate = getCategoryPredicate(category, auction, cb);
+        criteriaQuery.orderBy(cb.desc(auction.get("viewers")));
+        criteriaQuery.select(auction).where(predicate);
+        return entityManager.createQuery(criteriaQuery)
+                .setFirstResult(0)
+                .setMaxResults(4)
+                .getResultList();
+    }
+
     public List findByFilters(FilterVM filterVM) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery criteriaQuery = cb.createQuery();
@@ -58,7 +72,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         if (filterVM.getFilters() != null && !filterVM.getFilters().isEmpty())
             predicates.add(getAttributesPredicate(filterVM, auction, cb));
         if (!StringUtils.isEmpty(filterVM.getCategory()) && !filterVM.getCategory().equals("all"))
-            predicates.add(getCategoryPredicate(filterVM, auction, cb));
+            predicates.add(getCategoryPredicate(filterVM.getCategory(), auction, cb));
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
@@ -121,7 +135,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         return cb.or(attributesPredicate.toArray(new Predicate[attributesPredicate.size()]));
     }
 
-    private Predicate getCategoryPredicate(FilterVM filterVM, Root<Auction> auction, CriteriaBuilder cb) {
-        return cb.equal(auction.get("category").get("category"), filterVM.getCategory());
+    private Predicate getCategoryPredicate(String category, Root<Auction> auction, CriteriaBuilder cb) {
+        return cb.equal(auction.get("category").get("category"), category);
     }
 }
