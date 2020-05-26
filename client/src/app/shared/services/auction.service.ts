@@ -52,4 +52,16 @@ export class AuctionService {
   updateFilterObj(filter: Filter) {
     this.filter.next(filter);
   }
+
+  loadTopAuction(category: string) {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('category', category);
+    return this.http.get<AuctionBaseField[]>(this.AUCTIONS + '/top', {params: httpParams});
+  }
+
+  getAuctionAmount(category: string) {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('category', category);
+    return this.http.get<number>(this.AUCTIONS + '/amount', {params: httpParams});
+  }
 }

@@ -4,7 +4,64 @@
       <app-filter-bar></app-filter-bar>
     </div>
     <div class="col-9">
-      <app-auction-list [auctions]="auctions"></app-auction-list>
+      <ng-container *ngIf="!this.noContent">
+        <div class="row" #div1>
+          <ng-container *ngIf="topAuctions?.length === 4">
+            <div [ngStyle]="{'height.px': div1.offsetWidth / 4 }"
+                 class="col-3 w-100 mt-3 nopadding" *ngFor="let auction of topAuctions">
+              <app-auction-base [auction]="auction"></app-auction-base>
+            </div>
+          </ng-container>
+        </div>
+        <div class="mt-3">
+          <mat-card>
+            <div class="row">
+              <div class="col-5">
+                <mat-select class="form-control w-25 float-right" [(value)]="pageSize"
+                            (selectionChange)="changePageSize($event)">
+                  <mat-option *ngFor="let values of pageSizeList" [value]="values">{{values}}</mat-option>
+                </mat-select>
+              </div>
+              <div class="col-4">
+                <mat-select class="form-control w-75 float-right" [(value)]="sortValue"
+                            (selectionChange)="selectValue($event)">
+                  <mat-option *ngFor="let values of sortList" [value]="values">{{values | translate}}</mat-option>
+                </mat-select>
+              </div>
+              <div class="col-3">
+                <div class="row">
+                  <div class="col-3 nopadding">
+                    <button [disabled]="page <= 1" (click)="changeInput(-1)" type="button"
+                            class="btn btn-primary btn-circle btn-xl float-right"><
+                    </button>
+                  </div>
+                  <div class="col-4 nopadding">
+                    <input type="text"
+                           name="minPrice"
+                           [value]="inputValue"
+                           class="form-control w-100 text-center" disabled/>
+                  </div>
+                  <div class="col-5 float-left nopadding float-left">
+                    <button [disabled]="page == amountOfPages" (click)="changeInput(1)" type="button"
+                            class="btn btn-primary btn-circle btn-xl">>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+        <div>
+          <app-auction-list [auctions]="auctions"></app-auction-list>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="this.noContent">
+        <mat-card class="mt-3">
+          <mat-card-title class="text-center">{{"sort.noContent" | translate}}</mat-card-title>
+        </mat-card>
+      </ng-container>
+
+
     </div>
   </div>
 </div>

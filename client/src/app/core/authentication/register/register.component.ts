@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {UserViewModel} from '../../security/model/user-view-model';
 import {AuthService} from '../../security/auth.service';
@@ -10,7 +10,7 @@ import {NavigationService} from '../../header/navigation/navigation.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   model: UserViewModel = {
     login: '',
     password: '',

@@ -2,13 +2,13 @@ import {CategoryAttributes} from './category-attributes';
 
 export class Filter {
 
-  sortByFieldName: string;
+  sortByFieldName = 'createdDate';
 
   pageSize = 10;
 
   page = 0;
 
-  sort = 'NONE';
+  sort = 'DESC';
 
   /**
    * Map for filters fields single select attributes

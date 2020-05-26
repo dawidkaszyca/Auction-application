@@ -19,6 +19,13 @@ mat-select {
   border-radius: 35px !important;
 }
 
+/*.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}*/
+
 .input-label-lg{
   background:rgba(0,0,0,0);
   border:none;
@@ -32,6 +39,12 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+mat-card-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* Firefox */

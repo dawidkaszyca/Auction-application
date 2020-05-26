@@ -52,6 +52,17 @@ public class AuctionController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/auctions/amount")
+    public ResponseEntity getAuctionAmount(@RequestParam String category) {
+        try {
+            Long amount = auctionService.getAuctionAmount(category);
+            return new ResponseEntity(amount, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during getting  auctions");
+        }
+        return new ResponseEntity(0L, HttpStatus.OK);
+    }
+
     @PostMapping("/auctions")
     public ResponseEntity saveAuction(@RequestBody NewAuctionVM newAuctionVM) {
         try {

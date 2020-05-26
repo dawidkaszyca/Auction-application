@@ -71,5 +71,14 @@
     "maxPrice": "max Price",
     "from": "from",
     "to": "to"
+  },
+  "sort": {
+    "minPrice": "Lowest price",
+    "maxPrice": "Highest price",
+    "newest": "Newest",
+    "latest": "Latest",
+    "popularity": "Populatiry",
+    "noContent": "No content to display",
+    "of": "of 67"
   }
 }

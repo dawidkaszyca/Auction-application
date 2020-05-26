@@ -71,6 +71,15 @@
     "maxPrice": "maksymalna cena",
     "from": "od",
     "to": "do"
+  },
+  "sort": {
+    "minPrice": "Cena malejąco",
+    "maxPrice": "Cena rosnąco",
+    "newest": "Najnowsze",
+    "latest": "Najstarsze",
+    "popularity": "Popularność",
+    "noContent": "Brak ogłoszeń w podanych kryteriach",
+    "of": "z 67"
   }
 }
 
