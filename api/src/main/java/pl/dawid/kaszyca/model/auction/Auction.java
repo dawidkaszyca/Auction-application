@@ -32,7 +32,7 @@ public class Auction implements Serializable {
     @NonNull
     private Category category;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @NonNull
     private City city;
 

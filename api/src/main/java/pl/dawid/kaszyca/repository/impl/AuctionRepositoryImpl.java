@@ -21,10 +21,11 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
 
     @PersistenceContext
     private EntityManager entityManager;
+    private CriteriaBuilder cb;
 
     @Override
     public List findTop4ByCategoryOrderByViewers(String category) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        cb = entityManager.getCriteriaBuilder();
         CriteriaQuery criteriaQuery = cb.createQuery();
         Root<Auction> auction = criteriaQuery.from(Auction.class);
         Predicate predicate = getCategoryPredicate(category, auction, cb);
@@ -37,21 +38,33 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
     }
 
     public List findByFilters(FilterVM filterVM) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        cb = entityManager.getCriteriaBuilder();
         CriteriaQuery criteriaQuery = cb.createQuery();
         Root<Auction> auction = criteriaQuery.from(Auction.class);
-
         Predicate predicate = getPredicateByFilters(filterVM, auction, cb);
         criteriaQuery.select(auction).where(predicate);
         setSort(criteriaQuery, filterVM, cb, auction);
         if (filterVM.getFilters() != null && !filterVM.getFilters().isEmpty()) {
             addGroupBy(cb, criteriaQuery, filterVM, auction);
         }
-        //criteriaQuery.groupBy(auction.get("id"))
         return entityManager.createQuery(criteriaQuery)
                 .setFirstResult(filterVM.getPage())
                 .setMaxResults(filterVM.getPageSize())
                 .getResultList();
+    }
+
+    @Override
+    public Long countByFilters(FilterVM filterVM) {
+        cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
+        Root<Auction> auction = criteriaQuery.from(Auction.class);
+        Predicate predicate = getPredicateByFilters(filterVM, auction, cb);
+        criteriaQuery.select(cb.count(auction)).where(predicate);
+        if (filterVM.getFilters() != null && filterVM.getFilters().size() > 1) {
+            addGroupBy(cb, criteriaQuery, filterVM, auction);
+            return Long.valueOf(entityManager.createQuery(criteriaQuery).getResultList().size());
+        }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     private void addGroupBy(CriteriaBuilder cb, CriteriaQuery criteriaQuery, FilterVM filterVM, Root<Auction> auction) {

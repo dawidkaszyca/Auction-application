@@ -1,9 +1,7 @@
 package pl.dawid.kaszyca.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.model.City;
@@ -12,6 +10,7 @@ import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
 import pl.dawid.kaszyca.repository.CityRepository;
 import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
@@ -84,9 +83,12 @@ public class AuctionService {
     }
 
     //TODO if category is empty find by views!!!
-    public List<AuctionBaseDTO> getAuctionsFilter(FilterVM filterVM) {
+    public AuctionVM getAuctionsFilter(FilterVM filterVM) {
+        AuctionVM auctionVM = new AuctionVM();
         List<Auction> auctions = auctionRepository.findByFilters(filterVM);
-        return MapperUtils.mapAll(auctions, AuctionBaseDTO.class);
+        auctionVM.setAuctionListBase(MapperUtils.mapAll(auctions, AuctionBaseDTO.class));
+        auctionVM.setNumberOfAuctionByProvidedFilters(auctionRepository.countByFilters(filterVM));
+        return auctionVM;
     }
 
     public Map<String, List<String>> getAuctionData() {
@@ -98,5 +100,14 @@ public class AuctionService {
             data.put("name", Collections.singletonList(name));
         data.put("condition", Arrays.asList("Nowy", "Używany"));
         return data;
+    }
+
+    public List<AuctionBaseDTO> getTopAuction(String category) {
+        List<Auction> auctions;
+        if (!StringUtils.isEmpty(category) && category.equals("all"))
+            auctions = auctionRepository.findTop4ByOrderByViewersDesc();
+        else
+            auctions = auctionRepository.findTop4ByCategoryOrderByViewers(category);
+        return MapperUtils.mapAll(auctions, AuctionBaseDTO.class);
     }
 }

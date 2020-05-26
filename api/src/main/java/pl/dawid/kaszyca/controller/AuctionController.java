@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.service.AuctionService;
+import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
@@ -31,9 +32,8 @@ public class AuctionController {
         try {
             Gson g = new Gson();
             FilterVM filterVM = g.fromJson(criteria, FilterVM.class);
-            List<AuctionBaseDTO> auction = auctionService.getAuctionsFilter(filterVM);
-            if (!auction.isEmpty())
-                return new ResponseEntity(auction, HttpStatus.OK);
+            AuctionVM auction = auctionService.getAuctionsFilter(filterVM);
+            return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting  auctions");
         }
@@ -50,17 +50,6 @@ public class AuctionController {
             log.info("Something went wrong during getting  auctions");
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping("/auctions/amount")
-    public ResponseEntity getAuctionAmount(@RequestParam String category) {
-        try {
-            Long amount = auctionService.getAuctionAmount(category);
-            return new ResponseEntity(amount, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info("Something went wrong during getting  auctions");
-        }
-        return new ResponseEntity(0L, HttpStatus.OK);
     }
 
     @PostMapping("/auctions")
