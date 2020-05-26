@@ -27,18 +27,7 @@ export class MainPageComponent implements OnInit {
   amountOfPages: number;
 
   constructor(private auctionService: AuctionService, private attachmentService: AttachmentService) {
-    this.sortList = [];
-    this.sortList.push('sort.minPrice');
-    this.sortList.push('sort.maxPrice');
-    this.sortList.push('sort.newest');
-    this.sortList.push('sort.latest');
-    this.sortList.push('sort.popularity');
-    this.pageSizeList = [];
-    this.pageSizeList.push(10);
-    this.pageSizeList.push(15);
-    this.pageSizeList.push(20);
-    this.pageSizeList.push(25);
-    this.pageSizeList.push(30);
+      this.loadMaps();
   }
 
   ngOnInit(): void {
@@ -51,7 +40,6 @@ export class MainPageComponent implements OnInit {
   }
 
   private loadAuction() {
-    this.getAuctionAmount();
     this.loadAuctionsData();
     this.loadTopAuction();
   }
@@ -59,7 +47,10 @@ export class MainPageComponent implements OnInit {
   private loadAuctionsData() {
     this.auctionService.getAuctions(this.filter).subscribe(
       res => {
-        this.auctions = res;
+        this.auctions = res.auctionListBase;
+        this.numberOfAuctions = res.numberOfAuctionByProvidedFilters;
+        this.amountOfPages = Math.ceil(this.numberOfAuctions / this.filter.pageSize);
+        this.inputValue = this.page + '/' + this.amountOfPages;
         this.noContent = false;
         if (res == null) {
           this.noContent = true;
@@ -127,15 +118,6 @@ export class MainPageComponent implements OnInit {
     this.loadTopAuction();
   }
 
-  private getAuctionAmount() {
-    this.auctionService.getAuctionAmount(this.filter.category).subscribe(
-      res => {
-        this.numberOfAuctions = res;
-        this.amountOfPages = Math.ceil(res / this.filter.pageSize);
-        this.inputValue = this.page + '/' + this.amountOfPages;
-      });
-  }
-
   changeInput(value: number) {
     this.page += value;
     this.filter.page = this.page - 1;
@@ -147,5 +129,20 @@ export class MainPageComponent implements OnInit {
     this.pageSize = $event.value;
     this.filter.pageSize = this.pageSize;
     this.loadAuction();
+  }
+
+  private loadMaps() {
+    this.sortList = [];
+    this.sortList.push('sort.minPrice');
+    this.sortList.push('sort.maxPrice');
+    this.sortList.push('sort.newest');
+    this.sortList.push('sort.latest');
+    this.sortList.push('sort.popularity');
+    this.pageSizeList = [];
+    this.pageSizeList.push(10);
+    this.pageSizeList.push(15);
+    this.pageSizeList.push(20);
+    this.pageSizeList.push(25);
+    this.pageSizeList.push(30);
   }
 }

@@ -17,7 +17,7 @@
           <mat-card>
             <div class="row">
               <div class="col-5">
-                <mat-select class="form-control w-25 float-right" [(value)]="pageSize"
+                <mat-select class="form-control w-25 float-left" [(value)]="pageSize"
                             (selectionChange)="changePageSize($event)">
                   <mat-option *ngFor="let values of pageSizeList" [value]="values">{{values}}</mat-option>
                 </mat-select>

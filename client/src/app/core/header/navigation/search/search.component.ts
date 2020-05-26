@@ -24,7 +24,11 @@ export class SearchComponent implements OnInit {
   }
 
   updateFilter() {
+    const name = this.filter.sortByFieldName;
+    const sort = this.filter.sort;
     this.filter = new Filter();
+    this.filter.sort = sort;
+    this.filter.sortByFieldName = name;
     if (this.isNonEmptyString(this.city)) {
       this.filter.city = this.city;
     }

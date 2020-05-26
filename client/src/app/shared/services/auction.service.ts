@@ -22,10 +22,6 @@ export class AuctionService {
     this.filter = new BehaviorSubject(new Filter());
   }
 
-  getCategories(): Observable<string[]> {
-    return this.http.get<string[]>(this.CATEGORIES);
-  }
-
   getCategoryAttributes(category: string): Observable<Category> {
     return this.http.get<Category>(this.CATEGORIES + '/' + category);
   }
@@ -34,10 +30,10 @@ export class AuctionService {
     return this.http.post<NewAuction>(this.AUCTIONS, auction);
   }
 
-  getAuctions(filter: Filter): Observable<AuctionBaseField[]> {
+  getAuctions(filter: Filter): Observable<any> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('criteria', JSON.stringify(filter));
-    return this.http.get<AuctionBaseField[]>(this.AUCTIONS, {params: httpParams});
+    return this.http.get<any>(this.AUCTIONS, {params: httpParams});
   }
 
 
@@ -57,11 +53,5 @@ export class AuctionService {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('category', category);
     return this.http.get<AuctionBaseField[]>(this.AUCTIONS + '/top', {params: httpParams});
-  }
-
-  getAuctionAmount(category: string) {
-    let httpParams = new HttpParams();
-    httpParams = httpParams.append('category', category);
-    return this.http.get<number>(this.AUCTIONS + '/amount', {params: httpParams});
   }
 }

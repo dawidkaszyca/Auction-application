@@ -8,6 +8,7 @@ import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {SERVER_API_URL} from '../../app.constants';
 import {Router} from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import {User} from '../../shared/models/user';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -22,6 +23,7 @@ export class AuthService {
 
   private CREATE_NEW_USER = `${SERVER_API_URL}/register`;
   private LOGIN = `${SERVER_API_URL}/authenticate`;
+  private PROFILE = `${SERVER_API_URL}/profile`;
 
   constructor(
     private http: HttpClient,
@@ -70,5 +72,9 @@ export class AuthService {
 
   isLogged(): boolean {
     return this.checkIfTokenIsNotExpired();
+  }
+
+  getUserData(): Observable<User> {
+    return this.http.get<User>(this.PROFILE);
   }
 }

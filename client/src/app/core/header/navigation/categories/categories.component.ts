@@ -14,12 +14,18 @@ export class CategoriesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.auctionService.filter.subscribe(data => {
+      this.filter = data;
+    });
   }
 
   sendSelectedCategory(category: string) {
     if (category !== this.filter?.category) {
+      const name = this.filter.sortByFieldName;
+      const sort = this.filter.sort;
       this.filter = new Filter();
+      this.filter.sort = sort;
+      this.filter.sortByFieldName = name;
       this.filter.category = category;
       this.auctionService.updateFilterObj(this.filter);
     }
