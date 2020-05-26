@@ -11,10 +11,7 @@ import pl.dawid.kaszyca.model.Authority;
 import pl.dawid.kaszyca.model.City;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
-import pl.dawid.kaszyca.repository.AuctionRepository;
-import pl.dawid.kaszyca.repository.AuthorityRepository;
-import pl.dawid.kaszyca.repository.CategoryRepository;
-import pl.dawid.kaszyca.repository.UserRepository;
+import pl.dawid.kaszyca.repository.*;
 import pl.dawid.kaszyca.service.AttachmentService;
 import pl.dawid.kaszyca.vm.AttachmentSaveVM;
 
@@ -31,28 +28,51 @@ class DbSeeder implements CommandLineRunner {
     private AuthorityRepository authorityRepository;
     private AuctionRepository auctionRepository;
     private AttachmentService attachmentService;
+    private CityRepository cityRepository;
     private UserRepository userRepository;
     private PasswordEncoder password;
+    Map<String, List<String>> categoriesMap;
+    Map<String, List<String>> attributesMap;
+    Map<String, List<String>> attachmentMap;
+    List<String> cityList;
+    List<String> categoryList;
+    Random random;
     @Autowired
     PasswordEncoder encoder;
 
     public DbSeeder(AuthorityRepository authorityRepository, CategoryRepository categoryRepository,
                     AuctionRepository auctionRepository, PasswordEncoder password, UserRepository userRepository,
-                    AttachmentService attachmentService) {
+                    AttachmentService attachmentService, CityRepository cityRepository) {
         this.authorityRepository = authorityRepository;
         this.categoryRepository = categoryRepository;
         this.auctionRepository = auctionRepository;
+        this.cityRepository = cityRepository;
         this.password = password;
         this.userRepository = userRepository;
         this.attachmentService = attachmentService;
+        this.random = new Random();
+        categoryList = getCategoryList();
     }
 
     @Override
     public void run(String... args) throws IOException {
+        categoriesMap = new HashMap<>();
+        attributesMap = new HashMap<>();
+        attachmentMap = getAttachments();
+        cityList = getCityList();
+        saveCity();
         addRolesAndUser();
         createCategories();
         createExampleAuctions();
         System.out.println("Initialized database");
+    }
+
+    private void saveCity() {
+        City cityObj;
+        for(String city: cityList) {
+            cityObj = new City(city);
+            cityRepository.save(cityObj);
+        }
     }
 
     private void addRolesAndUser() {
@@ -64,7 +84,7 @@ class DbSeeder implements CommandLineRunner {
         user.setActivated(true);
         user.setAuthorities(authorities);
         user.setEmail("testowy@gmail.com");
-        user.setFirstName("David");
+        user.setFirstName("Dawid");
         user.setLastName("Kaszyca");
         String encryptedPassword = password.encode("admin11");
         user.setPassword(encryptedPassword);
@@ -106,7 +126,9 @@ class DbSeeder implements CommandLineRunner {
                 break;
             default:
                 attributes = new ArrayList<>();
+                break;
         }
+        categoriesMap.put(attr, attributes);
         for (String value : attributes) {
             CategoryAttributes categoryAttribute = new CategoryAttributes();
             categoryAttribute.setAttribute(value);
@@ -157,6 +179,7 @@ class DbSeeder implements CommandLineRunner {
             default:
                 listOfValues = new ArrayList<>();
         }
+        attributesMap.put(value, listOfValues);
         for (String val : listOfValues) {
             AttributeValues att = new AttributeValues();
             att.setValue(val);
@@ -167,100 +190,58 @@ class DbSeeder implements CommandLineRunner {
     }
 
     private void createExampleAuctions() throws IOException {
-        Auction auction = new Auction();
+        Auction auction;
         List<MultipartFile> list = new ArrayList<>();
-        list.add(getMultipartFile("dysk.png"));
-        list.add(getMultipartFile("karta.png"));
-        list.add(getMultipartFile("intel.png"));
-        list.add(getMultipartFile("pc.png"));
+        List<AuctionDetails> auctionDetails;
+        for (int i = 0; i < 1500; i++) {
+            auction = new Auction();
+            City city = new City(getRandomCity());
+            Condition condition;
+            if(i % 2 == 0)
+                 condition = new Condition("Używany");
+            else
+                condition = new Condition("Nowy");
+            String categoryString = getRandomCategory();
+            Optional<Category> category = categoryRepository.findFirstByCategory(categoryString);
+            if (category.isPresent())
+                auction.setCategory(category.get());
+            auction.setCity(city);
+            auction.setCondition(condition.getCondition());
+            Optional<User> user = userRepository.findOneByLogin("admin");
+            if (user.isPresent())
+                auction.setUser(user.get());
+            auction.setPhone(getRandomPhoneNumber());
+            auction.setPrice(getRandomPrice());
+            auction.setViewers(getRandomPrice());
+            auction.setDescription(getDescription());
+            auction.setTitle(getTitle());
+            if(!categoryString.equals("Fotografia")){
+                auctionDetails = getDetailsByCategory(categoryString, auction);
+                auction.setAuctionDetails(auctionDetails);
+            }
+            auction = auctionRepository.save(auction);
+            AttachmentSaveVM attachmentSaveVM = new AttachmentSaveVM();
+            attachmentSaveVM.setMainPhotoId(0L);
+            attachmentSaveVM.setAuctionId(auction.getId());
+            list = new ArrayList<>();
+            list.add(getMultipartFile(getRandomImageNameByCategory(categoryString)));
+            list.add(getMultipartFile(getRandomImageNameByCategory(categoryString)));
+            attachmentService.saveAuctionAttachments(list, attachmentSaveVM);
+        }
+    }
 
-        City city = new City("Katowice");
-        Condition condition = new Condition("Używany");
-        Optional<Category> category = categoryRepository.findFirstByCategory("Telefony");
-        if (category.isPresent())
-            auction.setCategory(category.get());
-        auction.setCity(city);
-        auction.setCondition(condition.getCondition());
-        Optional<User> user = userRepository.findOneByLogin("admin");
-        if (user.isPresent())
-            auction.setUser(user.get());
-        auction.setPhone("666777333");
-        auction.setPrice(123.31f);
-        auction.setViewers(21312);
-        auction.setDescription("description example");
-        auction.setTitle("title example");
-        auction = auctionRepository.save(auction);
-        AttachmentSaveVM attachmentSaveVM = new AttachmentSaveVM();
-        attachmentSaveVM.setMainPhotoId(0L);
-        attachmentSaveVM.setAuctionId(auction.getId());
-        attachmentService.saveAuctionAttachments(list, attachmentSaveVM);
+    private String getTitle() {
+        String lorrem = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+        List<String> arr = Arrays.asList(lorrem.split(" "));
+        return arr.get(random.nextInt(arr.size())) + arr.get(random.nextInt(arr.size()));
+    }
 
-
-        auction = new Auction();
-        city = new City("Mysłowice");
-        condition = new Condition("Nowy");
-        category = categoryRepository.findFirstByCategory("Tablety");
-        if (category.isPresent())
-            auction.setCategory(category.get());
-        auction.setCity(city);
-        auction.setCondition(condition.getCondition());
-        user = userRepository.findOneByLogin("admin");
-        if (user.isPresent())
-            auction.setUser(user.get());
-        auction.setPhone("622333444");
-        auction.setPrice(1239.99f);
-        auction.setViewers(1212);
-        auction.setDescription("Przykładowy opis");
-        auction.setTitle("Przykładowy tytuł");
-        auction = auctionRepository.save(auction);
-        attachmentSaveVM.setAuctionId(auction.getId());
-        list = new ArrayList<>();
-        list.add(getMultipartFile("intel.png"));
-        attachmentService.saveAuctionAttachments(list, attachmentSaveVM);
-
-        auction = new Auction();
-        city = new City("Sosnowiec");
-        condition = new Condition("Nowy");
-        category = categoryRepository.findFirstByCategory("Laptopy");
-        if (category.isPresent())
-            auction.setCategory(category.get());
-        auction.setCity(city);
-        auction.setCondition(condition.getCondition());
-        user = userRepository.findOneByLogin("admin");
-        if (user.isPresent())
-            auction.setUser(user.get());
-        auction.setPhone("233444555");
-        auction.setPrice(999.99f);
-        auction.setViewers(112);
-        auction.setDescription("Tu będzie opis");
-        auction.setTitle("Tu będzie tutuł");
-        auction = auctionRepository.save(auction);
-        attachmentSaveVM.setAuctionId(auction.getId());
-        list = new ArrayList<>();
-        list.add(getMultipartFile("pc.png"));
-        attachmentService.saveAuctionAttachments(list, attachmentSaveVM);
-
-        auction = new Auction();
-        city = new City("Kraków");
-        condition = new Condition("Używany");
-        category = categoryRepository.findFirstByCategory("Telewizory");
-        if (category.isPresent())
-            auction.setCategory(category.get());
-        auction.setCity(city);
-        auction.setCondition(condition.getCondition());
-        user = userRepository.findOneByLogin("admin");
-        if (user.isPresent())
-            auction.setUser(user.get());
-        auction.setPhone("222333444");
-        auction.setPrice(99.99f);
-        auction.setViewers(12);
-        auction.setDescription("Przykładowy opis12");
-        auction.setTitle("Przykładowy tytuł12");
-        auction = auctionRepository.save(auction);
-        attachmentSaveVM.setAuctionId(auction.getId());
-        list = new ArrayList<>();
-        list.add(getMultipartFile("karta.png"));
-        attachmentService.saveAuctionAttachments(list, attachmentSaveVM);
+    private String getRandomPhoneNumber() {
+        String phone ="";
+        for(int i=0; i<9; i++) {
+            phone += String.valueOf(random.nextInt(9));
+        }
+        return phone;
     }
 
     private MultipartFile getMultipartFile(String name) throws IOException {
@@ -269,4 +250,89 @@ class DbSeeder implements CommandLineRunner {
         return new MockMultipartFile("file",
                 file.getName(), "image/png", IOUtils.toByteArray(input));
     }
+
+    private List<String> getCityList() {
+        List<String> list = new ArrayList<>();
+        list.add("Katowice");
+        list.add("Częstochowa");
+        list.add("Sosnowiec");
+        list.add("Gliwice");
+        list.add("Zabrze");
+        list.add("Bielsko-Biała");
+        list.add("Bytom");
+        list.add("Ruda Śląska");
+        list.add("Rybnik");
+        list.add("Tychy");
+        list.add("Dąbrowa Górnicza");
+        list.add("Chorzów");
+        list.add("Jaworzno");
+        list.add("Jastrzębie-Zdrój");
+        list.add("Mysłowice");
+        list.add("Żory");
+        return list;
+    }
+
+    private List<AuctionDetails> getDetailsByCategory(String categoryString, Auction auction) {
+        List<String> attr = categoriesMap.get(categoryString);
+        List<AuctionDetails> details = new ArrayList<>();
+        AuctionDetails ad;
+        for(String att: attr) {
+            ad = new AuctionDetails();
+            ad.setAuction(auction);
+            ad.setCategoryAttribute(att);
+            ad.setAttributeValue(getRandomAttValue(att));
+            details.add(ad);
+        }
+        return details;
+    }
+
+    private Map<String, List<String>> getAttachments() {
+        Map<String, List<String>> att = new HashMap<>();
+        att.put("Telefony", Arrays.asList("phone.png", "phone1.png", "phone3.png", "clock.png", "clock1.png"));
+        att.put("Tablety", Arrays.asList("tablet.png", "tablet1.png", "tablet2.png", "tablet5.png"));
+        att.put("Telewizory", Arrays.asList("tv1.png", "tv2.png", "phone3.png"));
+        att.put("Laptopy", Arrays.asList("laptop.png", "laptop1.png", "laptop12.png", "tablet12.png", "display.png", "dysk.png", "intel.png", "karta.png", "headphone.png", "pc.png", "keyboard.png"));
+        att.put("Gry i konsole", Arrays.asList("dirt.png", "gta.png", "grid2.png"));
+        att.put("Fotografia", Arrays.asList("camera.png", "camera1.png", "camera3.png"));
+        return att;
+    }
+
+    private String getRandomImageNameByCategory(String category) {
+        List<String> list = attachmentMap.get(category);
+        return list.get(random.nextInt(list.size()));
+    }
+
+    private String getRandomAttValue(String att) {
+        List<String> list = attributesMap.get(att);
+        return list.get(random.nextInt(list.size()));
+    }
+
+    private int getRandomPrice() {
+        return random.nextInt(1000);
+    }
+
+    private String getRandomCity() {
+        return cityList.get(random.nextInt(cityList.size()));
+    }
+
+    private String getRandomCategory() {
+        return categoryList.get(random.nextInt(categoryList.size()));
+    }
+
+    private String getDescription() {
+        String lorrem = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of";
+        return lorrem.substring(0, random.nextInt(lorrem.length() / 2));
+    }
+
+    private List<String> getCategoryList() {
+        List<String> list = new ArrayList<>();
+        list.add("Telefony");
+        list.add("Tablety");
+        list.add("Telewizory");
+        list.add("Laptopy");
+        list.add("Gry i konsole");
+        list.add("Fotografia");
+        return list;
+    }
+
 }
