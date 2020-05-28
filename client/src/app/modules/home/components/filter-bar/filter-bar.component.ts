@@ -35,6 +35,7 @@ export class FilterBarComponent implements OnInit {
         this.maxPrice = null;
         this.selectedCondition = null;
         this.category = data.category;
+        this.attributesFilters = [];
         this.loadFiltersByCategory();
       }
       if (this.isSearch !==  this.filter.isSearchFilter) {

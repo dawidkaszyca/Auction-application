@@ -48,7 +48,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             addGroupBy(cb, criteriaQuery, filterVM, auction);
         }
         return entityManager.createQuery(criteriaQuery)
-                .setFirstResult(filterVM.getPage())
+                .setFirstResult(filterVM.getPage() * filterVM.getPageSize())
                 .setMaxResults(filterVM.getPageSize())
                 .getResultList();
     }

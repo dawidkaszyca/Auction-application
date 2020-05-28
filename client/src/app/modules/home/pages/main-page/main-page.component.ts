@@ -27,21 +27,29 @@ export class MainPageComponent implements OnInit {
   amountOfPages: number;
 
   constructor(private auctionService: AuctionService, private attachmentService: AttachmentService) {
-      this.loadMaps();
+    this.loadMaps();
   }
 
   ngOnInit(): void {
     this.auctionService.filter.subscribe(data => {
       this.filter = data;
       this.filter.pageSize = this.pageSize;
+      this.filter.page = 0;
+      this.page = 1;
       this.category = data.category;
-      this.loadAuction();
+      if (this.filter.priceFilter || this.filter?.condition || this.filter.filters?.length > 0) {
+        this.loadAuction(false);
+      } else {
+        this.loadAuction(true);
+      }
     });
   }
 
-  private loadAuction() {
+  private loadAuction(loadTopAuction: boolean) {
     this.loadAuctionsData();
-    this.loadTopAuction();
+    if (loadTopAuction) {
+      this.loadTopAuction();
+    }
   }
 
   private loadAuctionsData() {
@@ -114,21 +122,20 @@ export class MainPageComponent implements OnInit {
       this.filter.sort = 'ASC';
       this.filter.sortByFieldName = 'createdDate';
     }
-    this.loadAuctionsData();
-    this.loadTopAuction();
+    this.loadAuction(false);
   }
 
   changeInput(value: number) {
     this.page += value;
     this.filter.page = this.page - 1;
     this.inputValue = this.page + '/' + this.amountOfPages;
-    this.loadAuction();
+    this.loadAuction(false);
   }
 
   changePageSize($event: MatSelectChange) {
     this.pageSize = $event.value;
     this.filter.pageSize = this.pageSize;
-    this.loadAuction();
+    this.loadAuction(false);
   }
 
   private loadMaps() {
