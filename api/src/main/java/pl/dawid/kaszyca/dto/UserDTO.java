@@ -1,5 +1,6 @@
 package pl.dawid.kaszyca.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,8 +37,10 @@ public class UserDTO {
     @Column(length = 254, unique = true)
     private String email;
 
+    @JsonIgnore
     private boolean activated = false;
 
+    @JsonIgnore
     private Set<String> authorities;
 
     public UserDTO(User user) {

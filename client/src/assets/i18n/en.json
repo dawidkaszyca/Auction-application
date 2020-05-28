@@ -80,5 +80,9 @@
     "popularity": "Populatiry",
     "noContent": "No content to display",
     "of": "of 67"
+  },
+  "myProfile": {
+    "photoButton": "Click to change photo",
+    "welcome": "Welcome"
   }
 }

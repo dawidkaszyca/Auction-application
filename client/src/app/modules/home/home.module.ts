@@ -20,6 +20,8 @@ import {FilterBarComponent} from './components/filter-bar/filter-bar.component';
 import {AuctionPreviewComponent} from './pages/auction-preview/auction-preview.component';
 import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
 import {CanActivateRouteGuard} from '../../core/security/can-activate-route-guard';
+import { AuctionBaseComponent } from './components/auction-base/auction-base.component';
+import { MyAccountComponent } from './pages/my-account/my-account.component';
 
 const appRoutes: Routes = [
   {
@@ -35,10 +37,14 @@ const appRoutes: Routes = [
     path: 'auction',
     component: AuctionPreviewComponent,
   },
+  {
+    path: 'my-profile',
+    component: MyAccountComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, AuctionPreviewComponent],
+  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, AuctionPreviewComponent, AuctionBaseComponent, MyAccountComponent],
   imports: [
     CommonModule,
     BrowserModule,

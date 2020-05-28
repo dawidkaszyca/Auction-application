@@ -14,9 +14,11 @@ import pl.dawid.kaszyca.model.Authority;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.repository.AuthorityRepository;
 import pl.dawid.kaszyca.repository.UserRepository;
+import pl.dawid.kaszyca.util.MapperUtils;
 import pl.dawid.kaszyca.util.RandomUtil;
 import pl.dawid.kaszyca.util.SecurityUtils;
 
+import javax.swing.text.html.Option;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
@@ -135,7 +137,15 @@ public class UserService {
                 });
     }
 
+    public UserDTO getUserProfileData() {
+        Optional<User> user = getCurrentUserObject();
+        if (user.isPresent())
+            return MapperUtils.map(user.get(), UserDTO.class);
+        return null;
+    }
+
     /**
+     * s
      * Not activated users should be automatically deleted after 3 days.
      * <p>
      * This is scheduled to get fired everyday, at 01:00 (am).

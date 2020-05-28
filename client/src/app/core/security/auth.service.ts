@@ -24,6 +24,7 @@ export class AuthService {
   private CREATE_NEW_USER = `${SERVER_API_URL}/register`;
   private LOGIN = `${SERVER_API_URL}/authenticate`;
   private PROFILE = `${SERVER_API_URL}/profile`;
+  private UPDATE = `${SERVER_API_URL}/update`;
 
   constructor(
     private http: HttpClient,
@@ -45,6 +46,7 @@ export class AuthService {
   logout(): void {
       this.localStorage.clear('authenticationToken');
       this.sessionStorage.clear('authenticationToken');
+      this.router.navigateByUrl('/');
     }
 
   private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
@@ -76,5 +78,9 @@ export class AuthService {
 
   getUserData(): Observable<User> {
     return this.http.get<User>(this.PROFILE);
+  }
+
+  updateUserData(user: User) {
+    return this.http.post(this.UPDATE, user);
   }
 }

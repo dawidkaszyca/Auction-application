@@ -80,6 +80,12 @@
     "popularity": "Popularność",
     "noContent": "Brak ogłoszeń w podanych kryteriach",
     "of": "z 67"
+  },
+  "myProfile": {
+    "photoButton": "Dodaj lub zmień zdjęcie",
+    "welcome": "Witaj",
+    "changeData": "Zmień dane",
+    "changePassword": "Zmień hasło"
   }
 }
 

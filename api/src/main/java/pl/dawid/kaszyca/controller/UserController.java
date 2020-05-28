@@ -3,7 +3,9 @@ package pl.dawid.kaszyca.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.dawid.kaszyca.dto.UserDTO;
 import pl.dawid.kaszyca.exception.InvalidPasswordException;
 import pl.dawid.kaszyca.exception.UserNotExistException;
 import pl.dawid.kaszyca.model.User;
@@ -39,7 +41,7 @@ public class UserController {
         if (!checkPasswordLength(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-       userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        userService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
 
     @GetMapping("/activate")
@@ -48,6 +50,29 @@ public class UserController {
         if (!user.isPresent()) {
             throw new UserNotExistException();
         }
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity getUserProfileData() {
+        try {
+            UserDTO user = userService.getUserProfileData();
+            if (user != null)
+                return new ResponseEntity(user, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot find user");
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity updateUserData(@RequestBody UserDTO user) {
+        try {
+            userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail());
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot change user data");
+        }
+        return new ResponseEntity(HttpStatus.valueOf(500));
     }
 
     private static boolean checkPasswordLength(String password) {

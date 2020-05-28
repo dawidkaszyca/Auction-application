@@ -1,0 +1,74 @@
+<div class="container row mt-5">
+  <div class="col-7" [ngStyle]="{'height.px': div.offsetHeight}">
+    <mat-card class="h-100">
+      <mat-card class="h-75 w-100 remove-shadow">
+        <app-image></app-image>
+      </mat-card>
+      <button type="button" class="w-50 mt-4 btn btn-primary float-right">{{"myProfile.photoButton" | translate}}</button>
+    </mat-card>
+  </div>
+  <div class="col-5" #div>
+    <mat-card class="h-100">
+      <mat-card-title class="text-center">{{'myProfile.welcome' | translate}}</mat-card-title>
+      <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && changeUserData()" novalidate class="feedback-form">
+        <label class="mt-2">{{"register.login" | translate}}</label>
+        <input class="form-control w-100" [value]="user?.login" disabled>
+        <label class="mt-2">{{"register.firstName" | translate}}</label>
+        <input type="text"
+               id="firstName"
+               class="form-control"
+               name="firstname"
+               placeholder="{{'register.urName' | translate}}"
+               [(ngModel)]="user.firstName"
+               #firstName="ngModel"
+               [ngClass]="{ 'is-invalid': f.submitted && firstName.invalid }"
+               [disabled]="!isEditAble"
+               required/>
+        <!-- input validation group -->
+        <div *ngIf="f.submitted && firstName.invalid" class="invalid-input">
+          <!-- individual validation errors -->
+          <div *ngIf="firstName.errors?.required">{{'register.isEmpty' | translate}}</div>
+        </div>
+        <label class="mt-2">{{"register.lastName" | translate}}</label>
+        <input type="text"
+               id="lastname"
+               class="form-control"
+               name="lastname"
+               placeholder="{{'register.urLastName' | translate}}"
+               [(ngModel)]="user.lastName"
+               #lastName="ngModel"
+               [ngClass]="{ 'is-invalid': f.submitted && lastName.invalid }"
+               [disabled]="!isEditAble"
+               required/>
+        <!-- input validation group -->
+        <div *ngIf="f.submitted && lastName.invalid" class="invalid-input">
+          <!-- individual validation errors -->
+          <div *ngIf="lastName.errors?.required">{{'register.isEmpty' | translate}}</div>
+        </div>
+        <label class="mt-2">{{"register.email" | translate}}</label>
+        <input type="text"
+               id="email"
+               class="form-control"
+               name="email"
+               placeholder="{{'register.urEmail' | translate}}"
+               [(ngModel)]="user.email"
+               #email="ngModel"
+               [ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
+               [disabled]="!isEditAble"
+               required email/>
+        <!-- input validation group -->
+        <div *ngIf="f.submitted && email.invalid" class="invalid-input">
+          <!-- individual validation errors -->
+          <div *ngIf="email.errors?.required">{{'register.isEmpty' | translate}}</div>
+          <div *ngIf="email.errors?.email">{{'register.validEmail' | translate}}</div>
+        </div>
+        <button type="button" *ngIf="!isEditAble" (click)="isEditAble = true"
+                class="w-100 mt-4 btn btn-primary d-block">{{"myProfile.changeData" | translate}}</button>
+        <button type="submit" *ngIf="isEditAble"
+                class="w-100 mt-4 btn btn-primary d-block">{{"newAuction.save" | translate}}</button>
+        <button type="button"
+                class="w-100 mt-3 btn btn-primary d-block">{{"myProfile.changePassword" | translate}}</button>
+      </form>
+    </mat-card>
+  </div>
+</div>
