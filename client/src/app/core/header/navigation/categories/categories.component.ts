@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {Filter} from '../../../../shared/models/filter';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-categories',
@@ -10,7 +11,7 @@ import {Filter} from '../../../../shared/models/filter';
 export class CategoriesComponent implements OnInit {
   filter: Filter;
 
-  constructor(private auctionService: AuctionService) {
+  constructor(private auctionService: AuctionService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -28,6 +29,9 @@ export class CategoriesComponent implements OnInit {
       this.filter.sortByFieldName = name;
       this.filter.category = category;
       this.auctionService.updateFilterObj(this.filter);
+      if (this.router.url !== '/') {
+        this.router.navigateByUrl('/');
+      }
     }
   }
 

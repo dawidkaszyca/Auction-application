@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {Filter} from '../../../../shared/models/filter';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -13,7 +14,7 @@ export class SearchComponent implements OnInit {
   search: string;
   city: string;
 
-  constructor(private auctionService: AuctionService) {
+  constructor(private auctionService: AuctionService, private router: Router) {
     this.clearVariable();
   }
 
@@ -37,6 +38,9 @@ export class SearchComponent implements OnInit {
     }
     this.filter.isSearchFilter = !this.filter.isSearchFilter;
     this.auctionService.updateFilterObj(this.filter);
+    if (this.router.url !== '/') {
+      this.router.navigateByUrl('/');
+    }
     this.clearVariable();
   }
 
