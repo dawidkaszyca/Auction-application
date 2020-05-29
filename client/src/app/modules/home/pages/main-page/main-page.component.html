@@ -54,6 +54,24 @@
         <div>
           <app-auction-list [auctions]="auctions"></app-auction-list>
         </div>
+        <div class="row float-right mt-3 mr-2">
+          <div class="nopadding">
+            <button [disabled]="page <= 1" (click)="changeInput(-1)" type="button"
+                    class="btn btn-primary btn-circle btn-xl float-right"><
+            </button>
+          </div>
+          <div class="nopadding">
+            <input type="text"
+                   name="minPrice"
+                   [value]="inputValue"
+                   class="form-control w-100 text-center" disabled/>
+          </div>
+          <div class="nopadding">
+            <button [disabled]="page == amountOfPages" (click)="changeInput(1)" type="button"
+                    class="btn btn-primary btn-circle btn-xl">>
+            </button>
+          </div>
+        </div>
       </ng-container>
       <ng-container *ngIf="this.noContent">
         <mat-card class="mt-3">
