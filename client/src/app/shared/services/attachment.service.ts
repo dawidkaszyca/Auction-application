@@ -11,6 +11,7 @@ export class AttachmentService {
   private DOMAIN_URL = 'http://localhost:8082';
   private BASE_URL = this.DOMAIN_URL + '/api';
   private ATTACHMENT = this.BASE_URL + '/attachments';
+  private USER = this.ATTACHMENT + '/user';
 
   constructor(private http: HttpClient) {
   }
@@ -32,5 +33,13 @@ export class AttachmentService {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('id', auctionId.toString());
     return this.http.get<any>(this.ATTACHMENT, {params: httpParams});
+  }
+
+  getUserPhoto() {
+    return this.http.get<string[]>(this.USER);
+  }
+
+  saveUserPhoto(image: FormData) {
+    return this.http.post<string[]>(this.USER, image);
   }
 }

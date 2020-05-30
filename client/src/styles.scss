@@ -64,6 +64,16 @@ textarea {
   border-radius: 35px !important;
 }
 
+.nopadding {
+  padding: 0 !important;
+  margin-left: 0;
+  margin-right: 0;
+  span {
+    position:absolute;
+    bottom:0;
+  }
+}
+
 html, body { height: 100%;}
 body {
   margin: 0;
