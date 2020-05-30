@@ -5,8 +5,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dawid.kaszyca.model.Attachment;
 import pl.dawid.kaszyca.model.Image;
+import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.Auction;
-import pl.dawid.kaszyca.repository.AttachmentRepository;
 import pl.dawid.kaszyca.repository.AuctionRepository;
 import pl.dawid.kaszyca.repository.ImageRepository;
 import pl.dawid.kaszyca.vm.AttachmentSaveVM;
@@ -17,15 +17,15 @@ import java.util.*;
 @Service
 public class AttachmentService {
 
-    AttachmentRepository attachmentRepository;
     AuctionRepository auctionRepository;
     ImageRepository imageRepository;
+    UserService userService;
 
-    public AttachmentService(AttachmentRepository attachmentRepository, AuctionRepository auctionRepository,
-                             ImageRepository imageRepository) {
-        this.attachmentRepository = attachmentRepository;
+    public AttachmentService(AuctionRepository auctionRepository,
+                             ImageRepository imageRepository, UserService userService) {
         this.auctionRepository = auctionRepository;
         this.imageRepository = imageRepository;
+        this.userService = userService;
     }
 
     public void saveAuctionAttachments(List<MultipartFile> files, AttachmentSaveVM attachmentSaveVM) throws IOException {
@@ -42,11 +42,14 @@ public class AttachmentService {
     private List<Attachment> prepareAttachmentToSave(List<MultipartFile> fileList) throws IOException {
         List<Attachment> attachmentList = new ArrayList<>();
         for (MultipartFile file : fileList) {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-            Attachment attachment = new Attachment(fileName, file.getContentType(), file.getBytes());
-            attachmentList.add(attachment);
+            attachmentList.add(convertMultiPartFileToAttachment(file));
         }
         return attachmentList;
+    }
+
+    private Attachment convertMultiPartFileToAttachment(MultipartFile file) throws IOException {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        return new Attachment(fileName, file.getContentType(), file.getBytes());
     }
 
     private List<Image> prepareImageListToSave(Auction auction, List<Attachment> attachments, Long mainPhotoId) {
@@ -99,5 +102,21 @@ public class AttachmentService {
             return "data:image/" + "png" + ";base64," + encodeBase64;
         }
         return null;
+    }
+
+    public List<String> getUserPhoto() {
+        Optional<User> user = userService.getCurrentUserObject();
+        List<String> userUrl = new ArrayList<>();
+        if (user.isPresent())
+            userUrl.add(convertImageToResponseIfExist(user.get().getProfile_Image()));
+        return userUrl;
+    }
+
+    public void saveUserPhoto(MultipartFile file) throws IOException {
+        Optional<User> user = userService.getCurrentUserObject();
+        if (user.isPresent()) {
+            user.get().setProfile_Image(convertMultiPartFileToAttachment(file));
+            userService.updateUser(user.get());
+        }
     }
 }

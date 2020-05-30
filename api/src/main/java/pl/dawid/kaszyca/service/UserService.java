@@ -159,4 +159,8 @@ public class UserService {
                     userRepository.delete(user);
                 });
     }
+
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
 }

@@ -27,7 +27,7 @@ public class User implements Serializable {
     private Long id;
 
     @Nullable
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private Attachment profile_Image;
 
     @NotNull

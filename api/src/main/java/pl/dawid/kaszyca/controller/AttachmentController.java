@@ -59,4 +59,27 @@ public class AttachmentController {
         }
         return new ResponseEntity(HttpStatus.valueOf(422));
     }
+
+    @GetMapping(value = "/attachments/user")
+    public ResponseEntity getUserPhoto() {
+        try {
+            List<String> photos = attachmentService.getUserPhoto();
+            return new ResponseEntity(photos, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot get user photo");
+        }
+        return new ResponseEntity(HttpStatus.valueOf(422));
+    }
+
+    @PostMapping(value = "/attachments/user", consumes = "multipart/form-data")
+    public ResponseEntity saveUserPhoto(@RequestParam("files") MultipartFile file) {
+        try {
+            attachmentService.saveUserPhoto(file);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Something went wrong during saving user photo image");
+        }
+        return new ResponseEntity(HttpStatus.valueOf(422));
+    }
+
 }
