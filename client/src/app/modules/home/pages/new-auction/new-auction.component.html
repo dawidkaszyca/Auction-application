@@ -123,13 +123,16 @@
       </div>
     </mat-card>
 
-    <mat-card>
-      <app-drag-drop [maxAmountOfImages]="maxSizeOfImages" (filesEmitter)="receiveImages($event)"></app-drag-drop>
+    <mat-card class="h-100">
+      <div class="w-100" #div [ngStyle]="{'height.px': div.offsetWidth / 5}">
+        <app-drag-drop class="h-100" [maxAmountOfImages]="maxSizeOfImages"
+                       (filesEmitter)="receiveImages($event)"></app-drag-drop>
+      </div>
       <div class="row">
         <div class="col-3" *ngFor="let number of [0,1,2,3]">
 
-          <div *ngIf="selected!=number">
-            <mat-card class="image w-100" (click)="selectMainPhoto(number)">
+          <div #div1 *ngIf="selected!=number">
+            <mat-card [ngStyle]="{'height.px': div1.offsetWidth}" class="image w-100" (click)="selectMainPhoto(number)">
               <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
             </mat-card>
           </div>

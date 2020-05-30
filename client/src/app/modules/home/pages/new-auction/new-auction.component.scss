@@ -13,13 +13,10 @@ mat-card {
   margin-top: 2rem;
 }
 
-.image {
-  min-height: 210px;
-}
-
 .submit {
   background-color: lightgrey;
   min-height: 50%;
+
   &:hover {
     cursor: pointer;
   }
@@ -39,6 +36,7 @@ mat-card {
     width: 50% !important;
   }
 }
+
 .selected {
   ::ng-deep .mat-card {
     border: 1px solid red !important;
