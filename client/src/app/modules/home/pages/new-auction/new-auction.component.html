@@ -132,13 +132,13 @@
         <div class="col-3" *ngFor="let number of [0,1,2,3]">
 
           <div #div1 *ngIf="selected!=number">
-            <mat-card [ngStyle]="{'height.px': div1.offsetWidth}" class="image w-100" (click)="selectMainPhoto(number)">
+            <mat-card [ngStyle]="{'height.px': div1.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
               <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
             </mat-card>
           </div>
 
-          <div class="selected" *ngIf="selected == number && previewUrl[number]">
-            <mat-card class="image w-100" (click)="selectMainPhoto(number)">
+          <div #div2 class="selected" *ngIf="selected == number && previewUrl[number]">
+            <mat-card [ngStyle]="{'height.px': div2.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
               <app-image *ngIf="previewUrl[number]" [path]=previewUrl[number]></app-image>
             </mat-card>
           </div>
