@@ -30,7 +30,7 @@ class DbSeeder implements CommandLineRunner {
     private AttachmentService attachmentService;
     private CityRepository cityRepository;
     private UserRepository userRepository;
-    private PasswordEncoder password;
+    private PasswordEncoder passwordEncoder;
     Map<String, List<String>> categoriesMap;
     Map<String, List<String>> attributesMap;
     Map<String, List<String>> attachmentMap;
@@ -47,7 +47,7 @@ class DbSeeder implements CommandLineRunner {
         this.categoryRepository = categoryRepository;
         this.auctionRepository = auctionRepository;
         this.cityRepository = cityRepository;
-        this.password = password;
+        this.passwordEncoder = password;
         this.userRepository = userRepository;
         this.attachmentService = attachmentService;
         this.random = new Random();
@@ -61,7 +61,9 @@ class DbSeeder implements CommandLineRunner {
         attachmentMap = getAttachments();
         cityList = getCityList();
         saveCity();
-        addRolesAndUser();
+        addRolesAndUser("testowy@wp.pl", "Dawid", " Kaszyca", "admin", "admin11");
+        addRolesAndUser("testowy12@wp.pl", "XXXzzz", " xzxzxz", "admin1", "admin11");
+        addRolesAndUser("testowy123@wp.pl", "YYYzzz", " xzxzxzxz", "admin2", "admin11");
         createCategories();
         createExampleAuctions();
         System.out.println("Initialized database");
@@ -75,7 +77,7 @@ class DbSeeder implements CommandLineRunner {
         }
     }
 
-    private void addRolesAndUser() {
+    private void addRolesAndUser(String email, String firstName, String lastName, String login, String password) {
         Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.USER);
         authorityRepository.save(authority);
@@ -83,12 +85,12 @@ class DbSeeder implements CommandLineRunner {
         User user = new User();
         user.setActivated(true);
         user.setAuthorities(authorities);
-        user.setEmail("testowy@gmail.com");
-        user.setFirstName("Dawid");
-        user.setLastName("Kaszyca");
-        String encryptedPassword = password.encode("admin11");
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        String encryptedPassword = passwordEncoder.encode(password);
         user.setPassword(encryptedPassword);
-        user.setLogin("admin");
+        user.setLogin(login);
         userRepository.save(user);
     }
 
@@ -193,7 +195,7 @@ class DbSeeder implements CommandLineRunner {
         Auction auction;
         List<MultipartFile> list = new ArrayList<>();
         List<AuctionDetails> auctionDetails;
-        for (int i = 0; i < 1500; i++) {
+        for (int i = 0; i < 100; i++) {
             auction = new Auction();
             City city = new City(getRandomCity());
             Condition condition;

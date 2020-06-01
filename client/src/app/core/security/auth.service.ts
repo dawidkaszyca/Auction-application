@@ -7,7 +7,7 @@ import {map} from 'rxjs/operators';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {SERVER_API_URL} from '../../app.constants';
 import {Router} from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import {JwtHelperService} from '@auth0/angular-jwt';
 import {User} from '../../shared/models/user';
 
 const httpOptions = {
@@ -44,10 +44,10 @@ export class AuthService {
   }
 
   logout(): void {
-      this.localStorage.clear('authenticationToken');
-      this.sessionStorage.clear('authenticationToken');
-      this.router.navigateByUrl('/');
-    }
+    this.localStorage.clear('authenticationToken');
+    this.sessionStorage.clear('authenticationToken');
+    this.router.navigateByUrl('/');
+  }
 
   private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
     const jwt = response.id_token;
@@ -70,6 +70,15 @@ export class AuthService {
       return !helper.isTokenExpired(token);
     }
     return false;
+  }
+
+  getLoginFromToken(): string {
+    const token = this.getTokenFromStorage();
+    if (token != null) {
+      const helper = new JwtHelperService();
+      return helper.decodeToken(token).sub;
+    }
+    return null;
   }
 
   isLogged(): boolean {

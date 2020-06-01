@@ -25,11 +25,13 @@ export class AuctionListComponent implements OnInit, OnChanges {
   }
 
   private loadPhotos() {
+    if(this.getAuctionIdList().length > 0) {
     this.attachmentService.getPhotos(this.getAuctionIdList()).subscribe(
       res => {
         const response = new Map(Object.entries(res));
         this.setImages(response);
       });
+  }
   }
 
   private setImages(response: Map<string, string>) {
@@ -40,7 +42,7 @@ export class AuctionListComponent implements OnInit, OnChanges {
     });
   }
 
-  private getAuctionIdList() {
+  private getAuctionIdList(): [] {
     const arrayId = [];
     this.auctions?.forEach(it => {
       arrayId.push(it.id);

@@ -37,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
+                    .antMatchers( "/app/messages").hasAuthority(AuthoritiesConstants.USER)
                     .antMatchers(HttpMethod.POST, "/api/auctions").hasAuthority(AuthoritiesConstants.USER)
                     .antMatchers(HttpMethod.POST, "/api/attachments").hasAuthority(AuthoritiesConstants.USER)
                     .antMatchers(HttpMethod.POST, "/api/categories").hasAuthority(AuthoritiesConstants.ADMIN)

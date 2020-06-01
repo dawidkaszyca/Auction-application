@@ -16,7 +16,7 @@ import {ConfirmRegisterComponent} from './core/authentication/confirm-register/c
 import {FormsModule} from '@angular/forms';
 import {RegisterComponent} from './core/authentication/register/register.component';
 import {RouterModule, Routes} from '@angular/router';
-import {_MatMenuDirectivesModule, MatMenuModule} from '@angular/material/menu';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {NgxWebstorageModule} from 'ngx-webstorage';
 import {CoreModule} from './core/core.module';
@@ -75,7 +75,7 @@ const appRoutes: Routes = [
     MatIconModule,
     MatMenuModule,
     CoreModule,
-    HomeModule
+    HomeModule,
   ],
   providers: [
   ],
