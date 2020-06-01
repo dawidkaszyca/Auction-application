@@ -109,6 +109,11 @@ public class UserService {
         return login.map(userRepository::findOneByLogin).orElse(null);
     }
 
+    public User getUserObjectByLogin(String login) {
+        Optional<User> user = userRepository.findOneByLogin(login);
+        return Optional.ofNullable(user.get()).orElse(null);
+    }
+
     public String getCurrentUserName() {
         Optional<User> user = getCurrentUserObject();
         return user.map(User::getFirstName).orElse(null);

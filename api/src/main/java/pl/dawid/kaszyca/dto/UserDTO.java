@@ -9,22 +9,19 @@ import pl.dawid.kaszyca.model.Authority;
 import pl.dawid.kaszyca.model.User;
 
 import javax.persistence.Column;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO {
+public class UserDTO extends UserBaseDTO {
 
     private Long id;
-
-    @NotBlank
-    @Pattern(regexp = Constants.LOGIN_REGEX)
-    @Size(min = 1, max = 50)
-    private String login;
 
     @Size(min = 3, max = 50)
     private String firstName;
@@ -45,7 +42,7 @@ public class UserDTO {
 
     public UserDTO(User user) {
         this.id = user.getId();
-        this.login = user.getLogin();
+        setLogin(user.getLogin());
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();

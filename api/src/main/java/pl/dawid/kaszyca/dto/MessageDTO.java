@@ -1,28 +1,18 @@
-package pl.dawid.kaszyca.model;
+package pl.dawid.kaszyca.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.Instant;
 
-@Entity
-@Data
-public class Message implements Serializable {
+public class MessageDTO {
 
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    private User from;
+    private UserBaseDTO from;
 
-    @OneToOne
-    private User to;
+    private UserBaseDTO to;
 
     private String context;
 
