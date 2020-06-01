@@ -22,6 +22,7 @@ import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
 import {CanActivateRouteGuard} from '../../core/security/can-activate-route-guard';
 import { AuctionBaseComponent } from './components/auction-base/auction-base.component';
 import { MyAccountComponent } from './pages/my-account/my-account.component';
+import { UserMessageComponent } from './pages/user-message/user-message.component';
 
 const appRoutes: Routes = [
   {
@@ -41,10 +42,14 @@ const appRoutes: Routes = [
     path: 'my-profile',
     component: MyAccountComponent,
   },
+  {
+    path: 'messages',
+    component: UserMessageComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, AuctionPreviewComponent, AuctionBaseComponent, MyAccountComponent],
+  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, AuctionPreviewComponent, AuctionBaseComponent, MyAccountComponent, UserMessageComponent],
   imports: [
     CommonModule,
     BrowserModule,
