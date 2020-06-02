@@ -1,2 +1,75 @@
-<p>user-message works!</p>
-<button (click)="send()">Wyślij testa</button>
+<div class="main-container mt-5">
+  <div class="row app-container">
+
+    <!--Contact list section-->
+    <div class="col-12 col-md-4 side">
+      <div class="side-mainArea">
+        <!--contacts section-->
+        <div class="tab-content">
+          <div class="tab-pane active" id="chat">
+            <div class="row sideBar">
+              <!--contact component-->
+              <app-contact></app-contact>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="search">
+            <!--contact component-->
+            <app-contact></app-contact>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--main chat section-->
+    <div class="col-12 col-md-8 conversation">
+
+      <!--header section-->
+      <div class="row heading heading-container">
+        <div class="col-sm-11 col-md-11 col-xs-11">
+          <div class="heading-contact-container">
+            <div class="heading-avatar">
+              <div class="heading-avatar-icon">
+                <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
+              </div>
+            </div>
+            <div class="heading-name">
+              <a class="heading-name-details">John Doe</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--messages section-->
+      <div class="row message" id="conversation">
+        <div class="col-12 col-md-12">
+
+          <!--Messages-->
+
+          <!--received message component-->
+          <app-received-message></app-received-message>
+          <!--sent message component-->
+          <app-sent-message></app-sent-message>
+          <app-sent-message></app-sent-message>
+
+          <!--received message component-->
+          <app-received-message></app-received-message>
+          <!--sent message component-->
+          <app-sent-message></app-sent-message>
+
+
+        </div>
+      </div>
+
+      <!--reply section-->
+      <div class="row reply">
+        <div class="col-9 col-sm-9 reply-main">
+          <textarea class="form-control" rows="1" id="comment" placeholder="write a message..."></textarea>
+        </div>
+        <div class="col-3 col-sm-2 reply-send">
+          <button type="button" class="btn btn-info btn-send">Send</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
