@@ -21,6 +21,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {NgxWebstorageModule} from 'ngx-webstorage';
 import {CoreModule} from './core/core.module';
 import {HomeModule} from './modules/home/home.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -76,6 +77,7 @@ const appRoutes: Routes = [
     MatMenuModule,
     CoreModule,
     HomeModule,
+    FontAwesomeModule,
   ],
   providers: [
   ],

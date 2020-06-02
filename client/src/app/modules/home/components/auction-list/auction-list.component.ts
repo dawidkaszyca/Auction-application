@@ -42,7 +42,7 @@ export class AuctionListComponent implements OnInit, OnChanges {
     });
   }
 
-  private getAuctionIdList(): [] {
+  private getAuctionIdList(): any[] {
     const arrayId = [];
     this.auctions?.forEach(it => {
       arrayId.push(it.id);

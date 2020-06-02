@@ -20,9 +20,13 @@ import {FilterBarComponent} from './components/filter-bar/filter-bar.component';
 import {AuctionPreviewComponent} from './pages/auction-preview/auction-preview.component';
 import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
 import {CanActivateRouteGuard} from '../../core/security/can-activate-route-guard';
-import { AuctionBaseComponent } from './components/auction-base/auction-base.component';
-import { MyAccountComponent } from './pages/my-account/my-account.component';
-import { UserMessageComponent } from './pages/user-message/user-message.component';
+import {AuctionBaseComponent} from './components/auction-base/auction-base.component';
+import {MyAccountComponent} from './pages/my-account/my-account.component';
+import {UserMessageComponent} from './pages/user-message/user-message.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {ReceivedMessageComponent} from './pages/user-message/received-message/received-message.component';
+import {ContactComponent} from './pages/user-message/contact/contact.component';
+import {SentMessageComponent} from './pages/user-message/sent-message/sent-message.component';
 
 const appRoutes: Routes = [
   {
@@ -49,7 +53,20 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  declarations: [MainPageComponent, AuctionListComponent, NewAuctionComponent, DynamicPanelComponent, FilterBarComponent, AuctionPreviewComponent, AuctionBaseComponent, MyAccountComponent, UserMessageComponent],
+  declarations: [
+    MainPageComponent,
+    AuctionListComponent,
+    NewAuctionComponent,
+    DynamicPanelComponent,
+    FilterBarComponent,
+    AuctionPreviewComponent,
+    AuctionBaseComponent,
+    MyAccountComponent,
+    UserMessageComponent,
+    ContactComponent,
+    ReceivedMessageComponent,
+    SentMessageComponent
+  ],
   imports: [
     CommonModule,
     BrowserModule,
@@ -70,7 +87,10 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     MatOptionModule,
     MatSelectModule,
-    TextareaAutosizeModule
+    TextareaAutosizeModule,
+    FontAwesomeModule,
+    BrowserModule,
+    FormsModule,
   ]
 })
 export class HomeModule {
