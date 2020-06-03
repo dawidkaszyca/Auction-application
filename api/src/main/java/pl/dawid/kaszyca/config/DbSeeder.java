@@ -7,9 +7,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import pl.dawid.kaszyca.model.Authority;
-import pl.dawid.kaszyca.model.City;
-import pl.dawid.kaszyca.model.User;
+import pl.dawid.kaszyca.model.*;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.*;
 import pl.dawid.kaszyca.service.AttachmentService;
@@ -19,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 @Component
@@ -31,6 +30,7 @@ class DbSeeder implements CommandLineRunner {
     private CityRepository cityRepository;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private ConversationRepository conversationRepository;
     Map<String, List<String>> categoriesMap;
     Map<String, List<String>> attributesMap;
     Map<String, List<String>> attachmentMap;
@@ -42,7 +42,7 @@ class DbSeeder implements CommandLineRunner {
 
     public DbSeeder(AuthorityRepository authorityRepository, CategoryRepository categoryRepository,
                     AuctionRepository auctionRepository, PasswordEncoder password, UserRepository userRepository,
-                    AttachmentService attachmentService, CityRepository cityRepository) {
+                    AttachmentService attachmentService, CityRepository cityRepository, ConversationRepository conversationRepository) {
         this.authorityRepository = authorityRepository;
         this.categoryRepository = categoryRepository;
         this.auctionRepository = auctionRepository;
@@ -50,23 +50,48 @@ class DbSeeder implements CommandLineRunner {
         this.passwordEncoder = password;
         this.userRepository = userRepository;
         this.attachmentService = attachmentService;
+        this.conversationRepository = conversationRepository;
         this.random = new Random();
         categoryList = getCategoryList();
     }
 
     @Override
-    public void run(String... args) throws IOException {
+    public void run(String... args) throws IOException, InterruptedException {
         categoriesMap = new HashMap<>();
         attributesMap = new HashMap<>();
         attachmentMap = getAttachments();
         cityList = getCityList();
         saveCity();
-        addRolesAndUser("testowy@wp.pl", "Dawid", " Kaszyca", "admin", "admin11");
-        addRolesAndUser("testowy12@wp.pl", "XXXzzz", " xzxzxz", "admin1", "admin11");
+        User sender = addRolesAndUser("testowy@wp.pl", "Dawid", " Kaszyca", "admin", "admin11");
+        User recipient = addRolesAndUser("testowy12@wp.pl", "XXXzzz", " xzxzxz", "admin1", "admin11");
         addRolesAndUser("testowy123@wp.pl", "YYYzzz", " xzxzxzxz", "admin2", "admin11");
+        createExampleMessage(sender, recipient);
         createCategories();
         createExampleAuctions();
         System.out.println("Initialized database");
+    }
+
+    private void createExampleMessage(User sender, User recipient) throws InterruptedException {
+        Conversation recipientChat = new Conversation();
+        Conversation senderChat = new Conversation();
+        Message message = new Message();
+        message.setConversation(senderChat);
+        message.setContent("Hi!!!");
+        message.setDisplayed(true);
+        senderChat.setSender(sender);
+        senderChat.setRecipient(recipient);
+        senderChat.setRecipientMessage(recipientChat);
+        senderChat.setSentMessages(Arrays.asList(message));
+        conversationRepository.save(senderChat);
+        TimeUnit.SECONDS.sleep(10);
+        Message msg = new Message();
+        msg.setConversation(recipientChat);
+        msg.setContent("Yo !!!");
+        recipientChat.setSender(recipient);
+        recipientChat.setRecipient(sender);
+        recipientChat.setRecipientMessage(senderChat);
+        senderChat.setSentMessages(Arrays.asList(msg));
+        conversationRepository.save(recipientChat);
     }
 
     private void saveCity() {
@@ -77,7 +102,7 @@ class DbSeeder implements CommandLineRunner {
         }
     }
 
-    private void addRolesAndUser(String email, String firstName, String lastName, String login, String password) {
+    private User addRolesAndUser(String email, String firstName, String lastName, String login, String password) {
         Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.USER);
         authorityRepository.save(authority);
@@ -92,6 +117,7 @@ class DbSeeder implements CommandLineRunner {
         user.setPassword(encryptedPassword);
         user.setLogin(login);
         userRepository.save(user);
+        return user;
     }
 
     private void createCategories() {

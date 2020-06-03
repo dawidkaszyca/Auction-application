@@ -16,7 +16,9 @@ public class ConversationVM {
     private Long id;
 
     @OneToOne
-    private String conversationPartnerFullName;
+    private String name;
+
+    private Long partnerId;
 
     private List<MessageDTO> partnerMessages;
 

@@ -12,6 +12,7 @@ import pl.dawid.kaszyca.vm.ConversationVM;
 import pl.dawid.kaszyca.vm.MessageDispatchVM;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,26 +42,30 @@ public class ChatService {
         List<ConversationVM> conversationModel = new ArrayList<>();
         for (Conversation conversation : conversations) {
             ConversationVM conversationVM = new ConversationVM();
-            conversationVM.setConversationPartnerFullName(getFullNameFromRecipient(conversation.getRecipient()));
+            conversationVM.setName(getFullNameFromRecipient(conversation.getRecipient()));
             conversationVM.setYourMessages(getMessagesDTOFromConversation(conversation));
             conversationVM.setPartnerMessages(getMessagesDTOFromConversation(conversation.getRecipientMessage()));
+            conversationVM.setId(conversation.getId());
+            conversationVM.setPartnerId(conversation.getRecipient().getId());
             conversationModel.add(conversationVM);
         }
         return conversationModel;
     }
 
     private List<MessageDTO> getMessagesDTOFromConversation(Conversation conversation) {
-        return MapperUtils.mapAll(conversation.getSentMessages(), MessageDTO.class);
+        List<MessageDTO> messages =  MapperUtils.mapAll(conversation.getSentMessages(), MessageDTO.class);
+         messages.sort(Comparator.comparing(MessageDTO::getSentDate));
+        return messages;
     }
 
     private String getFullNameFromRecipient(User recipient) {
         return recipient.getFirstName() + " " + recipient.getFirstName();
     }
 
-    public void sendMessage(MessageDispatchVM messageDispatchVM) {
+    public MessageDTO sendMessage(MessageDispatchVM messageDispatchVM) {
         Message message = new Message();
         Optional<User> sender = userService.getCurrentUserObject();
-        User recipient = userService.getUserObjectByLogin(messageDispatchVM.getTo());
+        User recipient = userService.getUserObjectById(messageDispatchVM.getTo());
         if (sender.isPresent() && recipient != null) {
             Conversation conversation = getConversationObjectToChat(sender.get(), recipient);
             List<Message> messages = conversation.getSentMessages();
@@ -72,6 +77,7 @@ public class ChatService {
             messages.add(message);
             conversationRepository.save(conversation);
             webSocketService.sendMessages(recipient.getLogin(), getFullNameFromRecipient(sender.get()));
+            return MapperUtils.map(message, MessageDTO.class);
         } else {
             throw new RecipientNotExistException();
         }

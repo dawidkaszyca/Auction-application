@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class MessageDispatchVM {
 
-    public String to;
+    public Long to;
     public String content;
-    public Boolean isAdminChat = false;
 }

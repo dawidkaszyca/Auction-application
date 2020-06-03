@@ -2,7 +2,6 @@ package pl.dawid.kaszyca.model;
 
 import lombok.Data;
 
-import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;

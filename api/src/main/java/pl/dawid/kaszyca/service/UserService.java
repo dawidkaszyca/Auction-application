@@ -109,8 +109,8 @@ public class UserService {
         return login.map(userRepository::findOneByLogin).orElse(null);
     }
 
-    public User getUserObjectByLogin(String login) {
-        Optional<User> user = userRepository.findOneByLogin(login);
+    public User getUserObjectById(Long id) {
+        Optional<User> user = userRepository.findOneById(id);
         return Optional.ofNullable(user.get()).orElse(null);
     }
 
