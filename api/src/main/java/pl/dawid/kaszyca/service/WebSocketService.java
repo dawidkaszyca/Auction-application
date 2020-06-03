@@ -34,7 +34,8 @@ public class WebSocketService {
         userLogin.remove(sessionId, userLogin.get(sessionId));
     }
 
-    public void sendMessages(String login, String message) {
-        simpMessagingTemplate.convertAndSend(WS_MESSAGE_TRANSFER_DESTINATION + login, message);
+    public void sendMessages(String to, String from) {
+        String message = "You have nice message from " + from;
+        simpMessagingTemplate.convertAndSend(WS_MESSAGE_TRANSFER_DESTINATION + to, message);
     }
 }
