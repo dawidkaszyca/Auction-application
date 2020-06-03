@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.dawid.kaszyca.config.Constants;
 import pl.dawid.kaszyca.model.Authority;
 import pl.dawid.kaszyca.model.User;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,12 +19,6 @@ import java.util.stream.Collectors;
 public class UserDTO extends UserBaseDTO {
 
     private Long id;
-
-    @Size(min = 3, max = 50)
-    private String firstName;
-
-    @Size(min = 3, max = 50)
-    private String lastName;
 
     @Email
     @Size(min = 5, max = 254)
@@ -43,8 +34,8 @@ public class UserDTO extends UserBaseDTO {
     public UserDTO(User user) {
         this.id = user.getId();
         setLogin(user.getLogin());
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
+        this.setFirstName(user.getFirstName());
+        this.setLastName(user.getLastName());
         this.email = user.getEmail();
         this.activated = user.getActivated();
         this.authorities = user.getAuthorities().stream()

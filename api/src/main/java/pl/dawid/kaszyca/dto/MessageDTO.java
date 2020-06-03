@@ -1,27 +1,19 @@
 package pl.dawid.kaszyca.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.Instant;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class MessageDTO {
 
-    private Long id;
+    private String content;
 
-    private UserBaseDTO from;
+    private boolean displayed;
 
-    private UserBaseDTO to;
-
-    private String context;
-
-    private boolean displayed = false;
-
-    private boolean isAdminOnlyChat = false;
-
-    @CreatedDate
-    @Column(name = "sent_date", updatable = false)
-    @JsonIgnore
-    private Instant sentDate = Instant.now();
+    private Instant sentDate;
 }

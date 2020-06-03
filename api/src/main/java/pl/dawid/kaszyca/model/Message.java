@@ -18,17 +18,13 @@ public class Message implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    private User from;
+    @ManyToOne
+    @JoinColumn(name = "conversation_id", nullable = false)
+    private Conversation conversation;
 
-    @OneToOne
-    private User to;
-
-    private String context;
+    private String content;
 
     private boolean displayed = false;
-
-    private boolean isAdminOnlyChat = false;
 
     @CreatedDate
     @Column(name = "sent_date", updatable = false)

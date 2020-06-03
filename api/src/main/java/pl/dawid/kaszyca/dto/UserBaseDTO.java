@@ -18,4 +18,10 @@ public class UserBaseDTO {
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
     private String login;
+
+    @Size(min = 3, max = 50)
+    private String firstName;
+
+    @Size(min = 3, max = 50)
+    private String lastName;
 }
