@@ -9,12 +9,12 @@
           <div class="tab-pane active" id="chat">
             <div class="row sideBar">
               <!--contact component-->
-              <app-contact></app-contact>
+              <app-contact [contacts]="conversations" ></app-contact>
             </div>
           </div>
           <div class="tab-pane fade" id="search">
             <!--contact component-->
-            <app-contact></app-contact>
+            <app-contact [contacts]="conversations" ></app-contact>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
               </div>
             </div>
             <div class="heading-name">
-              <a class="heading-name-details">John Doe</a>
+              <a class="heading-name-details">{{selected?.name}}</a>
             </div>
           </div>
         </div>
@@ -41,31 +41,23 @@
       <!--messages section-->
       <div class="row message" id="conversation">
         <div class="col-12 col-md-12">
-
-          <!--Messages-->
-
-          <!--received message component-->
-          <app-received-message></app-received-message>
-          <!--sent message component-->
-          <app-sent-message></app-sent-message>
-          <app-sent-message></app-sent-message>
-
-          <!--received message component-->
-          <app-received-message></app-received-message>
-          <!--sent message component-->
-          <app-sent-message></app-sent-message>
-
-
+          <ng-container *ngIf="selectedMessages">
+            <ng-container *ngFor="let msg of selectedMessages">
+              <app-received-message *ngIf="!msg.isYours" [date]="msg.sentDate"
+                                    [message]="msg.content"></app-received-message>
+              <app-sent-message *ngIf="msg.isYours" [date]="msg.sentDate" [message]="msg.content"></app-sent-message>
+            </ng-container>
+          </ng-container>
         </div>
       </div>
 
       <!--reply section-->
       <div class="row reply">
         <div class="col-9 col-sm-9 reply-main">
-          <textarea class="form-control" rows="1" id="comment" placeholder="write a message..."></textarea>
+          <textarea class="form-control" rows="1" id="comment" [(ngModel)]="msg" placeholder="write a message..."></textarea>
         </div>
         <div class="col-3 col-sm-2 reply-send">
-          <button type="button" class="btn btn-info btn-send">Send</button>
+          <button type="button" class="btn btn-info btn-send" (click)="sendMessage()">Send</button>
         </div>
       </div>
     </div>

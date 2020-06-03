@@ -61,7 +61,7 @@ export class WebsocketService {
   }
 
   onMessageReceived(message) {
-    console.log('Message Recieved from Server :: ' + message);
+    console.log('NewMessage Recieved from Server :: ' + message);
     alert(message);
   }
 
