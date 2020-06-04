@@ -3,6 +3,10 @@ package pl.dawid.kaszyca.service;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import pl.dawid.kaszyca.dto.MessageDTO;
+import pl.dawid.kaszyca.model.Message;
+import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.vm.StatusVM;
 
 import java.util.*;
 
@@ -34,8 +38,10 @@ public class WebSocketService {
         userLogin.remove(sessionId, userLogin.get(sessionId));
     }
 
-    public void sendMessages(String to, String from) {
-        String message = "You have nice message from " + from;
-        simpMessagingTemplate.convertAndSend(WS_MESSAGE_TRANSFER_DESTINATION + to, message);
+    public void sendMessages(String to, Long id, Message message) {
+        StatusVM statusVM = new StatusVM();
+        statusVM.setId(id);
+        statusVM.setMessage(MapperUtils.map(message, MessageDTO.class));
+        simpMessagingTemplate.convertAndSend(WS_MESSAGE_TRANSFER_DESTINATION + to, statusVM);
     }
 }

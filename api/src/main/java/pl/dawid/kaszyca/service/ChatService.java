@@ -76,7 +76,7 @@ public class ChatService {
             message.setConversation(conversation);
             messages.add(message);
             conversationRepository.save(conversation);
-            webSocketService.sendMessages(recipient.getLogin(), getFullNameFromRecipient(sender.get()));
+            webSocketService.sendMessages(recipient.getLogin(), conversation.getId(), message);
             return MapperUtils.map(message, MessageDTO.class);
         } else {
             throw new RecipientNotExistException();
