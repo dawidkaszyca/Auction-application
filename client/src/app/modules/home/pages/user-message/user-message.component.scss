@@ -67,7 +67,8 @@ span {
 }
 
 .sideBar {
-  overflow: scroll;
+  overflow: scroll ;
+  overflow-x: hidden;
 }
 
 .side-mainArea {

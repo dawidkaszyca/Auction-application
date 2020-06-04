@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Message} from '../../../../../shared/models/message';
-import {Conversation} from '../../../../../shared/models/conversation';
+import {Message} from '../../../../shared/models/message';
+import {Conversation} from '../../../../shared/models/conversation';
 
 @Component({
   selector: 'app-contact',

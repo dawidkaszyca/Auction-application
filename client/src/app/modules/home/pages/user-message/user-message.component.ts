@@ -1,10 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {WebsocketService} from '../../../../shared/services/web-socket.service';
 import {NavigationService} from '../../../../core/header/navigation/navigation.service';
 import {ChatService} from '../../../../shared/services/chat.service';
 import {Conversation} from '../../../../shared/models/conversation';
 import {NewMessage} from '../../../../shared/models/new-message';
 import {Message} from '../../../../shared/models/message';
+import {ScrollToBottomDirective} from '../../../../shared/directives/scroll-to-bottom.directive';
 
 @Component({
   selector: 'app-user-message',
@@ -13,6 +14,8 @@ import {Message} from '../../../../shared/models/message';
 })
 export class UserMessageComponent implements OnInit, OnDestroy {
 
+  @ViewChild(ScrollToBottomDirective)
+  scroll: ScrollToBottomDirective;
   conversations: Conversation[];
   selected: Conversation;
   selectedMessages: Message[];
@@ -29,6 +32,21 @@ export class UserMessageComponent implements OnInit, OnDestroy {
       this.conversations = res;
       this.selectFirst();
     });
+
+    this.webSocket.newMessage.subscribe(data => {
+      if (data.id) {
+        const conversation = this.findConversationById(data.id);
+        data.message.isYours = false;
+        conversation.partnerMessages.push(data.message);
+        if (this.selected.id === data.id) {
+          this.selectedMessages.push(data.message);
+        }
+      }
+    });
+  }
+
+  private findConversationById(id: number): Conversation {
+    return this.conversations.filter(it => it.id === id)[0];
   }
 
   private selectFirst() {
