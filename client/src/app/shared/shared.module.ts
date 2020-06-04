@@ -10,6 +10,7 @@ import { DragDropDirective } from './directives/drag-drop.directive';
 import { ImageComponent } from './components/image/image.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import {MatCardModule} from '@angular/material/card';
+import { ScrollToBottomDirective } from './directives/scroll-to-bottom.directive';
 
 
 
@@ -19,7 +20,8 @@ import {MatCardModule} from '@angular/material/card';
     MaterialElevationDirective,
     DragDropDirective,
     ImageComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ScrollToBottomDirective
   ],
   imports: [
     CommonModule,
