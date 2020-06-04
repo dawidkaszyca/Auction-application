@@ -40,7 +40,7 @@
 
       <!--messages section-->
       <div class="row message" id="conversation">
-        <div class="col-12 col-md-12">
+        <div class="col-12 col-md-12 sideBar" #scrollMe [scrollTop]="scrollMe.scrollHeight">
           <ng-container *ngIf="selectedMessages">
             <ng-container *ngFor="let msg of selectedMessages">
               <app-received-message *ngIf="!msg.isYours" [date]="msg.sentDate"

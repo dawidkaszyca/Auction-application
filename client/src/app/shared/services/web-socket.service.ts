@@ -1,28 +1,31 @@
 import {Injectable} from '@angular/core';
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
-import {AuthService} from '../../core/security/auth.service';
+import {Status} from '../models/status';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
 
-
   userName: string;
   webSocketEndPoint = 'http://localhost:8082/portfolio';
-  subscribeChannel: string
-  privateChannel: string
+  subscribeChannel: string;
+  privateChannel: string;
   stompClient: any;
 
-  constructor(private authService: AuthService) {
-    this.userName = authService.getLoginFromToken();
-    this.subscribeChannel = '/app/queue/user/' + this.userName;
-    this.privateChannel = '/queue/user/' + this.userName;
+  newMessage: BehaviorSubject<Status>;
+
+  constructor() {
+    this.newMessage = new BehaviorSubject(new Status());
   }
 
-  _connect() {
-    if(this.userName != null && this.userName !== '') {
+  _connect(login: string) {
+    this.userName = login;
+    this.subscribeChannel = '/app/queue/user/' + login;
+    this.privateChannel = '/queue/user/' + login;
+    if (this.userName != null && this.userName !== '') {
       console.log('Initialize WebSocket Connection');
       const ws = new SockJS(this.webSocketEndPoint);
       this.stompClient = Stomp.over(ws);
@@ -47,7 +50,7 @@ export class WebsocketService {
   errorCallBack(error) {
     console.log('errorCallBack -> ' + error);
     setTimeout(() => {
-      this._connect();
+      this._connect(this.userName);
     }, 5000);
   }
 
@@ -61,8 +64,8 @@ export class WebsocketService {
   }
 
   onMessageReceived(message) {
-    console.log('NewMessage Recieved from Server :: ' + message);
-    alert(message);
+    const obj: Status = JSON.parse(message.body);
+    this.newMessage.next(obj);
   }
 
 }

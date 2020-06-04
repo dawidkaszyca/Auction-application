@@ -24,9 +24,9 @@ import {AuctionBaseComponent} from './components/auction-base/auction-base.compo
 import {MyAccountComponent} from './pages/my-account/my-account.component';
 import {UserMessageComponent} from './pages/user-message/user-message.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {ReceivedMessageComponent} from './pages/user-message/received-message/received-message.component';
-import {ContactComponent} from './pages/user-message/contact/contact.component';
-import {SentMessageComponent} from './pages/user-message/sent-message/sent-message.component';
+import {ReceivedMessageComponent} from './components/received-message/received-message.component';
+import {ContactComponent} from './components/contact/contact.component';
+import {SentMessageComponent} from './components/sent-message/sent-message.component';
 
 const appRoutes: Routes = [
   {

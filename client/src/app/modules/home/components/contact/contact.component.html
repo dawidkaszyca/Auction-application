@@ -5,7 +5,7 @@
     <div class="row time-container">
       <div class="col-12 col-md-12 float-right sideBar-time">
                 <span class="time-meta float-right">
-                    {{getLastMessageDate(contact)}}
+                    {{getLastMessageDate(contact) | date:'medium' }}
                 </span>
       </div>
     </div>

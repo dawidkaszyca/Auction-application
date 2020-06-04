@@ -9,6 +9,7 @@ import {SERVER_API_URL} from '../../app.constants';
 import {Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {User} from '../../shared/models/user';
+import {WebsocketService} from '../../shared/services/web-socket.service';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -30,7 +31,8 @@ export class AuthService {
     private http: HttpClient,
     private localStorage: LocalStorageService,
     private sessionStorage: SessionStorageService,
-    private router: Router) {
+    private router: Router,
+    private websocketService: WebsocketService) {
   }
 
   login(credentials: LoginViewModel): Observable<void> {
@@ -46,6 +48,7 @@ export class AuthService {
   logout(): void {
     this.localStorage.clear('authenticationToken');
     this.sessionStorage.clear('authenticationToken');
+    this.websocketService._disconnect();
     this.router.navigateByUrl('/');
   }
 
@@ -56,6 +59,7 @@ export class AuthService {
     } else {
       this.sessionStorage.store('authenticationToken', jwt);
     }
+    this.websocketService._connect(this.getLoginFromToken());
     this.router.navigateByUrl('/');
   }
 
