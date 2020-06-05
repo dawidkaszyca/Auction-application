@@ -59,7 +59,7 @@ public class ChatService {
     }
 
     private String getFullNameFromRecipient(User recipient) {
-        return recipient.getFirstName() + " " + recipient.getFirstName();
+        return recipient.getFirstName() + " " + recipient.getLastName();
     }
 
     public MessageDTO sendMessage(MessageDispatchVM messageDispatchVM) {
@@ -76,7 +76,7 @@ public class ChatService {
             message.setConversation(conversation);
             messages.add(message);
             conversationRepository.save(conversation);
-            webSocketService.sendMessages(recipient.getLogin(), conversation.getId(), message);
+            webSocketService.sendMessages(recipient.getLogin(), conversation.getRecipientMessage().getId(), message);
             return MapperUtils.map(message, MessageDTO.class);
         } else {
             throw new RecipientNotExistException();
@@ -84,7 +84,7 @@ public class ChatService {
     }
 
     private Conversation getConversationObjectToChat(User sender, User recipient) {
-        Optional<Conversation> conversation = conversationRepository.findFirstBySenderAndRecipient(recipient, sender);
+        Optional<Conversation> conversation = conversationRepository.findFirstBySenderAndRecipient(sender, recipient);
         if (conversation.isPresent())
             return conversation.get();
         return createTwoSideConversationObjectAndGetForCurrentUser(sender, recipient);

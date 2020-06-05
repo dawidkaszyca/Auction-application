@@ -37,7 +37,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         String user = event.getMessage().getHeaders().get("simpDestination").toString();
         String sessionId = event.getMessage().getHeaders().get("simpSessionId").toString();
         webSocketService.addUser(sessionId, user);
-        log.info("<==> handleSubscribeEvent: username, event=" + event);
+        log.info("<==> handleSubscribeEvent: username, event=" + user);
     }
 
     @EventListener
