@@ -20,7 +20,6 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   selected: number;
   auction: NewAuction;
   categories: string[];
-  countryCode: any;
   selectedValues: CategoryAttributes[];
   conditions: string[];
   name: string;

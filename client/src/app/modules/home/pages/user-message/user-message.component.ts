@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {WebsocketService} from '../../../../shared/services/web-socket.service';
 import {NavigationService} from '../../../../core/header/navigation/navigation.service';
 import {ChatService} from '../../../../shared/services/chat.service';
@@ -7,23 +7,25 @@ import {NewMessage} from '../../../../shared/models/new-message';
 import {Message} from '../../../../shared/models/message';
 import {ScrollToBottomDirective} from '../../../../shared/directives/scroll-to-bottom.directive';
 
+
 @Component({
   selector: 'app-user-message',
   templateUrl: './user-message.component.html',
   styleUrls: ['./user-message.component.scss']
 })
-export class UserMessageComponent implements OnInit, OnDestroy {
+export class UserMessageComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild(ScrollToBottomDirective)
   scroll: ScrollToBottomDirective;
   conversations: Conversation[];
   selected: Conversation;
   selectedMessages: Message[];
-  msg: any;
+  msg: string;
+  container: HTMLElement;
+  private isNewMSG: boolean;
 
   constructor(private webSocket: WebsocketService, private navigationService: NavigationService, private chatService: ChatService) {
   }
-
 
   ngOnInit(): void {
     this.msg = '';
@@ -31,6 +33,7 @@ export class UserMessageComponent implements OnInit, OnDestroy {
     this.chatService.getMessages().subscribe(res => {
       this.conversations = res;
       this.selectFirst();
+      this.isNewMSG = true;
     });
 
     this.webSocket.newMessage.subscribe(data => {
@@ -40,9 +43,25 @@ export class UserMessageComponent implements OnInit, OnDestroy {
         conversation.partnerMessages.push(data.message);
         if (this.selected.id === data.id) {
           this.selectedMessages.push(data.message);
+          this.isNewMSG = true;
         }
       }
     });
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      if (this.isNewMSG) {
+        this.container = document.getElementById('scroller');
+        this.container.scrollTop = this.container.scrollHeight;
+        this.isNewMSG = false;
+      }
+    } catch (err) {
+    }
   }
 
   private findConversationById(id: number): Conversation {
@@ -72,12 +91,24 @@ export class UserMessageComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
+    if (this.msg.trim() === '') {
+      return;
+    }
     const newMsg = new NewMessage();
     newMsg.content = this.msg;
     newMsg.to = this.selected.partnerId;
     this.chatService.sendMessage(newMsg).subscribe(res => {
+      res.isYours = true;
       this.selectedMessages.push(res);
+      this.selected.yourMessages.push(res);
       this.msg = '';
+      this.isNewMSG = true;
     });
+  }
+
+  receiveSelectedConversation($event: Conversation) {
+    this.selected = $event;
+    this.createOneArrayFromMessages();
+    this.isNewMSG = true;
   }
 }

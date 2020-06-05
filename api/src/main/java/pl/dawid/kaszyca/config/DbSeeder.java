@@ -63,8 +63,9 @@ class DbSeeder implements CommandLineRunner {
         cityList = getCityList();
         saveCity();
         User sender = addRolesAndUser("testowy@wp.pl", "Dawid", " Kaszyca", "admin", "admin11");
-        User recipient = addRolesAndUser("testowy12@wp.pl", "XXXzzz", " xzxzxz", "admin1", "admin11");
-        addRolesAndUser("testowy123@wp.pl", "YYYzzz", " xzxzxzxz", "admin2", "admin11");
+        User recipient = addRolesAndUser("testowy12@wp.pl", "Stefan", " Wąs", "admin1", "admin11");
+        createExampleMessage(sender, recipient);
+        recipient = addRolesAndUser("testowy123@wp.pl", "Janusz", " Kors", "admin2", "admin11");
         createExampleMessage(sender, recipient);
         createCategories();
         createExampleAuctions();

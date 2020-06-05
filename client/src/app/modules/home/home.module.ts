@@ -45,10 +45,12 @@ const appRoutes: Routes = [
   {
     path: 'my-profile',
     component: MyAccountComponent,
+    canActivate: [CanActivateRouteGuard]
   },
   {
     path: 'messages',
     component: UserMessageComponent,
+    canActivate: [CanActivateRouteGuard]
   },
 ];
 

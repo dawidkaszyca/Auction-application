@@ -9,12 +9,13 @@ import {MatSelectChange} from '@angular/material/select';
   templateUrl: './dynamic-panel.component.html',
   styleUrls: ['./dynamic-panel.component.scss']
 })
-export class DynamicPanelComponent implements OnInit, OnChanges{
+export class DynamicPanelComponent implements OnInit, OnChanges {
 
 
   @Output()
   selectEmitter: EventEmitter<CategoryAttributes[]> = new EventEmitter();
-  @Input() private category: string;
+  @Input()
+  private category: string;
   attributes: CategoryAttributes[];
   selectedValues: CategoryAttributes[];
   show = false;
@@ -27,7 +28,7 @@ export class DynamicPanelComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.category.previousValue != null && changes.category.previousValue != changes.category.currentValue) {
+    if (changes.category.previousValue != null && changes.category.previousValue !== changes.category.currentValue) {
       this.ngOnInit();
     }
   }

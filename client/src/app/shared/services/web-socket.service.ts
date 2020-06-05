@@ -14,11 +14,13 @@ export class WebsocketService {
   subscribeChannel: string;
   privateChannel: string;
   stompClient: any;
+  isConnected = false;
 
   newMessage: BehaviorSubject<Status>;
 
   constructor() {
     this.newMessage = new BehaviorSubject(new Status());
+    this.isConnected = false;
   }
 
   _connect(login: string) {
@@ -30,6 +32,7 @@ export class WebsocketService {
       const ws = new SockJS(this.webSocketEndPoint);
       this.stompClient = Stomp.over(ws);
       const _this = this;
+      _this.isConnected = true;
       _this.stompClient.connect({}, function(frame) {
         _this.stompClient.subscribe(_this.privateChannel, function(sdkEvent) {
           _this.onMessageReceived(sdkEvent);
@@ -41,17 +44,21 @@ export class WebsocketService {
 
   _disconnect() {
     if (this.stompClient !== null) {
+      this.isConnected = false;
       this.stompClient.disconnect();
     }
+    alert('Disconected');
     console.log('Disconnected');
   }
 
   // on error, schedule a reconnection attempt
   errorCallBack(error) {
+    this.isConnected = false;
     console.log('errorCallBack -> ' + error);
     setTimeout(() => {
       this._connect(this.userName);
-    }, 5000);
+      alert("Reconnect");
+    }, 1000);
   }
 
   /**

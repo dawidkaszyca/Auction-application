@@ -2,5 +2,5 @@ import {Message} from './message';
 
 export class NewMessage {
   public to: number;
-  public content: Message;
+  public content: string;
 }

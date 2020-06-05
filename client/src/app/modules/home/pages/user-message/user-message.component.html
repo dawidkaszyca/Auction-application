@@ -9,7 +9,7 @@
           <div class="tab-pane active" id="chat">
             <div class="row sideBar">
               <!--contact component-->
-              <app-contact [contacts]="conversations" ></app-contact>
+              <app-contact (selectedConversation)="receiveSelectedConversation($event)" [contacts]="conversations" ></app-contact>
             </div>
           </div>
           <div class="tab-pane fade" id="search">
@@ -40,7 +40,7 @@
 
       <!--messages section-->
       <div class="row message" id="conversation">
-        <div class="col-12 col-md-12 sideBar" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+        <div id="scroller" class="col-12 col-md-12 sideBar">
           <ng-container *ngIf="selectedMessages">
             <ng-container *ngFor="let msg of selectedMessages">
               <app-received-message *ngIf="!msg.isYours" [date]="msg.sentDate"

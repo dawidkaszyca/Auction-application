@@ -5,6 +5,7 @@ export class Conversation {
   name: string;
   avatar: string;
   partnerId: number;
+  unViewed = 0;
   yourMessages: Message[];
   partnerMessages: Message[];
 }

@@ -54,6 +54,8 @@ export class AuthService {
 
   private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
     const jwt = response.id_token;
+    this.localStorage.clear('authenticationToken');
+    this.sessionStorage.clear('authenticationToken');
     if (rememberMe) {
       this.localStorage.store('authenticationToken', jwt);
     } else {
@@ -86,7 +88,17 @@ export class AuthService {
   }
 
   isLogged(): boolean {
-    return this.checkIfTokenIsNotExpired();
+    if (this.checkIfTokenIsNotExpired()) {
+      this.reConnectIfIsRequired();
+      return true;
+    }
+    return false;
+  }
+
+  private reConnectIfIsRequired() {
+    if (this.websocketService.isConnected === false) {
+      this.websocketService._connect(this.getLoginFromToken());
+    }
   }
 
   getUserData(): Observable<User> {
