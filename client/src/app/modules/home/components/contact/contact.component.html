@@ -1,7 +1,7 @@
-<input id="searchInput" type="text" [(ngModel)]="contactFilter" placeholder="Search..." class="sideBar-search"/>
+<input id="searchInput" type="text" [(ngModel)]="contactFilter" placeholder="Search..." class="form-control mt-2"/>
 
-<div class="row sideBar-body" *ngFor="let contact of filteredContacts">
-  <div class="col-12 col-md-12">
+<div class="row sideBar-body mt-2" *ngFor="let contact of filteredContacts">
+  <div class="col-12 col-md-12" (click)="selectContact(contact)">
     <div class="row time-container">
       <div class="col-12 col-md-12 float-right sideBar-time">
                 <span class="time-meta float-right">
@@ -14,6 +14,7 @@
         <div class="avatar-icon">
           <img *ngIf="contact.avatar" [src]="contact.avatar">
           <img *ngIf="!contact.avatar" src="https://bootdey.com/img/Content/avatar/avatar6.png">
+          <span *ngIf="contact.unViewed && contact.unViewed !== 10" class="status new-message">{{contact.unViewed}}</span>
         </div>
       </div>
       <div class="col-9 col-md-9 sideBar-main">
