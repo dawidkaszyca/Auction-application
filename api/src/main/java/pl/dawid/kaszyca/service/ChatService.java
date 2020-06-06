@@ -53,8 +53,8 @@ public class ChatService {
     }
 
     private List<MessageDTO> getMessagesDTOFromConversation(Conversation conversation) {
-        List<MessageDTO> messages =  MapperUtils.mapAll(conversation.getSentMessages(), MessageDTO.class);
-         messages.sort(Comparator.comparing(MessageDTO::getSentDate));
+        List<MessageDTO> messages = MapperUtils.mapAll(conversation.getSentMessages(), MessageDTO.class);
+        messages.sort(Comparator.comparing(MessageDTO::getSentDate));
         return messages;
     }
 
@@ -103,5 +103,40 @@ public class ChatService {
         conversation.setSender(sender);
         conversation.setRecipient(recipient);
         conversation.setRecipientMessage(partnerObj);
+    }
+
+    public Integer getAmountOfUnViewedMessage(String login) {
+        Optional<User> user = userService.getUserByLogin(login);
+        Integer result = 0;
+        if (user.isPresent()) {
+            List<Conversation> listOfReceivedConversations = conversationRepository.findAllByRecipient(user.get());
+            for (Conversation conversation : listOfReceivedConversations) {
+                if (checkIfListContainsUnViewedMessage(conversation.getSentMessages()))
+                    result++;
+            }
+        }
+        return result;
+    }
+
+    private boolean checkIfListContainsUnViewedMessage(List<Message> messages) {
+        for (Message msg : messages) {
+            if (!msg.isDisplayed())
+                return true;
+        }
+        return false;
+    }
+
+    public void updateDisplayMessagesById(Long id) {
+        Optional<User> recipient = userService.getCurrentUserObject();
+        User sender = userService.getUserObjectById(id);
+        if (recipient.isPresent() && sender != null) {
+            Optional<Conversation> conversation = conversationRepository.findFirstBySenderAndRecipient(sender, recipient.get());
+            if (conversation.isPresent()) {
+                for (Message message : conversation.get().getSentMessages()) {
+                    message.setDisplayed(true);
+                }
+                conversationRepository.save(conversation.get());
+            }
+        }
     }
 }
