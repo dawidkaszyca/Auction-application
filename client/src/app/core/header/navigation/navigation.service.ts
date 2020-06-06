@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -6,7 +6,9 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class NavigationService {
   show: boolean;
+
   constructor() {
     this.show = true;
   }
+
 }

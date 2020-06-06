@@ -22,11 +22,11 @@ import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
 import {CanActivateRouteGuard} from '../../core/security/can-activate-route-guard';
 import {AuctionBaseComponent} from './components/auction-base/auction-base.component';
 import {MyAccountComponent} from './pages/my-account/my-account.component';
-import {UserMessageComponent} from './pages/user-message/user-message.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {ReceivedMessageComponent} from './components/received-message/received-message.component';
 import {ContactComponent} from './components/contact/contact.component';
 import {SentMessageComponent} from './components/sent-message/sent-message.component';
+import {ChatComponent} from './pages/chat/chat.component';
 
 const appRoutes: Routes = [
   {
@@ -49,7 +49,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'messages',
-    component: UserMessageComponent,
+    component: ChatComponent,
     canActivate: [CanActivateRouteGuard]
   },
 ];
@@ -64,7 +64,7 @@ const appRoutes: Routes = [
     AuctionPreviewComponent,
     AuctionBaseComponent,
     MyAccountComponent,
-    UserMessageComponent,
+    ChatComponent,
     ContactComponent,
     ReceivedMessageComponent,
     SentMessageComponent

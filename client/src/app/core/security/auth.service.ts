@@ -49,6 +49,7 @@ export class AuthService {
     this.localStorage.clear('authenticationToken');
     this.sessionStorage.clear('authenticationToken');
     this.websocketService._disconnect();
+    this.websocketService.notification.next(0);
     this.router.navigateByUrl('/');
   }
 

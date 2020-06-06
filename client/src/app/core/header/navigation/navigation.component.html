@@ -20,10 +20,16 @@
           <a  *ngIf="authService.isLogged()" class="nav-link"
                                              routerLink="/new-auction">{{'Navigation.newAuction' | translate}}</a>
         </li>
-        <li [routerLinkActive]="['active']" *ngIf="!authService.isLogged()" class="nav-item ml-md-auto">
-          <a class="nav-link" routerLink="/login">{{'Navigation.Myprofile' | translate}}</a>
+        <li class="nav-item  ml-md-auto" *ngIf="!notification || notification === 0">
+          <fa-icon class="nav-link" routerLink="/messages" [icon]="faEnvelope">{{notification}}</fa-icon>
         </li>
-        <li [routerLinkActive]="['active']" *ngIf="authService.isLogged()" class="nav-item ml-md-auto">
+        <li class="nav-item  ml-md-auto" *ngIf="notification && notification !== 0">
+          <fa-icon class="nav-link blink" routerLink="/messages" [icon]="faEnvelope">{{notification}}</fa-icon>
+        </li>
+        <li [routerLinkActive]="['active']" *ngIf="!authService.isLogged()" class="nav-item">
+        <a class="nav-link" routerLink="/login">{{'Navigation.Myprofile' | translate}}</a>
+        </li>
+        <li [routerLinkActive]="['active']" class="nav-item" *ngIf="authService.isLogged()">
           <a [matMenuTriggerFor]="menu1" class="nav-link">{{'Navigation.Myprofile' | translate}}</a>
           <mat-menu #menu1="matMenu">
             <button mat-menu-item routerLink="/my-profile">My account</button>

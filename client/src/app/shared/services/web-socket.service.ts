@@ -3,6 +3,7 @@ import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
 import {Status} from '../models/status';
 import {BehaviorSubject} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +16,13 @@ export class WebsocketService {
   privateChannel: string;
   stompClient: any;
   isConnected = false;
+  notification: BehaviorSubject<number>;
 
   newMessage: BehaviorSubject<Status>;
 
-  constructor() {
+  constructor(private router: Router) {
     this.newMessage = new BehaviorSubject(new Status());
+    this.notification = new BehaviorSubject<number>(0);
     this.isConnected = false;
   }
 
@@ -34,10 +37,11 @@ export class WebsocketService {
       const _this = this;
       _this.isConnected = true;
       _this.stompClient.connect({}, function(frame) {
+        _this._sendMessage('getStatus');
         _this.stompClient.subscribe(_this.privateChannel, function(sdkEvent) {
           _this.onMessageReceived(sdkEvent);
+          ;
         });
-        // _this.stompClient.reconnect_delay = 2000;
       }, this.errorCallBack);
     }
   }
@@ -45,10 +49,7 @@ export class WebsocketService {
   _disconnect() {
     if (this.stompClient !== null) {
       this.isConnected = false;
-      this.stompClient.disconnect();
     }
-    alert('Disconected');
-    console.log('Disconnected');
   }
 
   // on error, schedule a reconnection attempt
@@ -57,7 +58,6 @@ export class WebsocketService {
     console.log('errorCallBack -> ' + error);
     setTimeout(() => {
       this._connect(this.userName);
-      alert("Reconnect");
     }, 1000);
   }
 
@@ -71,8 +71,15 @@ export class WebsocketService {
   }
 
   onMessageReceived(message) {
-    const obj: Status = JSON.parse(message.body);
-    this.newMessage.next(obj);
+    const object = JSON.parse(message.body);
+    if (object.status || object.status === 0) {
+      this.notification.next(object.status);
+    } else {
+      const obj: Status = JSON.parse(message.body);
+      this.newMessage.next(obj);
+      if (this.router.url !== 'messages') {
+        this._sendMessage('getStatus');
+      }
+    }
   }
-
 }
