@@ -38,7 +38,7 @@ export class ContactComponent implements OnInit, OnChanges {
     this.filteredContacts = this.contacts;
   }
 
-  private setUnViewedMessage() {
+  public setUnViewedMessage() {
     this.contacts?.forEach(it => {
       let count = 0;
       it.partnerMessages.forEach(msg => {

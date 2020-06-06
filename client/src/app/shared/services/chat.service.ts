@@ -25,4 +25,8 @@ export class ChatService {
   sendMessage(newMsg: NewMessage): Observable<Message> {
     return this.http.post<Message>(this.MESSAGES, newMsg);
   }
+
+  updateDisplayedById(partnerId: number) {
+    return this.http.put(this.MESSAGES, partnerId);
+  }
 }
