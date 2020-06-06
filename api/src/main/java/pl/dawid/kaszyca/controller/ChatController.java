@@ -43,4 +43,15 @@ public class ChatController {
         }
         return new ResponseEntity(HttpStatus.valueOf(500));
     }
+
+    @PutMapping("/messages")
+    private ResponseEntity setDisplayMessage(@RequestBody Long id) {
+        try {
+            messageService.updateDisplayMessagesById(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during update message display");
+        }
+        return new ResponseEntity(HttpStatus.valueOf(500));
+    }
 }

@@ -1,6 +1,7 @@
 package pl.dawid.kaszyca.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -22,7 +23,7 @@ public class SocketController {
     }
 
     @MessageMapping("/user/{name}")
-    public void sendMessageToSpecificUser(@Payload String message, @DestinationVariable String name) {
-        simpMessagingTemplate.convertAndSend("/queue/user/" + name, message);
+    public void getAmountOfNotifications(@DestinationVariable String name) throws JSONException {
+        webSocketService.sendStatusMessageAfterLogin(name);
     }
 }

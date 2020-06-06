@@ -168,4 +168,8 @@ public class UserService {
     public void updateUser(User user) {
         userRepository.save(user);
     }
+
+    public Optional<User> getUserByLogin(String login) {
+        return userRepository.findOneByLogin(login);
+    }
 }

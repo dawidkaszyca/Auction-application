@@ -25,7 +25,7 @@ public class Conversation implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     private Conversation recipientMessage;
 
-    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Message> sentMessages;
 
 }
