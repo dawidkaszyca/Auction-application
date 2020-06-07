@@ -18,9 +18,6 @@ import pl.dawid.kaszyca.service.WebSocketService;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Autowired
-    WebSocketService webSocketService;
-
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/portfolio").setAllowedOrigins("http://localhost:4200").withSockJS();
@@ -34,10 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @EventListener
     public void handleSubscribeEvent(SessionSubscribeEvent event) {
-        String user = event.getMessage().getHeaders().get("simpDestination").toString();
-        String sessionId = event.getMessage().getHeaders().get("simpSessionId").toString();
-        webSocketService.addUser(sessionId, user);
-        log.info("<==> handleSubscribeEvent: username, event=" + user);
+        log.info("<==> handleSubscribeEvent: username, event=" + event);
     }
 
     @EventListener
@@ -47,8 +41,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @EventListener
     public void handleDisconnectEvent(SessionDisconnectEvent event) {
-        String sessionId = event.getMessage().getHeaders().get("simpSessionId").toString();
-        webSocketService.removeUserBySessionId(sessionId);
         log.info("<=== handleDisconnectEvent: username, event=" + event);
     }
 }

@@ -1,5 +1,6 @@
 package pl.dawid.kaszyca.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dawid.kaszyca.dto.MessageDTO;
 import pl.dawid.kaszyca.exception.RecipientNotExistException;
@@ -23,9 +24,13 @@ public class ChatService {
     ConversationRepository conversationRepository;
     WebSocketService webSocketService;
 
-    public ChatService(UserService userService, ConversationRepository messageRepository, WebSocketService webSocketService) {
+    public ChatService(UserService userService, ConversationRepository messageRepository) {
         this.userService = userService;
         this.conversationRepository = messageRepository;
+    }
+
+    @Autowired
+    public void setWebSocketService(WebSocketService webSocketService) {
         this.webSocketService = webSocketService;
     }
 
