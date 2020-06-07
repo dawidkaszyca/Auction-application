@@ -17,6 +17,7 @@ export class WebsocketService {
   stompClient: any;
   isConnected = false;
   notification: BehaviorSubject<number>;
+  token: string;
 
   newMessage: BehaviorSubject<Status>;
 
@@ -26,21 +27,22 @@ export class WebsocketService {
     this.isConnected = false;
   }
 
-  _connect(login: string) {
+  _connect(login: string, token: string) {
+    this.token = token;
     this.userName = login;
-    this.subscribeChannel = '/app/queue/user/' + login;
-    this.privateChannel = '/queue/user/' + login;
+    this.subscribeChannel = '/queue/user/' + login;
+    this.privateChannel = '/app/queue/user/' + login;
     if (this.userName != null && this.userName !== '') {
       console.log('Initialize WebSocket Connection');
       const ws = new SockJS(this.webSocketEndPoint);
       this.stompClient = Stomp.over(ws);
       const _this = this;
       _this.isConnected = true;
-      _this.stompClient.connect({}, function(frame) {
+      _this.stompClient.connect({'X-Authorization': 'Bearer ' + token}, function(frame) {
         _this._sendMessage('getStatus');
-        _this.stompClient.subscribe(_this.privateChannel, function(sdkEvent) {
+        _this.stompClient.subscribe(_this.subscribeChannel, function(sdkEvent) {
           _this.onMessageReceived(sdkEvent);
-          ;
+
         });
       }, this.errorCallBack);
     }
@@ -48,6 +50,7 @@ export class WebsocketService {
 
   _disconnect() {
     if (this.stompClient !== null) {
+      this.stompClient.disconnect();
       this.isConnected = false;
     }
   }
@@ -57,7 +60,7 @@ export class WebsocketService {
     this.isConnected = false;
     console.log('errorCallBack -> ' + error);
     setTimeout(() => {
-      this._connect(this.userName);
+      this._connect(this.userName, this.token);
     }, 1000);
   }
 
@@ -67,7 +70,7 @@ export class WebsocketService {
    */
   _sendMessage(message) {
     console.log('calling logout api via web socket');
-    this.stompClient.send(this.subscribeChannel, {}, JSON.stringify(message));
+    this.stompClient.send(this.privateChannel, {'X-Authorization': 'Bearer ' + this.token}, JSON.stringify(message));
   }
 
   onMessageReceived(message) {

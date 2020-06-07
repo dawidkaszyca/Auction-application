@@ -62,7 +62,7 @@ export class AuthService {
     } else {
       this.sessionStorage.store('authenticationToken', jwt);
     }
-    this.websocketService._connect(this.getLoginFromToken());
+    this.websocketService._connect(this.getLoginFromToken(), this.getTokenFromStorage());
     this.router.navigateByUrl('/');
   }
 
@@ -98,7 +98,7 @@ export class AuthService {
 
   private reConnectIfIsRequired() {
     if (this.websocketService.isConnected === false) {
-      this.websocketService._connect(this.getLoginFromToken());
+      this.websocketService._connect(this.getLoginFromToken(), this.getTokenFromStorage());
     }
   }
 

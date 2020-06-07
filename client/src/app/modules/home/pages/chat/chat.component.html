@@ -54,7 +54,7 @@
       <!--reply section-->
       <div class="row reply">
         <div class="col-9 col-sm-9 reply-main">
-          <textarea class="form-control" rows="1" id="comment" [(ngModel)]="msg" placeholder="write a message..."></textarea>
+          <textarea class="form-control" rows="1" id="comment" (keyup.enter)="sendMessage()" [(ngModel)]="msg" placeholder="write a message..."></textarea>
         </div>
         <div class="col-3 col-sm-2 reply-send">
           <button type="button" class="btn btn-info btn-send" (click)="sendMessage()">Send</button>
