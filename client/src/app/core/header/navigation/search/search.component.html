@@ -1,17 +1,28 @@
 <div class="row h-100">
-  <div class="col-6">
+  <div class="col-5">
     <input class="form-control w-100 h-100" [(ngModel)]="search" type="text"
            placeholder='{{"search.looking" | translate}}'>
   </div>
-  <div class="col-4">
-    <mat-select class="form-control w-100">
-      <mat-option>Option1</mat-option>
-      <mat-option>Option2</mat-option>
-      <mat-option>Option3</mat-option>
+  <div class="col-3">
+    <input class="form-control w-100"
+           autocomplete="off"
+           ngx-google-places-autocomplete
+           [options]='options'
+           [(ngModel)]="cityName"
+           name="input"
+           #placesRef="ngx-places"
+           (onAddressChange)="handleAddressChange($event)"
+           required/>
+  </div>
+  <div class="col-2 text-center">
+    <mat-select class="form-control w-100"
+                [(ngModel)]="kilometers"
+                required>
+      <mat-option *ngFor="let obj of kilometersToSelect" [value]="obj">{{obj}}&nbsp;KM</mat-option>
     </mat-select>
   </div>
   <div class="col-2">
-    <button type="button" class="w-100 h-100 btn btn-primary"
+    <button type="button" class="w-100 h-100 btn btn-primary text-center"
             (click)="updateFilter()">{{"search.Search" | translate}}</button>
   </div>
 </div>

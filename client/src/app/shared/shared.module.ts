@@ -11,6 +11,7 @@ import { ImageComponent } from './components/image/image.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import {MatCardModule} from '@angular/material/card';
 import { ScrollToBottomDirective } from './directives/scroll-to-bottom.directive';
+import { MapPreviewComponent } from './components/map-preview/map-preview.component';
 
 
 
@@ -21,7 +22,8 @@ import { ScrollToBottomDirective } from './directives/scroll-to-bottom.directive
     DragDropDirective,
     ImageComponent,
     ConfirmDialogComponent,
-    ScrollToBottomDirective
+    ScrollToBottomDirective,
+    MapPreviewComponent
   ],
   imports: [
     CommonModule,
@@ -31,11 +33,12 @@ import { ScrollToBottomDirective } from './directives/scroll-to-bottom.directive
     MatCardModule
   ],
   providers: [],
-  exports: [
-    MaterialElevationDirective,
-    DragDropComponent,
-    ImageComponent
-  ],
+    exports: [
+        MaterialElevationDirective,
+        DragDropComponent,
+        ImageComponent,
+        MapPreviewComponent
+    ],
   bootstrap: [AppComponent]
 })
 export class SharedModule { }

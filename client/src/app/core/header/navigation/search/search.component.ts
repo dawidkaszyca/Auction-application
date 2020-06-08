@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {Filter} from '../../../../shared/models/filter';
 import {Router} from '@angular/router';
+import {City} from '../../../../shared/models/auction-base-field';
 
 @Component({
   selector: 'app-search',
@@ -12,10 +13,22 @@ export class SearchComponent implements OnInit {
 
   filter: Filter;
   search: string;
-  city: string;
+  city: City;
+  options = {
+    types: ['(regions)'],
+    componentRestrictions: {
+      country: ['PL']
+    }
+  };
+  cityName: any;
+  kilometers: number;
+  kilometersToSelect: number[];
+
 
   constructor(private auctionService: AuctionService, private router: Router) {
     this.clearVariable();
+    this.kilometers = 0;
+    this.setKilometersList();
   }
 
   ngOnInit(): void {
@@ -24,14 +37,24 @@ export class SearchComponent implements OnInit {
     });
   }
 
+  public handleAddressChange(address: any) {
+    this.city = new City();
+    this.city.name = address.name;
+    this.city.longitude = address.geometry.location.lng();
+    this.city.latitude = address.geometry.location.lat();
+    this.filter.city = this.city;
+  }
+
   updateFilter() {
     const name = this.filter.sortByFieldName;
     const sort = this.filter.sort;
     this.filter = new Filter();
+    this.filter.kilometers = this.kilometers;
     this.filter.sort = sort;
     this.filter.sortByFieldName = name;
-    if (this.isNonEmptyString(this.city)) {
+    if (this.isNonEmptyString(this.city?.name)) {
       this.filter.city = this.city;
+      this.filter.kilometers = 20;
     }
     if (this.isNonEmptyString(this.search)) {
       this.filter.searchWords = this.search.split(' ').filter(Boolean);
@@ -50,6 +73,19 @@ export class SearchComponent implements OnInit {
 
   clearVariable() {
     this.search = '';
-    this.city = '';
+    this.city = new City();
+    this.cityName = '';
+  }
+
+  private setKilometersList() {
+    this.kilometersToSelect = [];
+    this.kilometersToSelect.push(0);
+    this.kilometersToSelect.push(5);
+    this.kilometersToSelect.push(10);
+    this.kilometersToSelect.push(15);
+    this.kilometersToSelect.push(20);
+    this.kilometersToSelect.push(30);
+    this.kilometersToSelect.push(50);
+    this.kilometersToSelect.push(100);
   }
 }

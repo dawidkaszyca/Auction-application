@@ -22,6 +22,7 @@ import {NgxWebstorageModule} from 'ngx-webstorage';
 import {CoreModule} from './core/core.module';
 import {HomeModule} from './modules/home/home.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -78,6 +79,7 @@ const appRoutes: Routes = [
     CoreModule,
     HomeModule,
     FontAwesomeModule,
+    GooglePlaceModule
   ],
   providers: [
   ],

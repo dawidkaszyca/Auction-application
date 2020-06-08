@@ -35,7 +35,8 @@
     "urEmail": "Twój email",
     "urName": "Twoje imie",
     "urLastName": "Twoje nazwisko",
-    "remember": "Pamiętaj Mnie"
+    "remember": "Pamiętaj Mnie",
+    "cityIsNotProvideByGoogle": "Miasto nie jest wprowadzone z listy miast Google"
   },
   "auction": {
     "condition": "Stan ",

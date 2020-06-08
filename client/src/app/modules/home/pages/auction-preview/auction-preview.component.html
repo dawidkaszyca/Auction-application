@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row" #div5 >
+  <div class="row" #div5>
     <div class="col-7">
       <div #div [ngStyle]="{'height.px': div.offsetWidth }">
         <mat-card class="mt-5 h-100">
@@ -8,7 +8,8 @@
       </div>
       <div class="row mt-4" #div5>
         <div class="col-4" *ngFor="let id of [1, 2, 3]">
-          <div class="mini-image" *ngIf="photosUrl?.size > 1" #div1 [ngStyle]="{'height.px': div1.offsetWidth  * 2 / 3}">
+          <div class="mini-image" *ngIf="photosUrl?.size > 1" #div1
+               [ngStyle]="{'height.px': div1.offsetWidth  * 2 / 3}">
             <mat-card *ngIf="(selected == id || selected < id) && photosUrl.get((id + 1).toString())" class="h-100"
                       (click)="select(id + 1)">
               <app-image *ngIf="photosUrl" [path]="photosUrl.get((id + 1).toString())"></app-image>
@@ -23,7 +24,12 @@
     <div class="col-5 mt-5">
       <div [ngStyle]="{'height.px': div.offsetHeight}">
         <mat-card class="h-100">
+          <div class="h-50 align-bottom">
           <mat-card-title class="mt-2 text-center">{{auction?.title}}</mat-card-title>
+          </div>
+          <div class="h-50 align-bottom">
+            <app-map-preview *ngIf="auction?.city" [city]="auction.city"></app-map-preview>
+          </div>
         </mat-card>
       </div>
     </div>

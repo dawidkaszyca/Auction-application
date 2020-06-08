@@ -35,7 +35,8 @@
     "urEmail": "Your email",
     "urName": "Your name",
     "urLastName": "Your lastname",
-    "remember": "Remember Me"
+    "remember": "Remember Me",
+    "cityIsNotProvideByGoogle": "city is not selected from google list"
   },
   "auction": {
     "condition": "Condition ",
