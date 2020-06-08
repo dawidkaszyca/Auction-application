@@ -27,6 +27,7 @@ import {ReceivedMessageComponent} from './components/received-message/received-m
 import {ContactComponent} from './components/contact/contact.component';
 import {SentMessageComponent} from './components/sent-message/sent-message.component';
 import {ChatComponent} from './pages/chat/chat.component';
+import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 
 const appRoutes: Routes = [
   {
@@ -93,6 +94,7 @@ const appRoutes: Routes = [
     FontAwesomeModule,
     BrowserModule,
     FormsModule,
+    GooglePlaceModule
   ]
 })
 export class HomeModule {

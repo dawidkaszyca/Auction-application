@@ -6,6 +6,8 @@ import {CategoryAttributes} from '../../../../shared/models/category-attributes'
 import {Attachment} from '../../../../shared/models/attachment';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
 import {Router} from '@angular/router';
+import {City} from '../../../../shared/models/auction-base-field';
+
 
 @Component({
   selector: 'app-new-auction',
@@ -23,6 +25,24 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   selectedValues: CategoryAttributes[];
   conditions: string[];
   name: string;
+  city: City;
+  cityName: any;
+  options = {
+    types: ['(regions)'],
+    componentRestrictions: {
+      country: ['PL']
+    }
+  };
+
+
+  public handleAddressChange(address: any) {
+    this.city = new City();
+    this.city.name = address.name;
+    this.city.longitude = address.geometry.location.lng();
+    this.city.latitude = address.geometry.location.lat();
+    this.auction.city = this.city;
+    this.cityName = address.name;
+  }
 
   constructor(private navigationService: NavigationService, private auctionService: AuctionService,
               private attachmentService: AttachmentService, private router: Router) {
@@ -114,5 +134,9 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       err => {
         alert('TODO');
       });
+  }
+
+  checkName(): boolean {
+    return this.cityName === this.city?.name;
   }
 }
