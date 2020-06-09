@@ -116,9 +116,17 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   updateDataAfterSelection(): void {
-    this.selected.partnerMessages.forEach(it => it.displayed = true);
+    let unDisplayed = 0;
+    this.selected.partnerMessages.forEach(it => {
+      if (it.displayed === false) {
+        it.displayed = true;
+        unDisplayed++;
+      }
+    });
     this.createOneArrayFromMessages();
-    this.updateDisplayed();
+    if (unDisplayed > 0) {
+      this.updateDisplayed();
+    }
     this.child.setUnViewedMessage();
   }
 
