@@ -10,7 +10,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.config.ChannelRegistration;
-import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
@@ -23,6 +22,7 @@ import pl.dawid.kaszyca.security.jwt.TokenProvider;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -32,6 +32,9 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
 
     @Autowired
     TokenProvider tokenProvider;
+
+    private static final String SESSION_ID = "simpSessionId";
+    private static final String DESTINATION = "simpDestination";
 
     /**
      * @key - websocket session id
@@ -49,45 +52,41 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor =
-                        MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                if (StompCommand.CONNECT.equals(accessor.getCommand()) || StompCommand.SEND.equals(accessor.getCommand())) {
-                    try {
-                        List<String> authorization = accessor.getNativeHeader("X-Authorization");
-                        log.info("X-Authorization: {}", authorization);
-                        String accessToken = authorization.get(0).split(" ")[1];
-                        Authentication authentication = tokenProvider.getAuthentication(accessToken);
-                        accessor.setUser(authentication);
-                        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                            String sessionId = (String) accessor.getHeader("simpSessionId");
-                            addUser(sessionId, authentication.getName());
-                        }
-                        if (StompCommand.SEND.equals(accessor.getCommand())) {
-                            String app = ((String) message.getHeaders().get("simpDestination")).split("/")[1];
-                            String login = ((String) message.getHeaders().get("simpDestination")).split("/")[4];
-                            if (!authentication.getName().equals(login) && app.equals("app")) {
-                                throw new LoginFromTokenDoNotMatchToWebSocketChannelException();
-                            }
-                        }
-                    } catch (JwtException | IllegalArgumentException e) {
-                        log.info("Invalid JWT token.");
-                        log.trace("Invalid JWT token trace.", e);
-                    }
-                }
-                if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
-                    String sessionId = (String) accessor.getHeader("simpSessionId");
-                    String login = ((String) message.getHeaders().get("simpDestination")).split("/")[3];
-                    if (!checkUserBySessionIdAndLogin(sessionId, login)) {
-                        throw new LoginFromTokenDoNotMatchToWebSocketChannelException();
-                    }
-                }
-                if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
-                    String sessionId = (String) accessor.getHeader("simpSessionId");
-                    removeUserBySessionId(sessionId);
+                StompHeaderAccessor accessor = getAccessor(message);
+                switch (Objects.requireNonNull(accessor.getCommand())) {
+                    case CONNECT:
+                        checkConnectAuthorization(accessor);
+                        break;
+                    case DISCONNECT:
+                        removeActiveUserFromList(accessor);
+                        break;
+                    case SUBSCRIBE:
+                        checkSubscribeAuthorization(accessor, message);
+                        break;
+                    case SEND:
+                        checkSendAuthorization(accessor, message);
+                        break;
+                    default:
+                        return message;
                 }
                 return message;
             }
         });
+    }
+
+    private StompHeaderAccessor getAccessor(Message<?> message) {
+        return MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+    }
+
+    private void checkConnectAuthorization(StompHeaderAccessor accessor) {
+        try {
+            Authentication authentication = setAuthenticationToAccessorFromTokenInHeader(accessor);
+            String sessionId = (String) accessor.getHeader(SESSION_ID);
+            addUser(sessionId, authentication.getName());
+        } catch (JwtException | IllegalArgumentException e) {
+            log.info("Invalid JWT token.");
+            log.trace("Invalid JWT token trace.", e);
+        }
     }
 
     public void addUser(String sessionId, String login) {
@@ -95,11 +94,48 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
             userLogin.put(sessionId, login);
     }
 
+    private void removeActiveUserFromList(StompHeaderAccessor accessor) {
+        String sessionId = (String) accessor.getHeader(SESSION_ID);
+        removeUserBySessionId(sessionId);
+    }
+
     public void removeUserBySessionId(String sessionId) {
         userLogin.remove(sessionId, userLogin.get(sessionId));
     }
 
+    private void checkSubscribeAuthorization(StompHeaderAccessor accessor, Message<?> message) {
+        String sessionId = (String) accessor.getHeader(SESSION_ID);
+        String login = ((String) Objects.requireNonNull(message.getHeaders().get(DESTINATION))).split("/")[3];
+        if (!checkUserBySessionIdAndLogin(sessionId, login)) {
+            throw new LoginFromTokenDoNotMatchToWebSocketChannelException();
+
+        }
+    }
+
     public boolean checkUserBySessionIdAndLogin(String sessionId, String login) {
         return userLogin.get(sessionId).equals(login);
+    }
+
+    private void checkSendAuthorization(StompHeaderAccessor accessor, Message<?> message) {
+        try {
+            Authentication authentication = setAuthenticationToAccessorFromTokenInHeader(accessor);
+            String app = ((String) Objects.requireNonNull(message.getHeaders().get(DESTINATION))).split("/")[1];
+            String login = ((String) Objects.requireNonNull(message.getHeaders().get(DESTINATION))).split("/")[4];
+            if (!authentication.getName().equals(login) && app.equals("app")) {
+                throw new LoginFromTokenDoNotMatchToWebSocketChannelException();
+            }
+        } catch (JwtException | IllegalArgumentException e) {
+            log.info("Invalid JWT token.");
+            log.trace("Invalid JWT token trace.", e);
+        }
+    }
+
+    private Authentication setAuthenticationToAccessorFromTokenInHeader(StompHeaderAccessor accessor) {
+        List<String> authorization = accessor.getNativeHeader("X-Authorization");
+        log.info("X-Authorization: {}", authorization);
+        String accessToken = Objects.requireNonNull(authorization).get(0).split(" ")[1];
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        accessor.setUser(authentication);
+        return authentication;
     }
 }
