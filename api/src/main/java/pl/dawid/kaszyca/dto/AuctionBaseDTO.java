@@ -1,4 +1,5 @@
 package pl.dawid.kaszyca.dto;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ public class AuctionBaseDTO {
 
     private String category;
 
-    private String city;
+    private CityDTO city;
 
     private String condition;
 

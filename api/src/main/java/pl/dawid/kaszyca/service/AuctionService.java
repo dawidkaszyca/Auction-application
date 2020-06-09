@@ -8,7 +8,6 @@ import pl.dawid.kaszyca.model.City;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
-import pl.dawid.kaszyca.repository.CityRepository;
 import pl.dawid.kaszyca.util.MapperUtils;
 import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
@@ -22,14 +21,11 @@ public class AuctionService {
     AuctionRepository auctionRepository;
     UserService userService;
     CategoryService categoryService;
-    CityRepository cityRepository;
 
-    public AuctionService(AuctionRepository auctionRepository, UserService userService, CategoryService categoryService,
-                          CityRepository cityRepository) {
+    public AuctionService(AuctionRepository auctionRepository, UserService userService, CategoryService categoryService) {
         this.auctionRepository = auctionRepository;
         this.userService = userService;
         this.categoryService = categoryService;
-        this.cityRepository = cityRepository;
     }
 
     public AuctionWithDetailsDTO getAuctionById(long id) {
@@ -71,18 +67,11 @@ public class AuctionService {
                 detailsToSave.add(auctionDetails);
             }
         }
-        setCityToAuction(auction);
         auction.setAuctionDetails(detailsToSave);
         auctionRepository.save(auction);
         return auction.getId();
     }
 
-    private void setCityToAuction(Auction auction) {
-        City city = auction.getCity();
-        auction.setCity(cityRepository.save(city));
-    }
-
-    //TODO if category is empty find by views!!!
     public AuctionVM getAuctionsFilter(FilterVM filterVM) {
         AuctionVM auctionVM = new AuctionVM();
         List<Auction> auctions = auctionRepository.findByFilters(filterVM);

@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.dawid.kaszyca.config.SortEnum;
 import pl.dawid.kaszyca.dto.CategoryAttributesDTO;
+import pl.dawid.kaszyca.dto.CityDTO;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -33,7 +33,7 @@ public class FilterVM {
 
     List<String> searchWords;
 
-    String city;
+    CityDTO city;
 
     String condition;
 
@@ -42,4 +42,7 @@ public class FilterVM {
     Float minPrice;
 
     Float maxPrice;
+
+    int kilometers;
+
 }
