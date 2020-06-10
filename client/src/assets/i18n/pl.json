@@ -56,7 +56,8 @@
     "name": "Podaj swoje imię",
     "phone": "Numer telefonu",
     "photo": "Zdjęcie",
-    "save": "ZAPISZ"
+    "save": "ZAPISZ",
+    "setCity": "Wprowadź lokalizacje"
   },
   "dragAndDrop": {
     "string": "Upuść tutaj pliki lub kliknij",
