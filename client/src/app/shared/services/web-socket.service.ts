@@ -4,6 +4,7 @@ import * as Stomp from 'stompjs';
 import {Status} from '../models/status';
 import {BehaviorSubject} from 'rxjs';
 import {Router} from '@angular/router';
+import {WEB_SOCKET_URL} from '../../app.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import {Router} from '@angular/router';
 export class WebsocketService {
 
   userName: string;
-  webSocketEndPoint = 'http://localhost:8082/portfolio';
+  webSocketEndPoint = `${WEB_SOCKET_URL}/portfolio`;
   subscribeChannel: string;
   privateChannel: string;
   stompClient: any;

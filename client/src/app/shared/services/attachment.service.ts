@@ -2,15 +2,14 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Attachment} from '../models/attachment';
 import {Observable} from 'rxjs';
+import {SERVER_API_URL} from '../../app.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttachmentService {
 
-  private DOMAIN_URL = 'http://localhost:8082';
-  private BASE_URL = this.DOMAIN_URL + '/api';
-  private ATTACHMENT = this.BASE_URL + '/attachments';
+  private ATTACHMENT = `${SERVER_API_URL}/attachments`;
   private USER = this.ATTACHMENT + '/user';
 
   constructor(private http: HttpClient) {

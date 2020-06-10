@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {Conversation} from '../models/conversation';
 import {NewMessage} from '../models/new-message';
 import {Message} from '../models/message';
+import {SERVER_API_URL} from '../../app.constants';
 
 
 @Injectable({
@@ -11,9 +12,7 @@ import {Message} from '../models/message';
 })
 export class ChatService {
 
-  private DOMAIN_URL = 'http://localhost:8082';
-  private BASE_URL = this.DOMAIN_URL + '/api';
-  private MESSAGES = this.BASE_URL + '/messages';
+  private MESSAGES = `${SERVER_API_URL}/messages`;
 
   constructor(private http: HttpClient) {
   }
