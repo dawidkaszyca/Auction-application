@@ -139,7 +139,7 @@
         <input class="form-control w-25" [(ngModel)]="auction.phone" name="phone">
       </div>
     </mat-card>
-
+    <mat-spinner *ngIf="isSaving" class="spinner-center"></mat-spinner>
     <mat-card class="h-100">
       <div class="w-100" #div [ngStyle]="{'height.px': div.offsetWidth / 5}">
         <app-drag-drop class="h-100" [maxAmountOfImages]="maxSizeOfImages"
@@ -161,7 +161,6 @@
               <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove" (click)="removeImage(number)"></fa-icon>
             </mat-card>
           </div>
-
         </div>
       </div>
     </mat-card>
