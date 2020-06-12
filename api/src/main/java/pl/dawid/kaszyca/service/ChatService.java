@@ -2,7 +2,10 @@ package pl.dawid.kaszyca.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.MessageDTO;
+import pl.dawid.kaszyca.exception.CannotSendEmptyMessageException;
+import pl.dawid.kaszyca.exception.CannotSendMessageToYourselfException;
 import pl.dawid.kaszyca.exception.RecipientNotExistException;
 import pl.dawid.kaszyca.model.Conversation;
 import pl.dawid.kaszyca.model.Message;
@@ -69,9 +72,15 @@ public class ChatService {
 
     public MessageDTO sendMessage(MessageDispatchVM messageDispatchVM) {
         Message message = new Message();
+        if(!StringUtils.hasText(messageDispatchVM.getContent())) {
+            throw new CannotSendEmptyMessageException();
+        }
         Optional<User> sender = userService.getCurrentUserObject();
         User recipient = userService.getUserObjectById(messageDispatchVM.getTo());
         if (sender.isPresent() && recipient != null) {
+            if(sender.get() == recipient) {
+                throw new CannotSendMessageToYourselfException();
+            }
             Conversation conversation = getConversationObjectToChat(sender.get(), recipient);
             List<Message> messages = conversation.getSentMessages();
             if (messages == null) {
@@ -80,6 +89,7 @@ public class ChatService {
             message.setContent(messageDispatchVM.getContent());
             message.setConversation(conversation);
             messages.add(message);
+            conversation.setSentMessages(messages);
             conversationRepository.save(conversation);
             webSocketService.sendMessages(recipient.getLogin(), conversation.getRecipientMessage().getId(), message);
             return MapperUtils.map(message, MessageDTO.class);
