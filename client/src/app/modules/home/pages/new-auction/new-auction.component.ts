@@ -111,7 +111,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
     const attachment = new Attachment();
     attachment.isUserImagePhoto = false;
     attachment.mainPhotoId = this.selected;
-    this.auction.attributes = this.selectedValues;
+    this.auction.attributes = this.getNotEmptyValues();
     this.auctionService.saveAuction(this.auction).subscribe(
       res => {
         attachment.auctionId = Number(res);
@@ -121,6 +121,10 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       err => {
         alert('TODO');
       });
+  }
+
+  private getNotEmptyValues() {
+    return this.selectedValues.filter(it => it.attributeValues[0].value !== '');
   }
 
   saveAttachment(attachment: Attachment) {
