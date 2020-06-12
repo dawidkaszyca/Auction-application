@@ -7,6 +7,7 @@ import {Attachment} from '../../../../shared/models/attachment';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
 import {Router} from '@angular/router';
 import {City} from '../../../../shared/models/auction-base-field';
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       country: ['PL']
     }
   };
+  faRemove = faTimes;
 
 
   public handleAddressChange(address: any) {
@@ -138,5 +140,13 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
 
   checkName(): boolean {
     return this.cityName === this.city?.name;
+  }
+
+  removeImage(index: number) {
+    this.files.splice(index, 1);
+    this.previewUrl.splice(index, 1);
+    if(this.files.length === 0) {
+      this.selected = this.maxSizeOfImages;
+    }
   }
 }

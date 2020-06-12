@@ -151,12 +151,14 @@
           <div #div1 *ngIf="selected!=number">
             <mat-card [ngStyle]="{'height.px': div1.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
               <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
+              <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove"></fa-icon>
             </mat-card>
           </div>
 
           <div #div2 class="selected" *ngIf="selected == number && previewUrl[number]">
             <mat-card [ngStyle]="{'height.px': div2.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
               <app-image *ngIf="previewUrl[number]" [path]=previewUrl[number]></app-image>
+              <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove" (click)="removeImage(number)"></fa-icon>
             </mat-card>
           </div>
 
