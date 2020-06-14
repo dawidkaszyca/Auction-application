@@ -6,7 +6,7 @@ import {UserViewModel} from './model/user-view-model';
 import {map} from 'rxjs/operators';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {SERVER_API_URL} from '../../app.constants';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {User} from '../../shared/models/user';
 import {WebsocketService} from '../../shared/services/web-socket.service';
@@ -26,11 +26,13 @@ export class AuthService {
   private LOGIN = `${SERVER_API_URL}/authenticate`;
   private PROFILE = `${SERVER_API_URL}/profile`;
   private UPDATE = `${SERVER_API_URL}/update`;
+  private returnUrl: string;
 
   constructor(
     private http: HttpClient,
     private localStorage: LocalStorageService,
     private sessionStorage: SessionStorageService,
+    private route: ActivatedRoute,
     private router: Router,
     private websocketService: WebsocketService) {
   }
@@ -63,7 +65,8 @@ export class AuthService {
       this.sessionStorage.store('authenticationToken', jwt);
     }
     this.websocketService._connect(this.getLoginFromToken(), this.getTokenFromStorage());
-    this.router.navigateByUrl('/');
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.router.navigateByUrl(this.returnUrl);
   }
 
   getTokenFromStorage(): string {
