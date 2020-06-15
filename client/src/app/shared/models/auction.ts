@@ -6,4 +6,6 @@ export class Auction extends AuctionBaseField {
   description: string;
   email: string;
   phone: string;
+  userId: number;
+  userFirstName: string;
 }

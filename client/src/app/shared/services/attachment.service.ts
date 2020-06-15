@@ -41,4 +41,8 @@ export class AttachmentService {
   saveUserPhoto(image: FormData) {
     return this.http.post<string[]>(this.USER, image);
   }
+
+  getUserPhotoById(userId: number) {
+    return this.http.get<string[]>(this.USER + '/' + userId);
+  }
 }
