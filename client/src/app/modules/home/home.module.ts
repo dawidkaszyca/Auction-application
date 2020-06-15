@@ -29,6 +29,7 @@ import {SentMessageComponent} from './components/sent-message/sent-message.compo
 import {ChatComponent} from './pages/chat/chat.component';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MessageDialogComponent} from '../../shared/components/message-dialog/message-dialog.component';
 
 const appRoutes: Routes = [
   {

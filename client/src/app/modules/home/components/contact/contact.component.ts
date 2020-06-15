@@ -74,6 +74,9 @@ export class ContactComponent implements OnInit, OnChanges {
   private getLastMessageObj(conversation: Conversation): Message {
     const urMsg = conversation.yourMessages[conversation.yourMessages.length - 1];
     const partnerMsg = conversation.partnerMessages[conversation.partnerMessages.length - 1];
+    if (!urMsg || !partnerMsg) {
+      return urMsg || partnerMsg;
+    }
     const yourLastMsgDate = new Date(urMsg.sentDate);
     const partnerLastMsgDate = new Date(partnerMsg.sentDate);
     if (yourLastMsgDate > partnerLastMsgDate) {

@@ -29,6 +29,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   private isNewMSG: boolean;
 
   constructor(private webSocket: WebsocketService, private navigationService: NavigationService, private chatService: ChatService) {
+    this.conversations = [];
   }
 
   ngOnInit(): void {
@@ -51,26 +52,33 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   private getMessageFromServer() {
     this.chatService.getMessages().subscribe(res => {
-      this.conversations = res;
-      this.selectFirst();
-      this.isNewMSG = true;
+      if (res) {
+        this.conversations = res;
+        this.selectFirst();
+        this.isNewMSG = true;
+      }
     });
   }
 
   private selectFirst() {
-    this.selected = this.conversations[0];
-    this.updateDataAfterSelection();
+    if (this.conversations) {
+      this.selected = this.conversations[0];
+      this.updateDataAfterSelection();
+    }
   }
 
   private setDataAfterNewMessage(data: Status) {
     if (data.id) {
       const conversation = this.findConversationById(data.id);
       data.message.isYours = false;
-      if (!conversation.partnerMessages) {
+      if (!conversation) {
+        this.getConversationById(data);
+        return 0;
+      } else if (conversation && !conversation.partnerMessages) {
         conversation.partnerMessages = [];
       }
       conversation.partnerMessages.push(data.message);
-      if (this.selected.id === data.id) {
+      if (this.selected?.id === data.id) {
         this.selectedMessages.push(data.message);
         this.isNewMSG = true;
       }
@@ -151,5 +159,15 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       const bDate = new Date(b.sentDate);
       return aDate < bDate ? -1 : aDate > bDate ? 1 : 0;
     });
+  }
+
+  private getConversationById(conversationToLoad: Status) {
+    this.chatService.getConversationById(conversationToLoad.id).subscribe(
+      res => {
+        this.conversations.push(res);
+        if (!this.selected) {
+          this.selectFirst();
+        }
+      });
   }
 }

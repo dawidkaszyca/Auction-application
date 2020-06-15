@@ -28,4 +28,8 @@ export class ChatService {
   updateDisplayedById(partnerId: number) {
     return this.http.put(this.MESSAGES, partnerId);
   }
+
+  getConversationById(id: number): Observable<Conversation> {
+    return this.http.get<Conversation>(this.MESSAGES + '/' + id);
+  }
 }
