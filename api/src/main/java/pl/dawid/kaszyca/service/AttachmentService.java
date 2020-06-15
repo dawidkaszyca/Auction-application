@@ -119,4 +119,11 @@ public class AttachmentService {
             userService.updateUser(user.get());
         }
     }
+
+    public List<String> getUserPhoto(long id) {
+        User user = userService.getUserObjectById(id);
+        List<String> userUrl = new ArrayList<>();
+            userUrl.add(convertImageToResponseIfExist(user.getProfile_Image()));
+        return userUrl;
+    }
 }

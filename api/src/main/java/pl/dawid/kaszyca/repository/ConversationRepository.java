@@ -14,4 +14,6 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
     Optional<Conversation> findFirstBySenderAndRecipient(User sender, User recipient);
 
     List<Conversation> findAllByRecipient(User user);
+
+    Optional<Conversation> findFirstById(long conversationId);
 }

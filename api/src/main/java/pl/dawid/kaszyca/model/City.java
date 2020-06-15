@@ -28,4 +28,9 @@ public class City implements Serializable {
 
     private Double longitude;
 
+    public City(String name, Double longitude, Double latitude) {
+        this.name = name;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
 }
