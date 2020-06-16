@@ -87,7 +87,17 @@
     "photoButton": "Dodaj lub zmień zdjęcie",
     "welcome": "Witaj",
     "changeData": "Zmień dane",
-    "changePassword": "Zmień hasło"
+    "changePassword": "Zmień hasło",
+    "call": "Zadzwoń",
+    "classifieds": "Ogłoszenia"
+  },
+  "dialog": {
+    "title": "Wyślij wiadomość",
+    "send": "Wyślij",
+    "cancel": "Zamknij",
+    "sent": "Twoja wiadomość została wysłana",
+    "confirm": "Potwierdzenie",
+    "login": "Proszę o zalogowanie się przed wysłaniem wiadomości"
   }
 }
 
