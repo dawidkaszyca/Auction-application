@@ -118,6 +118,8 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             predicates.add(getAttributesPredicate(filterVM, auction, cb));
         if (!StringUtils.isEmpty(filterVM.getCategory()) && !filterVM.getCategory().equals("all"))
             predicates.add(getCategoryPredicate(filterVM.getCategory(), auction, cb));
+        if(filterVM.getUserId() != null && filterVM.getUserId() != 0)
+            predicates.add(getUserIdPredicate(filterVM.getUserId(), auction, cb));
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
@@ -174,6 +176,10 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             attributesPredicate.add(cb.and(attr, predicate));
         }
         return cb.or(attributesPredicate.toArray(new Predicate[attributesPredicate.size()]));
+    }
+
+    private Predicate getUserIdPredicate(Long userId, Root<Auction> auction, CriteriaBuilder cb) {
+        return cb.equal(auction.get("user").get("id"), userId);
     }
 
     private Long getAuctionsByCityFilterCount(List<Auction> auctions, FilterVM filterVM) {
