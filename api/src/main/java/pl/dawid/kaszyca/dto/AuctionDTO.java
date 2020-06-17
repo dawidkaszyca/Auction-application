@@ -15,4 +15,8 @@ public class AuctionDTO extends AuctionBaseDTO {
 
     @Pattern(regexp = "[0-9]{9}")
     private String phone;
+
+    private Long userId;
+
+    private String userFirstName;
 }

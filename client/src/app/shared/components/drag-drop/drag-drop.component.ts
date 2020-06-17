@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {HttpClient, HttpEventType} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-drag-drop',
@@ -23,13 +23,13 @@ export class DragDropComponent implements OnChanges {
   }
 
   private setEmptyArrays(): void {
-    this.files = [];
-    this.validatedFiles = [];
+    this.files = [] as File[];
+    this.validatedFiles = [] as File[];
   }
 
   fileProgress(fileInput: any): void {
     this.setFile(fileInput);
-    this.addValidFilesToList(fileInput);
+    this.addValidFilesToList();
     if (this.validatedFiles.length > 0) {
       this.filesEmitter.emit(this.validatedFiles);
     }
@@ -38,16 +38,16 @@ export class DragDropComponent implements OnChanges {
 
   private setFile(fileInput: any): void {
     for (let i = 0; i < this.maxAmountOfImages; i++) {
-      if (fileInput.target && fileInput.target !== undefined) {
+      if (fileInput.target && fileInput.target.files[i]) {
         this.files.push(fileInput.target.files[i] as File);
-      } else {
+      } else if (fileInput[i]) {
         this.files.push(fileInput[i]);
       }
     }
   }
 
-  private addValidFilesToList(fileInput: File[]): void {
-    for (const file of fileInput) {
+  private addValidFilesToList(): void {
+    for (const file of this.files) {
       if (this.checkExtension(file) && this.checkFileSize(file)) {
         this.validatedFiles.push(file);
       }

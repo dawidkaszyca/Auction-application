@@ -1,9 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Auction} from '../../../../shared/models/auction';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
 import {AuctionDetails} from '../../../../shared/models/auction-details';
+import {SendMessageService} from '../../../../shared/services/send-message.service';
+import {AuthService} from '../../../../core/security/auth.service';
+import {InfoDialogService} from '../../../../shared/services/info-dialog.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auction-preview',
@@ -17,8 +21,13 @@ export class AuctionPreviewComponent implements OnInit {
   auction: Auction;
   photosUrl: Map<string, string>;
   selected = 1;
+  call: any;
+  userPhoto: any;
 
-  constructor(private router: ActivatedRoute, private auctionService: AuctionService, private attachmentService: AttachmentService) {
+  constructor(private router: ActivatedRoute, private auctionService: AuctionService, private attachmentService: AttachmentService,
+              private sendMessageService: SendMessageService, private authService: AuthService,
+              private infoDialogService: InfoDialogService, private translate: TranslateService) {
+    this.call = false;
   }
 
   ngOnInit(): void {
@@ -33,8 +42,8 @@ export class AuctionPreviewComponent implements OnInit {
       res => {
         this.auction = res;
         this.auctionDetails = this.auction.auctionDetails;
-        this.auction.description = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
         window.scroll(0, 0);
+        this.loadUserPhoto();
       },
       err => {
         alert('TODO');
@@ -53,5 +62,24 @@ export class AuctionPreviewComponent implements OnInit {
 
   select(id: number) {
     this.selected = id;
+  }
+
+  sendMessage() {
+    if (this.authService.isLogged()) {
+      this.sendMessageService.openConfirmationDialog(this.auction.userId);
+    } else {
+      const message = this.translate.instant('dialog.login');
+      this.infoDialogService.openConfirmationDialog(message);
+    }
+  }
+
+  private loadUserPhoto() {
+    this.attachmentService.getUserPhotoById(this.auction.userId).subscribe(res => {
+      this.userPhoto = res[0];
+    });
+  }
+
+  routeToUserClassFields() {
+
   }
 }

@@ -7,6 +7,7 @@ export class Filter {
   pageSize = 10;
   page = 0;
   sort = 'DESC';
+  userId;
   searchWords: string[];
   city: City;
   kilometers: number;

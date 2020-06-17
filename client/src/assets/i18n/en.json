@@ -56,7 +56,8 @@
     "name": "Enter your name",
     "phone": "Phone number",
     "photo": "Photo",
-    "save": "SAVE"
+    "save": "SAVE",
+    "setCity": "Enter a location"
   },
   "dragAndDrop": {
     "string": "Drop file here or click !!!",
@@ -84,6 +85,16 @@
   },
   "myProfile": {
     "photoButton": "Click to change photo",
-    "welcome": "Welcome"
+    "welcome": "Welcome",
+    "call": "Call",
+    "classifieds": "Classifieds"
+  },
+  "dialog": {
+    "title": "Send message",
+    "send": "Send",
+    "cancel": "Cancel",
+    "sent": "Your message has been sent",
+    "confirm": "Confirmation",
+    "login": "Please login to your account before you can send a message"
   }
 }

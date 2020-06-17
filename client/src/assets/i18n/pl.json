@@ -56,7 +56,8 @@
     "name": "Podaj swoje imię",
     "phone": "Numer telefonu",
     "photo": "Zdjęcie",
-    "save": "ZAPISZ"
+    "save": "ZAPISZ",
+    "setCity": "Wprowadź lokalizacje"
   },
   "dragAndDrop": {
     "string": "Upuść tutaj pliki lub kliknij",
@@ -86,7 +87,17 @@
     "photoButton": "Dodaj lub zmień zdjęcie",
     "welcome": "Witaj",
     "changeData": "Zmień dane",
-    "changePassword": "Zmień hasło"
+    "changePassword": "Zmień hasło",
+    "call": "Zadzwoń",
+    "classifieds": "Ogłoszenia"
+  },
+  "dialog": {
+    "title": "Wyślij wiadomość",
+    "send": "Wyślij",
+    "cancel": "Zamknij",
+    "sent": "Twoja wiadomość została wysłana",
+    "confirm": "Potwierdzenie",
+    "login": "Proszę o zalogowanie się przed wysłaniem wiadomości"
   }
 }
 

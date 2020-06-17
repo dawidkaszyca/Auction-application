@@ -7,6 +7,8 @@ import {Attachment} from '../../../../shared/models/attachment';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
 import {Router} from '@angular/router';
 import {City} from '../../../../shared/models/auction-base-field';
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import {timer} from 'rxjs';
 
 
 @Component({
@@ -33,6 +35,8 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       country: ['PL']
     }
   };
+  faRemove = faTimes;
+  isSaving: any;
 
 
   public handleAddressChange(address: any) {
@@ -48,6 +52,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
               private attachmentService: AttachmentService, private router: Router) {
     navigationService.show = false;
     this.maxSizeOfImages = 4;
+    this.isSaving = false;
   }
 
   ngOnInit(): void {
@@ -106,19 +111,24 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   }
 
   saveAuction() {
+    this.isSaving = true;
     const attachment = new Attachment();
     attachment.isUserImagePhoto = false;
     attachment.mainPhotoId = this.selected;
-    this.auction.attributes = this.selectedValues;
+    this.auction.attributes = this.getNotEmptyValues();
     this.auctionService.saveAuction(this.auction).subscribe(
       res => {
         attachment.auctionId = Number(res);
         this.saveAttachment(attachment);
-        this.router.navigateByUrl('/');
       },
       err => {
+        this.isSaving = false;
         alert('TODO');
       });
+  }
+
+  private getNotEmptyValues() {
+    return this.selectedValues.filter(it => it.attributeValues[0].value !== '');
   }
 
   saveAttachment(attachment: Attachment) {
@@ -129,14 +139,26 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
     formData.append('data', JSON.stringify(attachment));
     this.attachmentService.saveAttachment(formData).subscribe(
       res => {
-        console.log('Zdjecia zapisano');
-      },
-      err => {
-        alert('TODO');
+        timer(1500).subscribe(x => {
+          this.isSaving = false;
+          this.openAuctionPage(attachment.auctionId);
+        });
       });
+  }
+
+  openAuctionPage(id: number) {
+    this.router.navigate(['auction'], {queryParams: {'title': this.auction.title, 'category': this.auction.category, 'id': id}});
   }
 
   checkName(): boolean {
     return this.cityName === this.city?.name;
+  }
+
+  removeImage(index: number) {
+    this.files.splice(index, 1);
+    this.previewUrl.splice(index, 1);
+    if (this.files.length === 0) {
+      this.selected = this.maxSizeOfImages;
+    }
   }
 }

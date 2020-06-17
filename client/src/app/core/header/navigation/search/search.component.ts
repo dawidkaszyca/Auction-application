@@ -27,7 +27,6 @@ export class SearchComponent implements OnInit {
 
   constructor(private auctionService: AuctionService, private router: Router) {
     this.clearVariable();
-    this.kilometers = 0;
     this.setKilometersList();
   }
 
@@ -54,7 +53,7 @@ export class SearchComponent implements OnInit {
     this.filter.sortByFieldName = name;
     if (this.isNonEmptyString(this.city?.name)) {
       this.filter.city = this.city;
-      this.filter.kilometers = 20;
+      this.filter.kilometers = this.kilometers;
     }
     if (this.isNonEmptyString(this.search)) {
       this.filter.searchWords = this.search.split(' ').filter(Boolean);
@@ -64,7 +63,6 @@ export class SearchComponent implements OnInit {
     if (this.router.url !== '/') {
       this.router.navigateByUrl('/');
     }
-    this.clearVariable();
   }
 
   isNonEmptyString(str: string) {
@@ -73,6 +71,7 @@ export class SearchComponent implements OnInit {
 
   clearVariable() {
     this.search = '';
+    this.kilometers = 0;
     this.city = new City();
     this.cityName = '';
   }

@@ -99,6 +99,7 @@
                ngx-google-places-autocomplete
                [options]='options'
                name="input"
+               placeholder="{{'newAuction.setCity' | translate}}"
                #placesRef="ngx-places"
                #city="ngModel"
                [(ngModel)]="cityName"
@@ -138,7 +139,7 @@
         <input class="form-control w-25" [(ngModel)]="auction.phone" name="phone">
       </div>
     </mat-card>
-
+    <mat-spinner *ngIf="isSaving" class="spinner-center"></mat-spinner>
     <mat-card class="h-100">
       <div class="w-100" #div [ngStyle]="{'height.px': div.offsetWidth / 5}">
         <app-drag-drop class="h-100" [maxAmountOfImages]="maxSizeOfImages"
@@ -150,15 +151,16 @@
           <div #div1 *ngIf="selected!=number">
             <mat-card [ngStyle]="{'height.px': div1.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
               <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
+              <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove"></fa-icon>
             </mat-card>
           </div>
 
           <div #div2 class="selected" *ngIf="selected == number && previewUrl[number]">
             <mat-card [ngStyle]="{'height.px': div2.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
               <app-image *ngIf="previewUrl[number]" [path]=previewUrl[number]></app-image>
+              <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove" (click)="removeImage(number)"></fa-icon>
             </mat-card>
           </div>
-
         </div>
       </div>
     </mat-card>

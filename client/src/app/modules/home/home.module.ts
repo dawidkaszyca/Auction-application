@@ -28,6 +28,8 @@ import {ContactComponent} from './components/contact/contact.component';
 import {SentMessageComponent} from './components/sent-message/sent-message.component';
 import {ChatComponent} from './pages/chat/chat.component';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MessageDialogComponent} from '../../shared/components/message-dialog/message-dialog.component';
 
 const appRoutes: Routes = [
   {
@@ -70,32 +72,33 @@ const appRoutes: Routes = [
     ReceivedMessageComponent,
     SentMessageComponent
   ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    RouterModule.forRoot(appRoutes, {enableTracing: true}),
-    MatCardModule,
-    SharedModule,
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatOptionModule,
-    MatSelectModule,
-    TextareaAutosizeModule,
-    FontAwesomeModule,
-    BrowserModule,
-    FormsModule,
-    GooglePlaceModule
-  ]
+    imports: [
+        CommonModule,
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        RouterModule.forRoot(appRoutes, {enableTracing: true}),
+        MatCardModule,
+        SharedModule,
+        MatFormFieldModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatOptionModule,
+        MatSelectModule,
+        TextareaAutosizeModule,
+        FontAwesomeModule,
+        BrowserModule,
+        FormsModule,
+        GooglePlaceModule,
+        MatProgressSpinnerModule
+    ]
 })
 export class HomeModule {
 }

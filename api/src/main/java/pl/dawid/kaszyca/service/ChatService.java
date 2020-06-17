@@ -2,7 +2,11 @@ package pl.dawid.kaszyca.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.MessageDTO;
+import pl.dawid.kaszyca.exception.CannotSendEmptyMessageException;
+import pl.dawid.kaszyca.exception.CannotSendMessageToYourselfException;
+import pl.dawid.kaszyca.exception.LoginFromTokenDoNotMatchToConversationException;
 import pl.dawid.kaszyca.exception.RecipientNotExistException;
 import pl.dawid.kaszyca.model.Conversation;
 import pl.dawid.kaszyca.model.Message;
@@ -46,15 +50,19 @@ public class ChatService {
     private List<ConversationVM> prepareDataToModel(List<Conversation> conversations) {
         List<ConversationVM> conversationModel = new ArrayList<>();
         for (Conversation conversation : conversations) {
-            ConversationVM conversationVM = new ConversationVM();
-            conversationVM.setName(getFullNameFromRecipient(conversation.getRecipient()));
-            conversationVM.setYourMessages(getMessagesDTOFromConversation(conversation));
-            conversationVM.setPartnerMessages(getMessagesDTOFromConversation(conversation.getRecipientMessage()));
-            conversationVM.setId(conversation.getId());
-            conversationVM.setPartnerId(conversation.getRecipient().getId());
-            conversationModel.add(conversationVM);
+            conversationModel.add(convertConversationToVM(conversation));
         }
         return conversationModel;
+    }
+
+    private ConversationVM convertConversationToVM(Conversation conversation) {
+        ConversationVM conversationVM = new ConversationVM();
+        conversationVM.setName(getFullNameFromRecipient(conversation.getRecipient()));
+        conversationVM.setYourMessages(getMessagesDTOFromConversation(conversation));
+        conversationVM.setPartnerMessages(getMessagesDTOFromConversation(conversation.getRecipientMessage()));
+        conversationVM.setId(conversation.getId());
+        conversationVM.setPartnerId(conversation.getRecipient().getId());
+        return conversationVM;
     }
 
     private List<MessageDTO> getMessagesDTOFromConversation(Conversation conversation) {
@@ -69,9 +77,15 @@ public class ChatService {
 
     public MessageDTO sendMessage(MessageDispatchVM messageDispatchVM) {
         Message message = new Message();
+        if (!StringUtils.hasText(messageDispatchVM.getContent())) {
+            throw new CannotSendEmptyMessageException();
+        }
         Optional<User> sender = userService.getCurrentUserObject();
         User recipient = userService.getUserObjectById(messageDispatchVM.getTo());
         if (sender.isPresent() && recipient != null) {
+            if (sender.get() == recipient) {
+                throw new CannotSendMessageToYourselfException();
+            }
             Conversation conversation = getConversationObjectToChat(sender.get(), recipient);
             List<Message> messages = conversation.getSentMessages();
             if (messages == null) {
@@ -80,6 +94,7 @@ public class ChatService {
             message.setContent(messageDispatchVM.getContent());
             message.setConversation(conversation);
             messages.add(message);
+            conversation.setSentMessages(messages);
             conversationRepository.save(conversation);
             webSocketService.sendMessages(recipient.getLogin(), conversation.getRecipientMessage().getId(), message);
             return MapperUtils.map(message, MessageDTO.class);
@@ -143,5 +158,18 @@ public class ChatService {
                 conversationRepository.save(conversation.get());
             }
         }
+    }
+
+    public ConversationVM getConversationById(long conversationId) {
+        Optional<User> currentUser = userService.getCurrentUserObject();
+        Optional<Conversation> conversationOptional = conversationRepository.findFirstById(conversationId);
+        if (currentUser.isPresent() && conversationOptional.isPresent()) {
+            Conversation conversation = conversationOptional.get();
+            if (conversation.getSender() == currentUser.get())
+                return convertConversationToVM(conversation);
+            else
+                throw new LoginFromTokenDoNotMatchToConversationException();
+        }
+        return null;
     }
 }

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
-import pl.dawid.kaszyca.model.City;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
@@ -29,17 +28,19 @@ public class AuctionService {
     }
 
     public AuctionWithDetailsDTO getAuctionById(long id) {
-        Optional<Auction> auction = auctionRepository.findFirstById(id);
-        incrementViewersAmount(auction);
-        return auction.map(value -> MapperUtils.map(value, AuctionWithDetailsDTO.class)).orElse(null);
-    }
-
-    private void incrementViewersAmount(Optional<Auction> auctionOptional) {
+        Optional<Auction> auctionOptional = auctionRepository.findFirstById(id);
         if (auctionOptional.isPresent()) {
             Auction auction = auctionOptional.get();
-            auction.setViewers(auction.getViewers() + 1);
-            auctionRepository.save(auction);
+            incrementViewersAmount(auction);
+            AuctionWithDetailsDTO auctionWithDetailsDTO = MapperUtils.map(auction, AuctionWithDetailsDTO.class);
+            return auctionWithDetailsDTO;
         }
+        return null;
+    }
+
+    private void incrementViewersAmount(Auction auction) {
+        auction.setViewers(auction.getViewers() + 1);
+        auctionRepository.save(auction);
     }
 
     public Long saveAuction(NewAuctionVM auctionVM) {

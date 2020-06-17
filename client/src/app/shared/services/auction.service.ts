@@ -5,16 +5,15 @@ import {Category} from '../models/category';
 import {NewAuction} from '../models/new-auction';
 import {AuctionBaseField} from '../models/auction-base-field';
 import {Filter} from '../models/filter';
+import {SERVER_API_URL} from '../../app.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuctionService {
 
-  private DOMAIN_URL = 'http://localhost:8082';
-  private BASE_URL = this.DOMAIN_URL + '/api';
-  private CATEGORIES = this.BASE_URL + '/categories';
-  private AUCTIONS = this.BASE_URL + '/auctions';
+  private CATEGORIES = `${SERVER_API_URL}/categories`;
+  private AUCTIONS = `${SERVER_API_URL}/auctions`;
 
   filter: BehaviorSubject<Filter>;
 

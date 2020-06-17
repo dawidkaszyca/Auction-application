@@ -12,33 +12,44 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import {MatCardModule} from '@angular/material/card';
 import { ScrollToBottomDirective } from './directives/scroll-to-bottom.directive';
 import { MapPreviewComponent } from './components/map-preview/map-preview.component';
+import { SplitCurrencyPipe } from './pipes/split-currency.pipe';
+import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
+import {FormsModule} from '@angular/forms';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { InfoDialogComponent } from './components/info-dialog/info-dialog.component';
 
 
 
 @NgModule({
-  declarations: [
-    DragDropComponent,
-    MaterialElevationDirective,
-    DragDropDirective,
-    ImageComponent,
-    ConfirmDialogComponent,
-    ScrollToBottomDirective,
-    MapPreviewComponent
-  ],
+    declarations: [
+        DragDropComponent,
+        MaterialElevationDirective,
+        DragDropDirective,
+        ImageComponent,
+        ConfirmDialogComponent,
+        ScrollToBottomDirective,
+        MapPreviewComponent,
+        SplitCurrencyPipe,
+        MessageDialogComponent,
+        InfoDialogComponent
+    ],
   imports: [
     CommonModule,
     MatIconModule,
     MatProgressBarModule,
     TranslateModule,
-    MatCardModule
+    MatCardModule,
+    FormsModule,
+    FontAwesomeModule
   ],
   providers: [],
-    exports: [
-        MaterialElevationDirective,
-        DragDropComponent,
-        ImageComponent,
-        MapPreviewComponent
-    ],
+  exports: [
+    MaterialElevationDirective,
+    DragDropComponent,
+    ImageComponent,
+    MapPreviewComponent,
+    SplitCurrencyPipe
+  ],
   bootstrap: [AppComponent]
 })
 export class SharedModule { }

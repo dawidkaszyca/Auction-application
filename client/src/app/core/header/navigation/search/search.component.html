@@ -10,6 +10,7 @@
            [options]='options'
            [(ngModel)]="cityName"
            name="input"
+           placeholder="{{'newAuction.setCity' | translate}}"
            #placesRef="ngx-places"
            (onAddressChange)="handleAddressChange($event)"
            required/>

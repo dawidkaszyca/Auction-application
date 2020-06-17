@@ -45,12 +45,23 @@ public class ChatController {
     }
 
     @PutMapping("/messages")
-    private ResponseEntity setDisplayMessage(@RequestBody Long id) {
+    public ResponseEntity setDisplayMessage(@RequestBody Long id) {
         try {
             messageService.updateDisplayMessagesById(id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during update message display");
+        }
+        return new ResponseEntity(HttpStatus.valueOf(500));
+    }
+
+    @GetMapping("/messages/{id}")
+    public ResponseEntity getConversationById(@PathVariable long id) {
+        try {
+            ConversationVM conversation = messageService.getConversationById(id);
+            return new ResponseEntity(conversation, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Cannot get conversation by id");
         }
         return new ResponseEntity(HttpStatus.valueOf(500));
     }

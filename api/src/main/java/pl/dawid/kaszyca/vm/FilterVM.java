@@ -24,6 +24,8 @@ public class FilterVM {
 
     SortEnum sort;
 
+    Long userId;
+
     /**
      * Map for filters fields single select attributes
      * key - filter field name

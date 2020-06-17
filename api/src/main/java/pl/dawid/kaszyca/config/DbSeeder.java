@@ -27,14 +27,13 @@ class DbSeeder implements CommandLineRunner {
     private AuthorityRepository authorityRepository;
     private AuctionRepository auctionRepository;
     private AttachmentService attachmentService;
-    private CityRepository cityRepository;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private ConversationRepository conversationRepository;
     Map<String, List<String>> categoriesMap;
     Map<String, List<String>> attributesMap;
     Map<String, List<String>> attachmentMap;
-    List<String> cityList;
+    List<City> cityList;
     List<String> categoryList;
     Random random;
     @Autowired
@@ -42,11 +41,10 @@ class DbSeeder implements CommandLineRunner {
 
     public DbSeeder(AuthorityRepository authorityRepository, CategoryRepository categoryRepository,
                     AuctionRepository auctionRepository, PasswordEncoder password, UserRepository userRepository,
-                    AttachmentService attachmentService, CityRepository cityRepository, ConversationRepository conversationRepository) {
+                    AttachmentService attachmentService, ConversationRepository conversationRepository) {
         this.authorityRepository = authorityRepository;
         this.categoryRepository = categoryRepository;
         this.auctionRepository = auctionRepository;
-        this.cityRepository = cityRepository;
         this.passwordEncoder = password;
         this.userRepository = userRepository;
         this.attachmentService = attachmentService;
@@ -61,12 +59,11 @@ class DbSeeder implements CommandLineRunner {
         attributesMap = new HashMap<>();
         attachmentMap = getAttachments();
         cityList = getCityList();
-        saveCity();
         User sender = addRolesAndUser("testowy@wp.pl", "Dawid", " Kaszyca", "admin", "admin11");
         User recipient = addRolesAndUser("testowy12@wp.pl", "Stefan", " Wąs", "admin1", "admin11");
-        createExampleMessage(sender, recipient);
+        //createExampleMessage(sender, recipient);
         recipient = addRolesAndUser("testowy123@wp.pl", "Janusz", " Kors", "admin2", "admin11");
-        createExampleMessage(sender, recipient);
+        //createExampleMessage(sender, recipient);
         createCategories();
         createExampleAuctions();
         System.out.println("Initialized database");
@@ -84,7 +81,7 @@ class DbSeeder implements CommandLineRunner {
         senderChat.setRecipientMessage(recipientChat);
         senderChat.setSentMessages(Arrays.asList(message));
         conversationRepository.save(senderChat);
-        TimeUnit.SECONDS.sleep(10);
+        TimeUnit.SECONDS.sleep(2);
         Message msg = new Message();
         msg.setConversation(recipientChat);
         msg.setContent("Yo !!!");
@@ -93,14 +90,6 @@ class DbSeeder implements CommandLineRunner {
         recipientChat.setRecipientMessage(senderChat);
         senderChat.setSentMessages(Arrays.asList(msg));
         conversationRepository.save(recipientChat);
-    }
-
-    private void saveCity() {
-        City cityObj;
-        for(String city: cityList) {
-            cityObj = new City(city);
-            cityRepository.save(cityObj);
-        }
     }
 
     private User addRolesAndUser(String email, String firstName, String lastName, String login, String password) {
@@ -224,27 +213,26 @@ class DbSeeder implements CommandLineRunner {
         List<AuctionDetails> auctionDetails;
         for (int i = 0; i < 100; i++) {
             auction = new Auction();
-            City city = new City(getRandomCity());
             Condition condition;
-            if(i % 2 == 0)
-                 condition = new Condition("Używany");
+            if (i % 2 == 0)
+                condition = new Condition("Używany");
             else
                 condition = new Condition("Nowy");
             String categoryString = getRandomCategory();
             Optional<Category> category = categoryRepository.findFirstByCategory(categoryString);
             if (category.isPresent())
                 auction.setCategory(category.get());
-            auction.setCity(city);
             auction.setCondition(condition.getCondition());
             Optional<User> user = userRepository.findOneByLogin("admin");
             if (user.isPresent())
                 auction.setUser(user.get());
+            auction.setCity(getRandomCity());
             auction.setPhone(getRandomPhoneNumber());
             auction.setPrice(getRandomPrice());
             auction.setViewers(getRandomPrice());
             auction.setDescription(getDescription());
             auction.setTitle(getTitle());
-            if(!categoryString.equals("Fotografia")){
+            if (!categoryString.equals("Fotografia")) {
                 auctionDetails = getDetailsByCategory(categoryString, auction);
                 auction.setAuctionDetails(auctionDetails);
             }
@@ -266,8 +254,8 @@ class DbSeeder implements CommandLineRunner {
     }
 
     private String getRandomPhoneNumber() {
-        String phone ="";
-        for(int i=0; i<9; i++) {
+        String phone = "";
+        for (int i = 0; i < 9; i++) {
             phone += String.valueOf(random.nextInt(9));
         }
         return phone;
@@ -280,24 +268,19 @@ class DbSeeder implements CommandLineRunner {
                 file.getName(), "image/png", IOUtils.toByteArray(input));
     }
 
-    private List<String> getCityList() {
-        List<String> list = new ArrayList<>();
-        list.add("Katowice");
-        list.add("Częstochowa");
-        list.add("Sosnowiec");
-        list.add("Gliwice");
-        list.add("Zabrze");
-        list.add("Bielsko-Biała");
-        list.add("Bytom");
-        list.add("Ruda Śląska");
-        list.add("Rybnik");
-        list.add("Tychy");
-        list.add("Dąbrowa Górnicza");
-        list.add("Chorzów");
-        list.add("Jaworzno");
-        list.add("Jastrzębie-Zdrój");
-        list.add("Mysłowice");
-        list.add("Żory");
+    private List<City> getCityList() {
+        List<City> list = new ArrayList<>();
+        list.add(new City("Katowice", 19.02378149999999, 50.26489189999999));
+        list.add(new City("Myslowice", 19.1660513, 50.2080466));
+        list.add(new City("Zabrze", 18.7857186, 50.3249278));
+        list.add(new City("Krakow", 19.9449799, 50.06465009999999));
+        list.add(new City("Chorzow", 18.9545728, 50.2974884));
+        list.add(new City("Sosnowiec", 19.1040791, 50.28626380000001));
+        list.add(new City("Warsaw", 21.0122287, 52.2296756));
+        list.add(new City("Siemianowice Slaskie", 19.0295714, 50.3264314));
+        list.add(new City("Augustow", 22.9796024, 53.84344309999999));
+        list.add(new City("Kalisz", 18.0853462, 51.7672799));
+        list.add(new City("Szczecin", 14.5528116, 53.4285438));
         return list;
     }
 
@@ -305,7 +288,7 @@ class DbSeeder implements CommandLineRunner {
         List<String> attr = categoriesMap.get(categoryString);
         List<AuctionDetails> details = new ArrayList<>();
         AuctionDetails ad;
-        for(String att: attr) {
+        for (String att : attr) {
             ad = new AuctionDetails();
             ad.setAuction(auction);
             ad.setCategoryAttribute(att);
@@ -337,11 +320,13 @@ class DbSeeder implements CommandLineRunner {
     }
 
     private int getRandomPrice() {
-        return random.nextInt(1000);
+        return random.nextInt(100000);
     }
 
-    private String getRandomCity() {
-        return cityList.get(random.nextInt(cityList.size()));
+    private City getRandomCity() {
+        City city = cityList.get(random.nextInt(cityList.size()));
+        city.setId(null);
+        return city;
     }
 
     private String getRandomCategory() {
