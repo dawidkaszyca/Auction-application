@@ -71,6 +71,17 @@ public class AttachmentController {
         return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
+    @GetMapping(value = "/attachments/user/{id}")
+    public ResponseEntity getUserPhotoById(@PathVariable long id) {
+        try {
+            List<String> photos = attachmentService.getUserPhoto(id);
+            return new ResponseEntity(photos, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot get user photo by id");
+        }
+        return new ResponseEntity(HttpStatus.valueOf(422));
+    }
+
     @PostMapping(value = "/attachments/user", consumes = "multipart/form-data")
     public ResponseEntity saveUserPhoto(@RequestParam("files") MultipartFile file) {
         try {

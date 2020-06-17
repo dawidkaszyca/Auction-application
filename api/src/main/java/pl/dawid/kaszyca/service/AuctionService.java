@@ -33,7 +33,6 @@ public class AuctionService {
             Auction auction = auctionOptional.get();
             incrementViewersAmount(auction);
             AuctionWithDetailsDTO auctionWithDetailsDTO = MapperUtils.map(auction, AuctionWithDetailsDTO.class);
-            auctionWithDetailsDTO.setUserId(auction.getUser().getId());
             return auctionWithDetailsDTO;
         }
         return null;

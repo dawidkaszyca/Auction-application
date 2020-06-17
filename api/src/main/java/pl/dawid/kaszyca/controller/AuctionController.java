@@ -86,6 +86,4 @@ public class AuctionController {
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
-
 }
