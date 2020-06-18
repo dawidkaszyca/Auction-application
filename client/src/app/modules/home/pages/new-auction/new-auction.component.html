@@ -146,22 +146,23 @@
                        (filesEmitter)="receiveImages($event)"></app-drag-drop>
       </div>
       <div class="row">
-        <div class="col-3" *ngFor="let number of [0,1,2,3]">
-
-          <div #div1 *ngIf="selected!=number">
-            <mat-card [ngStyle]="{'height.px': div1.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
-              <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
-              <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove"></fa-icon>
-            </mat-card>
+        <ng-container *ngIf="files.length > 0">
+          <div class="col-3" *ngFor="let number of [0,1,2,3]">
+            <div #div1 *ngIf="selected !== number">
+              <mat-card [ngStyle]="{'height.px': div1.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
+                <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
+                <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove"></fa-icon>
+              </mat-card>
+            </div>
+            <div #div2 class="selected" *ngIf="selected === number && previewUrl[number]">
+              <mat-card [ngStyle]="{'height.px': div2.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
+                <app-image *ngIf="previewUrl[number]" [path]=previewUrl[number]></app-image>
+                <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove"
+                         (click)="removeImage(number)"></fa-icon>
+              </mat-card>
+            </div>
           </div>
-
-          <div #div2 class="selected" *ngIf="selected == number && previewUrl[number]">
-            <mat-card [ngStyle]="{'height.px': div2.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
-              <app-image *ngIf="previewUrl[number]" [path]=previewUrl[number]></app-image>
-              <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove" (click)="removeImage(number)"></fa-icon>
-            </mat-card>
-          </div>
-        </div>
+        </ng-container>
       </div>
     </mat-card>
     <div class="row">

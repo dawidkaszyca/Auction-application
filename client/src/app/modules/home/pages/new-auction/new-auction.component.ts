@@ -159,6 +159,8 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
     this.previewUrl.splice(index, 1);
     if (this.files.length === 0) {
       this.selected = this.maxSizeOfImages;
+    } else if (index === this.selected) {
+      this.selected = 0;
     }
   }
 }
