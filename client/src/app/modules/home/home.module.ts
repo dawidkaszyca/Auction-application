@@ -29,7 +29,8 @@ import {SentMessageComponent} from './components/sent-message/sent-message.compo
 import {ChatComponent} from './pages/chat/chat.component';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MessageDialogComponent} from '../../shared/components/message-dialog/message-dialog.component';
+import {MyAuctionListComponent} from './components/my-auction-list/my-auction-list.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 const appRoutes: Routes = [
   {
@@ -70,7 +71,8 @@ const appRoutes: Routes = [
     ChatComponent,
     ContactComponent,
     ReceivedMessageComponent,
-    SentMessageComponent
+    SentMessageComponent,
+    MyAuctionListComponent
   ],
     imports: [
         CommonModule,
@@ -97,7 +99,8 @@ const appRoutes: Routes = [
         BrowserModule,
         FormsModule,
         GooglePlaceModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatCheckboxModule
     ]
 })
 export class HomeModule {

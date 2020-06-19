@@ -1,0 +1,40 @@
+.auction-card {
+    margin-top: 1rem;
+    width: 100%;
+    height: 160px;
+  @media screen and (max-width: 1024px) {
+    mat-card {
+      height: 120px;
+    }
+  }
+
+  @media screen and (max-width: 1280px) {
+    mat-card {
+      height: 160px;
+    }
+  }
+}
+
+.floatingDiv{
+  display: flex;
+  align-items:center;
+}
+
+.inline{
+   font-size: 30px;
+   margin: 0;
+   position: relative;
+   top: 50%;
+   -ms-transform: translateY(-50%);
+   transform: translateY(-50%);
+ }
+
+::ng-deep .mat-card{
+  border: 55px solid #000;
+  border-radius: 35px !important;
+  border: #000 !important;
+}
+
+
+
+
