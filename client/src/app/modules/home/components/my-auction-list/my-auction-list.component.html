@@ -1,7 +1,7 @@
 <div>
   <mat-card>
     <div class="row">
-      <div class="col-5 row">
+      <div class="col-7 row">
         <div class="col-4">
           <div class="h-100 w-100 text-left d-inline-block">
             <div class="h-100 w-50 float-left">
@@ -12,19 +12,16 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-3">
           <button class="w-100 h-100 btn btn-primary text-center">{{'myAuction.delete' | translate}}</button>
         </div>
         <div class="col-4">
-          <button class="w-100 h-100 btn btn-primary text-center">{{'myAuction.refresh' | translate}}</button>
+          <mat-select class="form-control w-100"
+                      [(ngModel)]="selectedCondition"
+                      name="condition" multiple>
+            <mat-option *ngFor="let state of states" [value]="state">{{state| translate}}</mat-option>
+          </mat-select>
         </div>
-      </div>
-      <div class="col-2">
-        <mat-select class="form-control w-100"
-                    [(ngModel)]="selectedCondition"
-                    name="condition" multiple>
-          <mat-option *ngFor="let state of states" [value]="state">{{state| translate}}</mat-option>
-        </mat-select>
       </div>
       <div class="col-3">
         <mat-select class="form-control w-75 float-right" [(value)]="sortValue"
@@ -81,15 +78,34 @@
                     </h1>
                   </div>
                 </div>
-                <div class="row mt-3">
-                  <div class="col-10">
-                    <button class="  btn btn-info text-center">{{'myAuction.preview' | translate}}</button>
-                    <button class="  btn btn-info text-center">{{'myAuction.edit' | translate}}</button>
-                    <button class="  btn btn-info text-center">{{'myAuction.entryStat' | translate}}</button>
-                    <button class="  btn btn-info text-center">{{'myAuction.msgStat' | translate}}</button>
-                    <button class="  btn btn-info text-center">{{'myAuction.phoneStat' | translate}}</button>
+                <div class="row mt-5">
+                  <div class="col-7">
+                    <div class="row">
+                      <div class="col-3">
+                      <button class="btn btn-info text-center w-100" (click)="openAuctionPage(auction)">{{'myAuction.preview' | translate}}</button>
+                      </div>
+                      <div class="col-3">
+                      <button class="btn btn-info text-center w-100">{{'myAuction.edit' | translate}}</button>
+                      </div>
+                      <div class="col-3">
+                      <button class="btn btn-info text-center w-100">{{'myAuction.extend' | translate}}</button>
+                      </div>
+                      <div class="col-3">
+                        <button class="  btn btn-info text-center">{{'myAuction.statistics' | translate}}</button>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-2">
+                  <div class="col-5">
+                    <div class="row">
+                      <div class="col-4 text-center">
+                        Data dodania
+                        {{auction.createdDate| date:'mediumDate'}}
+                      </div>
+                      <div class="col-8 text-center">
+                        Data wygaśnięcia <br>
+                        {{auction.createdDate| date:'short'}}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

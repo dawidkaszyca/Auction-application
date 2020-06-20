@@ -36,8 +36,8 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
 
   constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router) {
     this.states = [];
-    this.states.push("Aktywny");
-    this.states.push("Nieaktywny");
+    this.states.push("myAuction.active");
+    this.states.push("myAuction.inactive");
   }
 
   ngOnInit(): void {
@@ -53,6 +53,7 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.userId) {
+      this.filter = new Filter();
       this.filter.userId = this.userId;
       this.loadAuctionsData();
     }
