@@ -100,4 +100,18 @@ public class AuctionService {
             auctions = auctionRepository.findTop4ByCategoryOrderByViewers(category);
         return MapperUtils.mapAll(auctions, AuctionBaseDTO.class);
     }
+
+    public void removeAuctionsById(List<Integer> ids) {
+        for (Integer id : ids) {
+            Optional<Auction> auction = auctionRepository.findById(Long.valueOf(id));
+            if (auction.isPresent()) {
+                Optional<User> optionalUser = userService.getCurrentUserObject();
+                if (optionalUser.isPresent()) {
+                    if (optionalUser.get().equals(auction.get().getUser())) {
+                        auctionRepository.delete(auction.get());
+                    }
+                }
+            }
+        }
+    }
 }

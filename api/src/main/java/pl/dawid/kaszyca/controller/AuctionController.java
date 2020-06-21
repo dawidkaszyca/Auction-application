@@ -63,6 +63,18 @@ public class AuctionController {
         }
     }
 
+    @DeleteMapping("/auctions")
+    public ResponseEntity removeAuctions(@RequestParam List<Integer> ids) {
+        try {
+            auctionService.removeAuctionsById(ids);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during saving new Auction Object");
+            return new ResponseEntity(HttpStatus.valueOf(422));
+        }
+    }
+
+
     @GetMapping("/auctions/{id}")
     public ResponseEntity getAuctionById(@PathVariable long id) {
         try {

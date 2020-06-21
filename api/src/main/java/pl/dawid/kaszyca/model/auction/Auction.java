@@ -61,7 +61,7 @@ public class Auction implements Serializable {
     @NonNull
     private String phone;
 
-    @OneToMany(mappedBy = "id", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "auction", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @Nullable
     private List<Image> images;
 
