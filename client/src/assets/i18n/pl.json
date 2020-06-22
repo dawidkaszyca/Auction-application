@@ -111,7 +111,9 @@
     "entryStat": "Statystyki wyświetleń",
     "msgStat": "Statystyki wiadomości",
     "phoneStat": "Statystyki wyświetleń telefonu",
-    "extend": "Przedłuż"
+    "extend": "Przedłuż",
+    "createDate": "Data dodania",
+    "expiredDate": "Data wygasnięcia"
   }
 }
 

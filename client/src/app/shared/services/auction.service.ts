@@ -6,6 +6,7 @@ import {NewAuction} from '../models/new-auction';
 import {AuctionBaseField} from '../models/auction-base-field';
 import {Filter} from '../models/filter';
 import {SERVER_API_URL} from '../../app.constants';
+import {Auction} from '../models/auction';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class AuctionService {
   private AUCTIONS = `${SERVER_API_URL}/auctions`;
 
   filter: BehaviorSubject<Filter>;
+  lastAuction: AuctionBaseField;
 
   constructor(private http: HttpClient) {
     this.filter = new BehaviorSubject(new Filter());
@@ -36,8 +38,8 @@ export class AuctionService {
   }
 
 
-  getAuctionWithDetailsById(id: number) {
-    return this.http.get<any>(this.AUCTIONS + '/' + id);
+  getAuctionWithDetailsById(id: number): Observable<Auction> {
+    return this.http.get<Auction>(this.AUCTIONS + '/' + id);
   }
 
   getAuctionForm() {
@@ -52,5 +54,12 @@ export class AuctionService {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('category', category);
     return this.http.get<AuctionBaseField[]>(this.AUCTIONS + '/top', {params: httpParams});
+  }
+
+  removeByIds(selectedAuctions: number[]) {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('ids', selectedAuctions.toString());
+    const options = {params: httpParams};
+    return this.http.delete(this.AUCTIONS, options);
   }
 }

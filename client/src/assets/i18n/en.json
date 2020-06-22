@@ -111,6 +111,8 @@
     "entryStat": "Entry statistics",
     "msgStat": "Message statistics",
     "phoneStat": "Phone display statistics",
-    "extend": "Extend"
+    "extend": "Extend",
+    "createDate": "Added date",
+    "expiredDate": "Expiration  date"
   }
 }
