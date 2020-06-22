@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
@@ -16,12 +16,10 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   @Input()
   userId: number;
 
-
-  checked = false;
-
   private category;
   private filter: Filter;
   auctions: AuctionBaseField[];
+  auctionToEdit: AuctionBaseField;
   sortList: string[];
   sortValue = 'sort.newest';
   pageSizeList: number[];
@@ -31,13 +29,13 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   inputValue: string;
   numberOfAuctions: number;
   amountOfPages: number;
-  selectedCondition: any;
+  selectedState: string[];
   states: string[];
+  selectedAuctions: number[];
 
   constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router) {
-    this.states = [];
-    this.states.push("myAuction.active");
-    this.states.push("myAuction.inactive");
+    this.selectedAuctions = [];
+    this.selectedState = [];
   }
 
   ngOnInit(): void {
@@ -103,7 +101,7 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
     return arrayId;
   }
 
-  selectValue(event: MatSelectChange) {
+  selectSort(event: MatSelectChange) {
     this.sortValue = event.value;
     if (event.value === 'sort.minPrice') {
       this.filter.sort = 'DESC';
@@ -132,6 +130,10 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   }
 
   private loadMaps() {
+    this.states = [];
+    this.selectedState.push('myAuction.active');
+    this.states.push('myAuction.active');
+    this.states.push('myAuction.inactive');
     this.sortList = [];
     this.sortList.push('sort.minPrice');
     this.sortList.push('sort.maxPrice');
@@ -150,5 +152,51 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
     this.router.navigate(['auction'], {queryParams: {'title': auction.title, 'category': auction.category, 'id': auction.id}});
   }
 
+  editAuction(auction: AuctionBaseField) {
+    this.auctionService.lastAuction = auction;
+    this.router.navigateByUrl('edit-auction');
+  }
 
+  selectAuction(id: number) {
+    const index = this.selectedAuctions.indexOf(id);
+    if (index !== -1) {
+      this.selectedAuctions.splice(index, 1);
+    } else {
+      this.selectedAuctions.push(id);
+    }
+  }
+
+  selectAllAuctions() {
+    if (this.selectedAuctions.length === this.auctions.length) {
+      this.selectedAuctions = [];
+    } else {
+      this.auctions.forEach(it => {
+        if (!this.selectedAuctions.includes(it.id)) {
+          this.selectedAuctions.push(it.id);
+        }
+      });
+    }
+  }
+
+  removeSelectedAuctions() {
+    this.auctionService.removeByIds(this.selectedAuctions).subscribe(res => {
+      this.selectedAuctions.forEach(it => {
+        this.auctions = this.auctions.filter(auction => auction.id !== it);
+      });
+      this.selectedAuctions = [];
+      this.loadAuctionsData();
+    });
+  }
+
+
+  selectState(event: MatSelectChange) {
+    if (event.value.length === 2) {
+      this.filter.state = 'ALL';
+    } else if (event.value[0] === 'myAuction.inactive') {
+      this.filter.state = 'INACTIVE';
+    } else {
+      this.filter.state = 'ACTIVE';
+    }
+    this.loadAuctionsData();
+  }
 }

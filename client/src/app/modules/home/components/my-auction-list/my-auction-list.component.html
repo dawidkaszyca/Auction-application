@@ -5,7 +5,7 @@
         <div class="col-4">
           <div class="h-100 w-100 text-left d-inline-block">
             <div class="h-100 w-50 float-left">
-              <input class="h-75 w-100 inline pl-2" type="checkbox" id="checkbox"/>
+              <input class="h-75 w-100 inline pl-2" [checked]="auctions?.length === selectedAuctions?.length" type="checkbox" (click)="selectAllAuctions()"/>
             </div>
             <div class="h-100 w-50 floatingDiv float-right">
               {{'myAuction.all' | translate}}
@@ -13,20 +13,20 @@
           </div>
         </div>
         <div class="col-3">
-          <button class="w-100 h-100 btn btn-primary text-center">{{'myAuction.delete' | translate}}</button>
+          <button class="w-100 h-100 btn btn-primary text-center" (click)="removeSelectedAuctions()">{{'myAuction.delete' | translate}}</button>
         </div>
         <div class="col-4">
           <mat-select class="form-control w-100"
-                      [(ngModel)]="selectedCondition"
-                      name="condition" multiple>
+                      [(value)]="selectedState"
+                      (selectionChange)="selectState($event)" multiple>
             <mat-option *ngFor="let state of states" [value]="state">{{state| translate}}</mat-option>
           </mat-select>
         </div>
       </div>
       <div class="col-3">
         <mat-select class="form-control w-75 float-right" [(value)]="sortValue"
-                    (selectionChange)="selectValue($event)">
-          <mat-option *ngFor="let values of sortList" [value]="values">{{values | translate}}</mat-option>
+                    (selectionChange)="selectSort($event)">
+          <mat-option *ngFor="let value of sortList" [value]="value">{{value | translate}}</mat-option>
         </mat-select>
       </div>
       <div class="col-2">
@@ -55,7 +55,7 @@
     <ng-container *ngFor="let auction of auctions">
       <div class="col-1">
         <div class="h-100 text-center">
-          <input class="h-75 w-75 inline" type="checkbox" id="checkbox"/>
+          <input class="h-50 w-50 inline" type="checkbox" [checked]="selectedAuctions.includes(auction.id)" (click)="selectAuction(auction.id)"/>
         </div>
       </div>
       <div class="col-11">
@@ -85,7 +85,7 @@
                       <button class="btn btn-info text-center w-100" (click)="openAuctionPage(auction)">{{'myAuction.preview' | translate}}</button>
                       </div>
                       <div class="col-3">
-                      <button class="btn btn-info text-center w-100">{{'myAuction.edit' | translate}}</button>
+                      <button class="btn btn-info text-center w-100" (click)="editAuction(auction)">{{'myAuction.edit' | translate}}</button>
                       </div>
                       <div class="col-3">
                       <button class="btn btn-info text-center w-100">{{'myAuction.extend' | translate}}</button>
@@ -98,12 +98,12 @@
                   <div class="col-5">
                     <div class="row">
                       <div class="col-4 text-center">
-                        Data dodania
+                        {{'myAuction.createDate' | translate}}
                         {{auction.createdDate| date:'mediumDate'}}
                       </div>
                       <div class="col-8 text-center">
-                        Data wygaśnięcia <br>
-                        {{auction.createdDate| date:'short'}}
+                        {{'myAuction.expiredDate' | translate}} <br>
+                        {{auction.expiredDate| date:'short'}}
                       </div>
                     </div>
                   </div>
