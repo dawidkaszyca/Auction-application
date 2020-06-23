@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
+import pl.dawid.kaszyca.exception.PermissionDeniedToAuction;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
@@ -46,6 +47,10 @@ public class AuctionService {
     public Long saveAuction(NewAuctionVM auctionVM) {
         auctionVM.setPrice(auctionVM.getPrice().replace(",", "."));
         Auction auction = MapperUtils.map(auctionVM, Auction.class);
+        if (auctionVM.getId() != null) {
+            auction.setId(auctionVM.getId());
+            setAuctionImages(auction);
+        }
         Optional<User> user = userService.getCurrentUserObject();
         Category category = categoryService.getCategoryById(auctionVM.getCategory());
         auction.setCategory(category);
@@ -54,6 +59,12 @@ public class AuctionService {
             return saveAuctionWithDetails(auction, auctionVM);
         }
         return null;
+    }
+
+    private void setAuctionImages(Auction auction) {
+        Optional<Auction> auctionAllReadySaved = auctionRepository.findFirstById(auction.getId());
+        if (auctionAllReadySaved.isPresent())
+            auction.setImages(auctionAllReadySaved.get().getImages());
     }
 
     private Long saveAuctionWithDetails(Auction auction, NewAuctionVM auctionVM) {
@@ -106,12 +117,26 @@ public class AuctionService {
             Optional<Auction> auction = auctionRepository.findById(Long.valueOf(id));
             if (auction.isPresent()) {
                 Optional<User> optionalUser = userService.getCurrentUserObject();
-                if (optionalUser.isPresent()) {
-                    if (optionalUser.get().equals(auction.get().getUser())) {
-                        auctionRepository.delete(auction.get());
-                    }
+                if (isUserAuction(optionalUser, auction.get())) {
+                    auctionRepository.delete(auction.get());
                 }
             }
         }
     }
+
+    public void checkPermissionToEdit(AuctionWithDetailsDTO auction) {
+        Optional<User> user = userService.getCurrentUserObject();
+        if (!isUserAuctionId(user, auction)) {
+            throw new PermissionDeniedToAuction();
+        }
+    }
+
+    private boolean isUserAuction(Optional<User> optionalUser, Auction auction) {
+        return optionalUser.isPresent() && optionalUser.get().equals(auction.getUser());
+    }
+
+    private boolean isUserAuctionId(Optional<User> optionalUser, AuctionWithDetailsDTO auction) {
+        return optionalUser.isPresent() && optionalUser.get().getId().equals(auction.getUserId());
+    }
+
 }

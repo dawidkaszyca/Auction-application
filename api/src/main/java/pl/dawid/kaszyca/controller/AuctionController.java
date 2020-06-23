@@ -58,7 +58,18 @@ public class AuctionController {
             Long auctionId = auctionService.saveAuction(newAuctionVM);
             return new ResponseEntity(auctionId, HttpStatus.CREATED);
         } catch (Exception e) {
-            log.info("Something went wrong during saving new Auction Object");
+            log.info("Something went wrong during saving new auction object");
+            return new ResponseEntity(HttpStatus.valueOf(422));
+        }
+    }
+
+    @PutMapping("/auctions")
+    public ResponseEntity updateAuction(@RequestBody NewAuctionVM newAuctionVM) {
+        try {
+            Long auctionId = auctionService.saveAuction(newAuctionVM);
+            return new ResponseEntity(auctionId, HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.info("Something went wrong during edit Auction Object");
             return new ResponseEntity(HttpStatus.valueOf(422));
         }
     }
@@ -69,7 +80,7 @@ public class AuctionController {
             auctionService.removeAuctionsById(ids);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
-            log.info("Something went wrong during saving new Auction Object");
+            log.info("Something went wrong during removing object");
             return new ResponseEntity(HttpStatus.valueOf(422));
         }
     }
@@ -82,7 +93,20 @@ public class AuctionController {
             if (auction != null)
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {
-            log.info("Something went wrong during getting  auction by id");
+            log.info("Something went wrong during getting auction by id");
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/auctions/edit/{id}")
+    public ResponseEntity getAuctionToEditById(@PathVariable long id) {
+        try {
+            AuctionWithDetailsDTO auction = auctionService.getAuctionById(id);
+            auctionService.checkPermissionToEdit(auction);
+            if (auction != null)
+                return new ResponseEntity(auction, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during getting auction by id");
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
