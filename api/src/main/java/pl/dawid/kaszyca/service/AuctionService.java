@@ -45,20 +45,63 @@ public class AuctionService {
     }
 
     public Long saveAuction(NewAuctionVM auctionVM) {
-        auctionVM.setPrice(auctionVM.getPrice().replace(",", "."));
         Auction auction = MapperUtils.map(auctionVM, Auction.class);
+        setDataToNewAuction(auctionVM, auction);
+        Optional<User> user = userService.getCurrentUserObject();
+        if (user.isPresent()) {
+            auction.setUser(user.get());
+            auctionRepository.save(auction);
+            return auction.getId();
+        }
+        return null;
+    }
+
+    private void setDataToNewAuction(NewAuctionVM auctionVM, Auction auction) {
+        auctionVM.setPrice(auctionVM.getPrice().replace(",", "."));
+        Category category = categoryService.getCategoryById(auctionVM.getCategory());
+        auction.setCategory(category);
+        setAuctionDetails(auction, auctionVM);
+    }
+
+    public Long updateAuction(NewAuctionVM auctionVM) {
+        Auction auction = MapperUtils.map(auctionVM, Auction.class);
+        setDataToNewAuction(auctionVM, auction);
         if (auctionVM.getId() != null) {
             auction.setId(auctionVM.getId());
             setAuctionImages(auction);
         }
         Optional<User> user = userService.getCurrentUserObject();
-        Category category = categoryService.getCategoryById(auctionVM.getCategory());
-        auction.setCategory(category);
         if (user.isPresent()) {
             auction.setUser(user.get());
-            return saveAuctionWithDetails(auction, auctionVM);
+            checkPermissionToEdit(auction.getUser().getId());
+            setIdToAuctionDetails(auction.getAuctionDetails(), auction.getId());
+            auction.getCity().setId(getCityIdToUpdate(auction.getId()));
+            auctionRepository.save(auction);
+            return auction.getId();
         }
         return null;
+    }
+
+    private void setIdToAuctionDetails(List<AuctionDetails> auctionDetails, Long id) {
+        Optional<Auction> auction = auctionRepository.findById(id);
+        if (auction.isPresent()) {
+            List<AuctionDetails> savedDetails = auction.get().getAuctionDetails();
+            for (AuctionDetails it : auctionDetails) {
+                it.setId(getAuctionDetailsIdByAttribute(it.getCategoryAttribute(), savedDetails));
+            }
+        }
+    }
+
+    private Long getCityIdToUpdate(Long id) {
+        Optional<Auction> auction = auctionRepository.findById(id);
+        return auction.map(value -> value.getCity().getId()).orElse(null);
+    }
+
+    private Long getAuctionDetailsIdByAttribute(String categoryAttribute, List<AuctionDetails> auctionDetails) {
+        Optional<AuctionDetails> auction = auctionDetails.stream()
+                .filter(it -> it.getCategoryAttribute().equals(categoryAttribute))
+                .findFirst();
+        return auction.map(AuctionDetails::getId).orElse(null);
     }
 
     private void setAuctionImages(Auction auction) {
@@ -67,7 +110,7 @@ public class AuctionService {
             auction.setImages(auctionAllReadySaved.get().getImages());
     }
 
-    private Long saveAuctionWithDetails(Auction auction, NewAuctionVM auctionVM) {
+    private void setAuctionDetails(Auction auction, NewAuctionVM auctionVM) {
         List<CategoryAttributes> categoryAttributesList = MapperUtils.mapAll(auctionVM.getAttributes(), CategoryAttributes.class);
         List<AuctionDetails> detailsToSave = new ArrayList<>();
         for (CategoryAttributes categoryAttributes : categoryAttributesList) {
@@ -80,8 +123,6 @@ public class AuctionService {
             }
         }
         auction.setAuctionDetails(detailsToSave);
-        auctionRepository.save(auction);
-        return auction.getId();
     }
 
     public AuctionVM getAuctionsFilter(FilterVM filterVM) {
@@ -99,6 +140,9 @@ public class AuctionService {
         String name = userService.getCurrentUserName();
         if (name != null)
             data.put("name", Collections.singletonList(name));
+        String email = userService.getCurrentUserEmail();
+        if (name != null)
+            data.put("email", Collections.singletonList(email));
         data.put("condition", Arrays.asList("Nowy", "Używany"));
         return data;
     }
@@ -115,28 +159,21 @@ public class AuctionService {
     public void removeAuctionsById(List<Integer> ids) {
         for (Integer id : ids) {
             Optional<Auction> auction = auctionRepository.findById(Long.valueOf(id));
-            if (auction.isPresent()) {
-                Optional<User> optionalUser = userService.getCurrentUserObject();
-                if (isUserAuction(optionalUser, auction.get())) {
-                    auctionRepository.delete(auction.get());
-                }
+            if (auction.isPresent() && checkPermissionToEdit(auction.get().getUser().getId())) {
+                auctionRepository.delete(auction.get());
             }
         }
     }
 
-    public void checkPermissionToEdit(AuctionWithDetailsDTO auction) {
+    public boolean checkPermissionToEdit(Long auctionUserId) {
         Optional<User> user = userService.getCurrentUserObject();
-        if (!isUserAuctionId(user, auction)) {
+        if (!isUserAuctionId(user, auctionUserId)) {
             throw new PermissionDeniedToAuction();
         }
+        return true;
     }
 
-    private boolean isUserAuction(Optional<User> optionalUser, Auction auction) {
-        return optionalUser.isPresent() && optionalUser.get().equals(auction.getUser());
+    private boolean isUserAuctionId(Optional<User> optionalUser, Long auction) {
+        return optionalUser.isPresent() && optionalUser.get().getId().equals(auction);
     }
-
-    private boolean isUserAuctionId(Optional<User> optionalUser, AuctionWithDetailsDTO auction) {
-        return optionalUser.isPresent() && optionalUser.get().getId().equals(auction.getUserId());
-    }
-
 }

@@ -66,7 +66,7 @@ public class AuctionController {
     @PutMapping("/auctions")
     public ResponseEntity updateAuction(@RequestBody NewAuctionVM newAuctionVM) {
         try {
-            Long auctionId = auctionService.saveAuction(newAuctionVM);
+            Long auctionId = auctionService.updateAuction(newAuctionVM);
             return new ResponseEntity(auctionId, HttpStatus.CREATED);
         } catch (Exception e) {
             log.info("Something went wrong during edit Auction Object");
@@ -102,7 +102,7 @@ public class AuctionController {
     public ResponseEntity getAuctionToEditById(@PathVariable long id) {
         try {
             AuctionWithDetailsDTO auction = auctionService.getAuctionById(id);
-            auctionService.checkPermissionToEdit(auction);
+            auctionService.checkPermissionToEdit(auction.getUserId());
             if (auction != null)
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {

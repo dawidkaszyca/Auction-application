@@ -9,7 +9,9 @@ import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.Auction;
 import pl.dawid.kaszyca.repository.AuctionRepository;
 import pl.dawid.kaszyca.repository.ImageRepository;
-import pl.dawid.kaszyca.vm.AttachmentSaveVM;
+import pl.dawid.kaszyca.vm.AttachmentToSaveVM;
+import pl.dawid.kaszyca.vm.AttachmentToUpdateVm;
+import pl.dawid.kaszyca.vm.ImageVM;
 
 import java.io.IOException;
 import java.util.*;
@@ -28,12 +30,12 @@ public class AttachmentService {
         this.userService = userService;
     }
 
-    public void saveAuctionAttachments(List<MultipartFile> files, AttachmentSaveVM attachmentSaveVM) throws IOException {
-        Optional<Auction> auction = auctionRepository.findById(attachmentSaveVM.getAuctionId());
+    public void saveAuctionAttachments(List<MultipartFile> files, AttachmentToSaveVM attachmentToSaveVM) throws IOException {
+        Optional<Auction> auction = auctionRepository.findById(attachmentToSaveVM.getAuctionId());
         List<Attachment> attachments = prepareAttachmentToSave(files);
         if (auction.isPresent()) {
             Auction auctionObj = auction.get();
-            List<Image> imageList = prepareImageListToSave(auctionObj, attachments, attachmentSaveVM.getMainPhotoId());
+            List<Image> imageList = prepareImageListToSave(auctionObj, attachments, attachmentToSaveVM.getMainPhotoId());
             auctionObj.setImages(imageList);
             auctionRepository.save(auctionObj);
         }
@@ -79,18 +81,16 @@ public class AttachmentService {
         return photosUrl;
     }
 
-    public Map<String, String> getPhotosForAuctionById(long auctionId) {
-        Map<String, String> photosUrl = new HashMap<>();
+    public List<ImageVM> getPhotosForAuctionById(long auctionId) {
+        List<ImageVM> photosUrl = new ArrayList<>();
         List<Image> images = imageRepository.findAllByAuctionId(auctionId);
-        int it = 2;
         for (Image image : images) {
             String url = convertImageToResponseIfExist(image.getAttachment());
-            if (image.getIsMainAuctionPhoto())
-                photosUrl.put("1", url);
-            else {
-                photosUrl.put(String.valueOf(it), url);
-                it++;
-            }
+            ImageVM imageVM = new ImageVM();
+            imageVM.setUrl(url);
+            imageVM.setMainPhoto(image.getIsMainAuctionPhoto());
+            imageVM.setPhotoId(image.getId());
+            photosUrl.add(imageVM);
         }
         return photosUrl;
     }
@@ -123,7 +123,44 @@ public class AttachmentService {
     public List<String> getUserPhoto(long id) {
         User user = userService.getUserObjectById(id);
         List<String> userUrl = new ArrayList<>();
-            userUrl.add(convertImageToResponseIfExist(user.getProfile_Image()));
+        userUrl.add(convertImageToResponseIfExist(user.getProfile_Image()));
         return userUrl;
+    }
+
+    public void updateAuctionAttachments(List<MultipartFile> files, AttachmentToUpdateVm attachment) throws IOException {
+        removeImages(attachment.getIdsToRemoved());
+        List<Image> images = imageRepository.findAllByAuctionId(attachment.getAuctionId());
+        List<Attachment> attachments = prepareAttachmentToSave(files);
+        Optional<Auction> auction = auctionRepository.findById(attachment.getAuctionId());
+        changeMainPhoto(images, attachment);
+        if (auction.isPresent()) {
+            Auction auctionObj = auction.get();
+            images.addAll(prepareImageListToSave(auctionObj, attachments, attachment.getMainPhotoId()));
+            auctionObj.setImages(images);
+            auctionRepository.save(auctionObj);
+        }
+    }
+
+    private void changeMainPhoto(List<Image> images, AttachmentToUpdateVm attachment) {
+        for (Image image : images) {
+            image.setIsMainAuctionPhoto(isMainPhoto(image, attachment));
+        }
+        if (!attachment.isMainPhotoAllReadySaved()) {
+            Long id = attachment.getMainPhotoId();
+            attachment.setMainPhotoId(id - images.size());
+        }
+    }
+
+    private Boolean isMainPhoto(Image image, AttachmentToUpdateVm attachment) {
+        return image.getId().equals(attachment.getMainPhotoId()) && attachment.isMainPhotoAllReadySaved();
+    }
+
+    private void removeImages(List<Long> idsToRemoved) {
+        for (Long id : idsToRemoved) {
+            Optional<Image> image = imageRepository.findById(id);
+            if (image.isPresent()) {
+                imageRepository.delete(image.get());
+            }
+        }
     }
 }
