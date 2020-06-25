@@ -153,8 +153,7 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   }
 
   editAuction(auction: AuctionBaseField) {
-    this.auctionService.lastAuction = auction;
-    this.router.navigateByUrl('edit-auction');
+    this.router.navigate(['edit-auction'], {queryParams: {'title': auction.title, 'category': auction.category, 'id': auction.id}});
   }
 
   selectAuction(id: number) {
@@ -198,5 +197,11 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
       this.filter.state = 'ACTIVE';
     }
     this.loadAuctionsData();
+  }
+
+  extendAuctionTime(auction: AuctionBaseField) {
+    this.auctionService.extendAuctionTime(auction.id).subscribe(res => {
+      auction.expiredDate = res;
+    });
   }
 }

@@ -12,6 +12,7 @@ import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +69,17 @@ public class AuctionController {
         try {
             Long auctionId = auctionService.updateAuction(newAuctionVM);
             return new ResponseEntity(auctionId, HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.info("Something went wrong during edit Auction Object");
+            return new ResponseEntity(HttpStatus.valueOf(422));
+        }
+    }
+
+    @PutMapping("/auctions/{id}")
+    public ResponseEntity extendAuctionEndTime(@PathVariable long id) {
+        try {
+            Instant expiredDate = auctionService.extendAuctionEndTimeById(id);
+            return new ResponseEntity(expiredDate, HttpStatus.CREATED);
         } catch (Exception e) {
             log.info("Something went wrong during edit Auction Object");
             return new ResponseEntity(HttpStatus.valueOf(422));

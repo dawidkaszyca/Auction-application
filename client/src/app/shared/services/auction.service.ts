@@ -15,9 +15,9 @@ export class AuctionService {
 
   private CATEGORIES = `${SERVER_API_URL}/categories`;
   private AUCTIONS = `${SERVER_API_URL}/auctions`;
+  private AUCTIONS_TO_EDIT = this.AUCTIONS + '/edit';
 
   filter: BehaviorSubject<Filter>;
-  lastAuction: AuctionBaseField;
 
   constructor(private http: HttpClient) {
     this.filter = new BehaviorSubject(new Filter());
@@ -61,5 +61,17 @@ export class AuctionService {
     httpParams = httpParams.append('ids', selectedAuctions.toString());
     const options = {params: httpParams};
     return this.http.delete(this.AUCTIONS, options);
+  }
+
+  getAuctionWithDetailsToEditById(id: number) {
+    return this.http.get<Auction>(this.AUCTIONS_TO_EDIT + '/' + id);
+  }
+
+  updateAuction(auction: NewAuction) {
+    return this.http.put<NewAuction>(this.AUCTIONS, auction);
+  }
+
+  extendAuctionTime(id: number) {
+    return this.http.put<string>(this.AUCTIONS + '/' + id, null);
   }
 }
