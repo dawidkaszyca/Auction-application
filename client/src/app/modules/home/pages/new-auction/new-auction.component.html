@@ -67,7 +67,7 @@
 
     </mat-card>
 
-    <app-dynamic-panel *ngIf="auction.category" [category]="auction.category"
+    <app-dynamic-panel *ngIf="auction.category" [category]="auction.category" [selectedValues]="[]"
                        (selectEmitter)="receiveSelectedData($event)"></app-dynamic-panel>
 
     <mat-card>
@@ -104,7 +104,7 @@
                #city="ngModel"
                [(ngModel)]="cityName"
                (onAddressChange)="handleAddressChange($event)"
-               [ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
+               [ngClass]="{ 'is-invalid': f.submitted && cityName.invalid }"
                required/>
         <div *ngIf="f.submitted && (city.invalid || !checkName())" class="invalid-input mt-2">
           <!-- individual validation errors -->
@@ -118,16 +118,8 @@
                id="email"
                class="form-control w-50"
                name="email"
-               [(ngModel)]="auction.email"
-               #email="ngModel"
-               [ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
-               required email/>
-        <!-- input validation group -->
-        <div *ngIf="f.submitted && email.invalid" class="invalid-input mt-2">
-          <!-- individual validation errors -->
-          <div *ngIf="email.errors?.required">{{'register.isEmpty' | translate}}</div>
-          <div *ngIf="email.errors?.minlength">{{'register.toSmall5' | translate}}</div>
-        </div>
+               [(ngModel)]="email"
+               disabled/>
       </div>
 
       <div class="form-group">
@@ -146,19 +138,13 @@
                        (filesEmitter)="receiveImages($event)"></app-drag-drop>
       </div>
       <div class="row">
-        <ng-container *ngIf="files.length > 0">
+        <ng-container *ngIf="previewUrl.length > 0">
           <div class="col-3" *ngFor="let number of [0,1,2,3]">
-            <div #div1 *ngIf="selected !== number">
-              <mat-card [ngStyle]="{'height.px': div1.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
+            <div #div1>
+              <mat-card [ngClass]="{'selected': selected == number}" [ngStyle]="{'height.px': div1.offsetWidth}"
+                        class="w-100" (click)="selectMainPhoto(number)">
                 <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
-                <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove"></fa-icon>
-              </mat-card>
-            </div>
-            <div #div2 class="selected" *ngIf="selected === number && previewUrl[number]">
-              <mat-card [ngStyle]="{'height.px': div2.offsetWidth}" class="w-100" (click)="selectMainPhoto(number)">
-                <app-image *ngIf="previewUrl[number]" [path]=previewUrl[number]></app-image>
-                <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove"
-                         (click)="removeImage(number)"></fa-icon>
+                <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove" (click)="removeImage(number)"></fa-icon>
               </mat-card>
             </div>
           </div>
