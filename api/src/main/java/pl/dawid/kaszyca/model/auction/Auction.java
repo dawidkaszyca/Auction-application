@@ -43,7 +43,7 @@ public class Auction implements Serializable {
     @NonNull
     private User user;
 
-    @OneToMany(mappedBy = "auction", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "auction", orphanRemoval = true, cascade = {CascadeType.ALL})
     @Nullable
     private List<AuctionDetails> auctionDetails;
 

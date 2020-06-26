@@ -1,5 +1,6 @@
 package pl.dawid.kaszyca.service;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
@@ -13,6 +14,7 @@ import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -74,7 +76,7 @@ public class AuctionService {
         if (user.isPresent()) {
             auction.setUser(user.get());
             checkPermissionToEdit(auction.getUser().getId());
-            setIdToAuctionDetails(auction.getAuctionDetails(), auction.getId());
+            removeOldAuctionDetails(auction.getId());
             auction.getCity().setId(getCityIdToUpdate(auction.getId()));
             auctionRepository.save(auction);
             return auction.getId();
@@ -82,26 +84,17 @@ public class AuctionService {
         return null;
     }
 
-    private void setIdToAuctionDetails(List<AuctionDetails> auctionDetails, Long id) {
+    private void removeOldAuctionDetails(Long id) {
         Optional<Auction> auction = auctionRepository.findById(id);
         if (auction.isPresent()) {
-            List<AuctionDetails> savedDetails = auction.get().getAuctionDetails();
-            for (AuctionDetails it : auctionDetails) {
-                it.setId(getAuctionDetailsIdByAttribute(it.getCategoryAttribute(), savedDetails));
-            }
+            auction.get().getAuctionDetails().clear();
+            auctionRepository.save(auction.get());
         }
     }
 
     private Long getCityIdToUpdate(Long id) {
         Optional<Auction> auction = auctionRepository.findById(id);
         return auction.map(value -> value.getCity().getId()).orElse(null);
-    }
-
-    private Long getAuctionDetailsIdByAttribute(String categoryAttribute, List<AuctionDetails> auctionDetails) {
-        Optional<AuctionDetails> auction = auctionDetails.stream()
-                .filter(it -> it.getCategoryAttribute().equals(categoryAttribute))
-                .findFirst();
-        return auction.map(AuctionDetails::getId).orElse(null);
     }
 
     private void setAuctionImages(Auction auction) {
@@ -176,4 +169,20 @@ public class AuctionService {
     private boolean isUserAuctionId(Optional<User> optionalUser, Long auction) {
         return optionalUser.isPresent() && optionalUser.get().getId().equals(auction);
     }
+
+    public Instant extendAuctionEndTimeById(long id) {
+        Optional<Auction> auction = auctionRepository.findById(id);
+        if (auction.isPresent()) {
+            checkPermissionToEdit(auction.get().getUser().getId());
+            auction.get().setExpiredDate(getCurrentDatePlusOneMonth());
+            Auction savedAuction = auctionRepository.save(auction.get());
+            return savedAuction.getExpiredDate();
+        }
+        return null;
+    }
+
+    private Instant getCurrentDatePlusOneMonth() {
+        return DateUtils.addMonths(new Date(), 1).toInstant();
+    }
+
 }

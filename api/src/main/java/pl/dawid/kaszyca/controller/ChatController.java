@@ -23,7 +23,7 @@ public class ChatController {
     }
 
     @GetMapping("/messages")
-    public ResponseEntity getMessageByUser() {
+    public ResponseEntity getMessagesByUser() {
         try {
             List<ConversationVM> messages = messageService.getAllMessageRelatedWithCurrentUser();
             return messages.isEmpty() ? new ResponseEntity(HttpStatus.NO_CONTENT) : new ResponseEntity(messages, HttpStatus.OK);
