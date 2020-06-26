@@ -31,6 +31,7 @@ import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MyAuctionListComponent} from './components/my-auction-list/my-auction-list.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { EditAuctionComponent } from './pages/edit-auction/edit-auction.component';
 
 const appRoutes: Routes = [
   {
@@ -56,6 +57,11 @@ const appRoutes: Routes = [
     component: ChatComponent,
     canActivate: [CanActivateRouteGuard]
   },
+  {
+    path: 'edit-auction',
+    component: EditAuctionComponent,
+    canActivate: [CanActivateRouteGuard]
+  },
 ];
 
 @NgModule({
@@ -72,7 +78,8 @@ const appRoutes: Routes = [
     ContactComponent,
     ReceivedMessageComponent,
     SentMessageComponent,
-    MyAuctionListComponent
+    MyAuctionListComponent,
+    EditAuctionComponent
   ],
     imports: [
         CommonModule,
