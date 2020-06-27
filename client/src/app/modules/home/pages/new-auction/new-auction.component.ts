@@ -18,17 +18,19 @@ import {timer} from 'rxjs';
 })
 export class NewAuctionComponent implements OnInit, OnDestroy {
 
+  selectedValues: CategoryAttributes[];
   files: File[];
   public maxSizeOfImages: number;
   previewUrl: any[];
   selected: number;
   auction: NewAuction;
   categories: string[];
-  selectedValues: CategoryAttributes[];
   conditions: string[];
   name: string;
   city: City;
   cityName: any;
+  email: string;
+  isAfterRemoved: boolean;
   options = {
     types: ['(regions)'],
     componentRestrictions: {
@@ -73,6 +75,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
         this.categories = res.category;
         this.conditions = res.condition;
         this.name = res.name[0];
+        this.email = res.email[0];
         console.log(this.categories);
       },
       err => {
@@ -101,9 +104,10 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   }
 
   selectMainPhoto(photoNumber: number) {
-    if (this.previewUrl[photoNumber] != null) {
+    if (this.previewUrl[photoNumber] != null && !this.isAfterRemoved) {
       this.selected = photoNumber;
     }
+    this.isAfterRemoved = false;
   }
 
   receiveSelectedData($event: CategoryAttributes[]) {
@@ -159,6 +163,11 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
     this.previewUrl.splice(index, 1);
     if (this.files.length === 0) {
       this.selected = this.maxSizeOfImages;
+    } else if (index === this.selected) {
+      this.selected = 0;
+    } else if (index < this.selected) {
+      this.selected--;
     }
+    this.isAfterRemoved = true;
   }
 }

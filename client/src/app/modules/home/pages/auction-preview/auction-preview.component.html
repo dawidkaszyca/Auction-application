@@ -3,19 +3,14 @@
     <div class="col-7">
       <div #div [ngStyle]="{'height.px': div.offsetWidth }">
         <mat-card class="mt-5 h-100">
-          <app-image *ngIf="photosUrl" [path]="photosUrl.get(selected.toString())"></app-image>
+          <app-image *ngIf="selected" [path]="selected.url"></app-image>
         </mat-card>
       </div>
-      <div class="row mt-4" #div5>
-        <div class="col-4" *ngFor="let id of [1, 2, 3]">
-          <div class="mini-image" *ngIf="photosUrl?.size > 1" #div1
-               [ngStyle]="{'height.px': div1.offsetWidth  * 2 / 3}">
-            <mat-card *ngIf="(selected == id || selected < id) && photosUrl.get((id + 1).toString())" class="h-100"
-                      (click)="select(id + 1)">
-              <app-image *ngIf="photosUrl" [path]="photosUrl.get((id + 1).toString())"></app-image>
-            </mat-card>
-            <mat-card *ngIf="selected > id && photosUrl.get(id.toString())" class="h-100" (click)="select(id)">
-              <app-image *ngIf="photosUrl" [path]="photosUrl.get(id.toString())"></app-image>
+      <div class="row mt-4">
+        <div class="col-4" *ngFor="let image of images">
+          <div class="mini-image" #div1 [ngStyle]="{'height.px': div1.offsetWidth  * 2 / 3}">
+            <mat-card *ngIf="image.url" class="h-100" (click)="select(image)">
+              <app-image [path]="image.url"></app-image>
             </mat-card>
           </div>
         </div>
@@ -29,9 +24,9 @@
             <div class="row mt-5">
               <div class="col-6">
                 <h1 class="text-center">{{auction?.userFirstName}}</h1>
-                  <mat-card class="w-100 h-75 remove-shadow">
-                    <app-image class="w-25 h-25" [path]="userPhoto"></app-image>
-                  </mat-card>
+                <mat-card class="w-100 h-75 remove-shadow">
+                  <app-image class="w-25 h-25" [path]="userPhoto"></app-image>
+                </mat-card>
 
               </div>
               <div class="col-6 h-100">
@@ -39,7 +34,8 @@
                     class="text-right pr-2">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</h1>
                 <button *ngIf="!call" class="btn btn-primary w-100 mt-3"
                         (click)="call = true">{{'myProfile.call' | translate}}</button>
-                <button *ngIf="call" (click)="call = false" class="btn btn-primary w-100 mt-3">{{auction?.phone}}</button>
+                <button *ngIf="call" (click)="call = false"
+                        class="btn btn-primary w-100 mt-3">{{auction?.phone}}</button>
                 <button class="btn btn-primary w-100 mt-3"
                         (click)="routeToUserClassFields()">{{'myProfile.classifieds' | translate}}</button>
                 <button class="btn btn-primary w-100 mt-3"

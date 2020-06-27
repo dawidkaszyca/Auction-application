@@ -12,6 +12,7 @@ import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
 import pl.dawid.kaszyca.vm.NewAuctionVM;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -58,10 +59,44 @@ public class AuctionController {
             Long auctionId = auctionService.saveAuction(newAuctionVM);
             return new ResponseEntity(auctionId, HttpStatus.CREATED);
         } catch (Exception e) {
-            log.info("Something went wrong during saving new Auction Object");
+            log.info("Something went wrong during saving new auction object");
             return new ResponseEntity(HttpStatus.valueOf(422));
         }
     }
+
+    @PutMapping("/auctions")
+    public ResponseEntity updateAuction(@RequestBody NewAuctionVM newAuctionVM) {
+        try {
+            Long auctionId = auctionService.updateAuction(newAuctionVM);
+            return new ResponseEntity(auctionId, HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.info("Something went wrong during edit Auction Object");
+            return new ResponseEntity(HttpStatus.valueOf(422));
+        }
+    }
+
+    @PutMapping("/auctions/{id}")
+    public ResponseEntity extendAuctionEndTime(@PathVariable long id) {
+        try {
+            Instant expiredDate = auctionService.extendAuctionEndTimeById(id);
+            return new ResponseEntity(expiredDate, HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.info("Something went wrong during edit Auction Object");
+            return new ResponseEntity(HttpStatus.valueOf(422));
+        }
+    }
+
+    @DeleteMapping("/auctions")
+    public ResponseEntity removeAuctions(@RequestParam List<Integer> ids) {
+        try {
+            auctionService.removeAuctionsById(ids);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during removing object");
+            return new ResponseEntity(HttpStatus.valueOf(422));
+        }
+    }
+
 
     @GetMapping("/auctions/{id}")
     public ResponseEntity getAuctionById(@PathVariable long id) {
@@ -70,7 +105,20 @@ public class AuctionController {
             if (auction != null)
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {
-            log.info("Something went wrong during getting  auction by id");
+            log.info("Something went wrong during getting auction by id");
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/auctions/edit/{id}")
+    public ResponseEntity getAuctionToEditById(@PathVariable long id) {
+        try {
+            AuctionWithDetailsDTO auction = auctionService.getAuctionById(id);
+            auctionService.checkPermissionToEdit(auction.getUserId());
+            if (auction != null)
+                return new ResponseEntity(auction, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during getting auction by id");
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

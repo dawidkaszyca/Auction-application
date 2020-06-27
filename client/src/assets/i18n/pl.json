@@ -98,6 +98,22 @@
     "sent": "Twoja wiadomość została wysłana",
     "confirm": "Potwierdzenie",
     "login": "Proszę o zalogowanie się przed wysłaniem wiadomości"
+  },
+  "myAuction": {
+    "all": "Wszystkie",
+    "delete": "Usuń",
+    "refresh": "Odśwież",
+    "active": "Aktywne",
+    "inactive": "Nieaktywne",
+    "preview": "Podgląd",
+    "edit": "Edytuj",
+    "statistics": "Statystyki",
+    "entryStat": "Statystyki wyświetleń",
+    "msgStat": "Statystyki wiadomości",
+    "phoneStat": "Statystyki wyświetleń telefonu",
+    "extend": "Przedłuż",
+    "createDate": "Data dodania",
+    "expiredDate": "Data wygasnięcia"
   }
 }
 

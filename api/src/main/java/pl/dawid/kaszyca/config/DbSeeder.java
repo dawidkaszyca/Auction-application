@@ -11,7 +11,7 @@ import pl.dawid.kaszyca.model.*;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.*;
 import pl.dawid.kaszyca.service.AttachmentService;
-import pl.dawid.kaszyca.vm.AttachmentSaveVM;
+import pl.dawid.kaszyca.vm.AttachmentToSaveVM;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -209,7 +209,7 @@ class DbSeeder implements CommandLineRunner {
 
     private void createExampleAuctions() throws IOException {
         Auction auction;
-        List<MultipartFile> list = new ArrayList<>();
+        List<MultipartFile> list;
         List<AuctionDetails> auctionDetails;
         for (int i = 0; i < 100; i++) {
             auction = new Auction();
@@ -237,13 +237,13 @@ class DbSeeder implements CommandLineRunner {
                 auction.setAuctionDetails(auctionDetails);
             }
             auction = auctionRepository.save(auction);
-            AttachmentSaveVM attachmentSaveVM = new AttachmentSaveVM();
-            attachmentSaveVM.setMainPhotoId(0L);
-            attachmentSaveVM.setAuctionId(auction.getId());
+            AttachmentToSaveVM attachmentToSaveVM = new AttachmentToSaveVM();
+            attachmentToSaveVM.setMainPhotoId(0L);
+            attachmentToSaveVM.setAuctionId(auction.getId());
             list = new ArrayList<>();
             list.add(getMultipartFile(getRandomImageNameByCategory(categoryString)));
             list.add(getMultipartFile(getRandomImageNameByCategory(categoryString)));
-            attachmentService.saveAuctionAttachments(list, attachmentSaveVM);
+            attachmentService.saveAuctionAttachments(list, attachmentToSaveVM);
         }
     }
 
@@ -348,5 +348,4 @@ class DbSeeder implements CommandLineRunner {
         list.add("Fotografia");
         return list;
     }
-
 }

@@ -1,0 +1,65 @@
+.w-90-center {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 16px;
+}
+
+mat-form-field {
+  border-radius: 35px !important;
+}
+
+mat-card {
+  margin-top: 2rem;
+}
+
+.submit {
+  background-color: lightgrey;
+  min-height: 50%;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+::ng-deep .mat-card {
+  border: 55px solid #000;
+  border-radius: 35px !important;
+  border: #000 !important;
+}
+
+@media screen and (max-width: 800px) {
+  .w-50 {
+    width: 75% !important;
+  }
+  .w-25 {
+    width: 50% !important;
+  }
+}
+
+.selected {
+  ::ng-deep .mat-card {
+    border: 1px solid red !important;
+  }
+}
+
+.submit {
+  height: 10%;
+}
+
+.spinner-center {
+  margin-left: calc(50% - 50px);
+  margin-right: calc(50% - 50px);
+}
+
+.removeImage {
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  margin-right: 0px;
+  float: right;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  color: red;
+}

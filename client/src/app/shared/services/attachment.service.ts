@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Attachment} from '../models/attachment';
 import {Observable} from 'rxjs';
 import {SERVER_API_URL} from '../../app.constants';
+import {Image} from '../models/image';
 
 @Injectable({
   providedIn: 'root'
@@ -28,10 +29,10 @@ export class AttachmentService {
     return this.http.get<any>(this.ATTACHMENT + '/' + idList);
   }
 
-  getAuctionPhotosById(auctionId: number) {
+  getAuctionPhotosById(auctionId: number): Observable<Image[]> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('id', auctionId.toString());
-    return this.http.get<any>(this.ATTACHMENT, {params: httpParams});
+    return this.http.get<Image[]>(this.ATTACHMENT, {params: httpParams});
   }
 
   getUserPhoto() {
@@ -44,5 +45,9 @@ export class AttachmentService {
 
   getUserPhotoById(userId: number) {
     return this.http.get<string[]>(this.USER + '/' + userId);
+  }
+
+  updateAttachment(formData: FormData) {
+    return this.http.put<Attachment>(this.ATTACHMENT, formData);
   }
 }

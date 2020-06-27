@@ -42,7 +42,7 @@
                            class="form-control w-100 text-center" disabled/>
                   </div>
                   <div class="col-5 float-left nopadding float-left">
-                    <button [disabled]="page == amountOfPages" (click)="changeInput(1)" type="button"
+                    <button [disabled]="page >= amountOfPages" (click)="changeInput(1)" type="button"
                             class="btn btn-primary btn-circle btn-xl">>
                     </button>
                   </div>

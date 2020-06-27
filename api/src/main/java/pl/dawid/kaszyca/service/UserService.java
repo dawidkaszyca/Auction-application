@@ -172,4 +172,9 @@ public class UserService {
     public Optional<User> getUserByLogin(String login) {
         return userRepository.findOneByLogin(login);
     }
+
+    public String getCurrentUserEmail() {
+        Optional<User> user = getCurrentUserObject();
+        return user.map(User::getEmail).orElse(null);
+    }
 }

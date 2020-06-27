@@ -6,6 +6,7 @@ import {NewAuction} from '../models/new-auction';
 import {AuctionBaseField} from '../models/auction-base-field';
 import {Filter} from '../models/filter';
 import {SERVER_API_URL} from '../../app.constants';
+import {Auction} from '../models/auction';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class AuctionService {
 
   private CATEGORIES = `${SERVER_API_URL}/categories`;
   private AUCTIONS = `${SERVER_API_URL}/auctions`;
+  private AUCTIONS_TO_EDIT = this.AUCTIONS + '/edit';
 
   filter: BehaviorSubject<Filter>;
 
@@ -36,8 +38,8 @@ export class AuctionService {
   }
 
 
-  getAuctionWithDetailsById(id: number) {
-    return this.http.get<any>(this.AUCTIONS + '/' + id);
+  getAuctionWithDetailsById(id: number): Observable<Auction> {
+    return this.http.get<Auction>(this.AUCTIONS + '/' + id);
   }
 
   getAuctionForm() {
@@ -52,5 +54,24 @@ export class AuctionService {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('category', category);
     return this.http.get<AuctionBaseField[]>(this.AUCTIONS + '/top', {params: httpParams});
+  }
+
+  removeByIds(selectedAuctions: number[]) {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('ids', selectedAuctions.toString());
+    const options = {params: httpParams};
+    return this.http.delete(this.AUCTIONS, options);
+  }
+
+  getAuctionWithDetailsToEditById(id: number) {
+    return this.http.get<Auction>(this.AUCTIONS_TO_EDIT + '/' + id);
+  }
+
+  updateAuction(auction: NewAuction) {
+    return this.http.put<NewAuction>(this.AUCTIONS, auction);
+  }
+
+  extendAuctionTime(id: number) {
+    return this.http.put<string>(this.AUCTIONS + '/' + id, null);
   }
 }

@@ -7,6 +7,7 @@ export class Filter {
   pageSize = 10;
   page = 0;
   sort = 'DESC';
+  state = 'ACTIVE';
   userId;
   searchWords: string[];
   city: City;

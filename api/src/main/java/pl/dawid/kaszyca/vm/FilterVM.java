@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.dawid.kaszyca.config.SortEnum;
+import pl.dawid.kaszyca.config.StateEnum;
 import pl.dawid.kaszyca.dto.CategoryAttributesDTO;
 import pl.dawid.kaszyca.dto.CityDTO;
 
@@ -23,6 +24,8 @@ public class FilterVM {
     Integer page;
 
     SortEnum sort;
+
+    StateEnum state;
 
     Long userId;
 

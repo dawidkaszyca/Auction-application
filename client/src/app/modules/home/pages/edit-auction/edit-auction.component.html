@@ -1,6 +1,6 @@
 <div class="w-90-center">
   <h2 class="pt-4 ext-left ml-2"> {{'newAuction.start' | translate}}</h2>
-  <form #f="ngForm" (ngSubmit)="f.form.valid && checkName() && saveAuction()" novalidate class="feedback-form"
+  <form #f="ngForm" (ngSubmit)="f.form.valid && checkName() && updateAuction()" novalidate class="feedback-form"
         autocomplete="off">
     <mat-card>
 
@@ -67,7 +67,7 @@
 
     </mat-card>
 
-    <app-dynamic-panel *ngIf="auction.category" [category]="auction.category" [selectedValues]="[]"
+    <app-dynamic-panel *ngIf="auction.category" [category]="auction.category" [selectedValues]="this.selectedValues"
                        (selectEmitter)="receiveSelectedData($event)"></app-dynamic-panel>
 
     <mat-card>
@@ -121,7 +121,6 @@
                [(ngModel)]="email"
                disabled/>
       </div>
-
       <div class="form-group">
         <label>{{'register.urName' | translate}}</label>
         <input class="form-control w-25" [(ngModel)]="name" name="name" disabled>

@@ -39,7 +39,7 @@
       </div>
 
       <!--messages section-->
-      <div class="row message" id="conversation">
+      <div class="row message" id="conversation" (click)="updateDataAfterSelection()">
         <div id="scroller" class="col-12 col-md-12 sideBar">
           <ng-container *ngIf="selectedMessages">
             <ng-container *ngFor="let msg of selectedMessages">
@@ -52,7 +52,7 @@
       </div>
 
       <!--reply section-->
-      <div class="row reply">
+      <div class="row reply" (click)="updateDataAfterSelection()">
         <div class="col-9 col-sm-9 reply-main">
           <textarea class="form-control" rows="1" id="comment" (keyup.enter)="sendMessage()" [(ngModel)]="msg" placeholder="write a message..."></textarea>
         </div>

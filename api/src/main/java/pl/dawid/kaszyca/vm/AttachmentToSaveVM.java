@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AttachmentSaveVM {
+public class AttachmentToSaveVM {
     Long auctionId;
     Long mainPhotoId;
     boolean isUserImagePhoto;

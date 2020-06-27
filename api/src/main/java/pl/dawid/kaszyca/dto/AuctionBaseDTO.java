@@ -25,6 +25,8 @@ public class AuctionBaseDTO {
 
     private Instant createdDate;
 
+    private Instant expiredDate;
+
     private int viewers;
 
 

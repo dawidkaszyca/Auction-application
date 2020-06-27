@@ -12,8 +12,8 @@
     "phone": "Mobile phones",
     "tablet": "Tablets",
     "tv": "TVs",
-    "pc": "Laptops & Netbooks",
-    "consoleGames": "Video Games & Consoles",
+    "pc": "Laptops",
+    "consoleGames": "Video Games",
     "photo": "Photography"
   },
   "register": {
@@ -87,6 +87,8 @@
     "photoButton": "Click to change photo",
     "welcome": "Welcome",
     "call": "Call",
+    "changeData": "Change data",
+    "changePassword": "Change password",
     "classifieds": "Classifieds"
   },
   "dialog": {
@@ -96,5 +98,21 @@
     "sent": "Your message has been sent",
     "confirm": "Confirmation",
     "login": "Please login to your account before you can send a message"
+  },
+  "myAuction": {
+    "all": "All",
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "active": "Active",
+    "inactive": "Inactive",
+    "preview": "Preview",
+    "edit": "Edit",
+    "statistics": "Statistics",
+    "entryStat": "Entry statistics",
+    "msgStat": "Message statistics",
+    "phoneStat": "Phone display statistics",
+    "extend": "Extend",
+    "createDate": "Added date",
+    "expiredDate": "Expiration  date"
   }
 }

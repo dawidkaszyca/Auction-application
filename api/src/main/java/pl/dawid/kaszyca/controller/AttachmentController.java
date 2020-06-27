@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dawid.kaszyca.service.AttachmentService;
-import pl.dawid.kaszyca.vm.AttachmentSaveVM;
+import pl.dawid.kaszyca.vm.AttachmentToSaveVM;
+import pl.dawid.kaszyca.vm.AttachmentToUpdateVm;
+import pl.dawid.kaszyca.vm.ImageVM;
 
 import java.util.List;
 import java.util.Map;
@@ -29,8 +31,22 @@ public class AttachmentController {
                                           @RequestParam("data") String data) {
         try {
             Gson gson = new Gson();
-            AttachmentSaveVM attachmentSaveVM = gson.fromJson(data, AttachmentSaveVM.class);
-            attachmentService.saveAuctionAttachments(files, attachmentSaveVM);
+            AttachmentToSaveVM attachmentToSaveVM = gson.fromJson(data, AttachmentToSaveVM.class);
+            attachmentService.saveAuctionAttachments(files, attachmentToSaveVM);
+            return new ResponseEntity(HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("Something went wrong during saving attachments");
+        }
+        return new ResponseEntity(HttpStatus.valueOf(422));
+    }
+
+    @RequestMapping(value = "/attachments", method = RequestMethod.PUT, consumes = "multipart/form-data")
+    public ResponseEntity updateAttachments(@RequestParam("files") List<MultipartFile> files,
+                                            @RequestParam("data") String data) {
+        try {
+            Gson gson = new Gson();
+            AttachmentToUpdateVm attachment = gson.fromJson(data, AttachmentToUpdateVm.class);
+            attachmentService.updateAuctionAttachments(files, attachment);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Something went wrong during saving attachments");
@@ -52,7 +68,7 @@ public class AttachmentController {
     @GetMapping(value = "/attachments")
     public ResponseEntity getPhotosForAuctionById(@RequestParam("id") long auctionId) {
         try {
-            Map<String, String> photosUrlMap = attachmentService.getPhotosForAuctionById(auctionId);
+            List<ImageVM> photosUrlMap = attachmentService.getPhotosForAuctionById(auctionId);
             return new ResponseEntity(photosUrlMap, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Something went wrong during saving attachments");
@@ -92,5 +108,4 @@ public class AttachmentController {
         }
         return new ResponseEntity(HttpStatus.valueOf(422));
     }
-
 }

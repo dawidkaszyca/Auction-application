@@ -17,6 +17,7 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
   @Input()
   private category: string;
   attributes: CategoryAttributes[];
+  @Input()
   selectedValues: CategoryAttributes[];
   show = false;
 
@@ -28,8 +29,12 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.category.previousValue != null && changes.category.previousValue !== changes.category.currentValue) {
+    if (changes.category?.previousValue != null && changes.category?.previousValue !== changes.category?.currentValue) {
+      this.selectedValues = null;
       this.ngOnInit();
+    }
+    if (changes.selectedValues) {
+      this.show = true;
     }
   }
 
@@ -45,19 +50,21 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
   }
 
   private prepareObjectToReturn() {
-    this.selectedValues = [];
-    for (const attribute of this.attributes) {
-      const categoryObj = new CategoryAttributes();
-      categoryObj.attribute = attribute.attribute;
-      categoryObj.isSingleSelect = attribute.isSingleSelect;
-      if (attribute.isSingleSelect) {
-        categoryObj.attributeValues = [];
-        const values = new AttributesValues();
-        values.id = 1;
-        values.value = '';
-        categoryObj.attributeValues.push(values);
+    if (!this.selectedValues) {
+      this.selectedValues = [];
+      for (const attribute of this.attributes) {
+        const categoryObj = new CategoryAttributes();
+        categoryObj.attribute = attribute.attribute;
+        categoryObj.isSingleSelect = attribute.isSingleSelect;
+        if (attribute.isSingleSelect) {
+          categoryObj.attributeValues = [];
+          const values = new AttributesValues();
+          values.id = 1;
+          values.value = '';
+          categoryObj.attributeValues.push(values);
+        }
+        this.selectedValues.push(categoryObj);
       }
-      this.selectedValues.push(categoryObj);
     }
     this.show = this.attributes.length > 0;
     this.selectEmitter.emit(this.selectedValues);
@@ -70,6 +77,17 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
         break;
       }
     }
+  }
+
+  getSelectedValue(attribute: CategoryAttributes): string {
+    if (!this.selectedValues) {
+      return '';
+    }
+    const attr = this.selectedValues.filter(it => it.attribute === attribute.attribute)[0];
+    if (attr?.attributeValues) {
+      return attr.attributeValues[0].value;
+    }
+    return '';
   }
 }
 

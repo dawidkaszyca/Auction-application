@@ -58,6 +58,9 @@ export class MainPageComponent implements OnInit {
         this.auctions = res.auctionListBase;
         this.numberOfAuctions = res.numberOfAuctionByProvidedFilters;
         this.amountOfPages = Math.ceil(this.numberOfAuctions / this.filter.pageSize);
+        if(this.amountOfPages === 0) {
+          this.amountOfPages = 1;
+        }
         this.inputValue = this.page + '/' + this.amountOfPages;
         this.noContent = false;
         if (res == null) {

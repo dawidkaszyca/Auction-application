@@ -12,6 +12,7 @@ export class AuctionBaseField {
   condition: string;
   title: string;
   createdDate: string;
+  expiredDate: string;
   viewers: number;
   photoUrl: string;
 }

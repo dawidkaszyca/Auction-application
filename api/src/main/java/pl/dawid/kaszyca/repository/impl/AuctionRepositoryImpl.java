@@ -3,6 +3,7 @@ package pl.dawid.kaszyca.repository.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import pl.dawid.kaszyca.config.SortEnum;
+import pl.dawid.kaszyca.config.StateEnum;
 import pl.dawid.kaszyca.dto.AttributeValuesDTO;
 import pl.dawid.kaszyca.dto.CategoryAttributesDTO;
 import pl.dawid.kaszyca.model.auction.Auction;
@@ -12,9 +13,10 @@ import pl.dawid.kaszyca.vm.FilterVM;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 
 @Repository
 public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
@@ -35,10 +37,6 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
                 .setFirstResult(0)
                 .setMaxResults(4)
                 .getResultList();
-    }
-
-    private Predicate getCategoryPredicate(String category, Root<Auction> auction, CriteriaBuilder cb) {
-        return cb.equal(auction.get("category").get("category"), category);
     }
 
     @Override
@@ -118,8 +116,11 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             predicates.add(getAttributesPredicate(filterVM, auction, cb));
         if (!StringUtils.isEmpty(filterVM.getCategory()) && !filterVM.getCategory().equals("all"))
             predicates.add(getCategoryPredicate(filterVM.getCategory(), auction, cb));
-        if(filterVM.getUserId() != null && filterVM.getUserId() != 0)
+        if (filterVM.getUserId() != null && filterVM.getUserId() != 0)
             predicates.add(getUserIdPredicate(filterVM.getUserId(), auction, cb));
+        if(filterVM.getState() != StateEnum.ALL) {
+            predicates.add(getState(cb, filterVM.getState(), auction));
+        }
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
@@ -135,7 +136,6 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         Predicate searchPredicate = cb.or(titleOrPredicates.toArray(new Predicate[titleOrPredicates.size()]));
         return searchPredicate;
     }
-
 
     private Predicate getPricePredicate(FilterVM filterVM, Root<Auction> auction, CriteriaBuilder cb) {
         List<Predicate> pricePredicate = new ArrayList<>();
@@ -178,8 +178,21 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         return cb.or(attributesPredicate.toArray(new Predicate[attributesPredicate.size()]));
     }
 
+    private Predicate getCategoryPredicate(String category, Root<Auction> auction, CriteriaBuilder cb) {
+        return cb.equal(auction.get("category").get("category"), category);
+    }
+
     private Predicate getUserIdPredicate(Long userId, Root<Auction> auction, CriteriaBuilder cb) {
         return cb.equal(auction.get("user").get("id"), userId);
+    }
+
+    private Predicate getState(CriteriaBuilder cb, StateEnum state, Root<Auction> auction) {
+        if (state == StateEnum.ACTIVE) {
+            return cb.greaterThan(auction.<Instant>get("expiredDate"), new Date().toInstant());
+        } else if (state == StateEnum.INACTIVE) {
+           return cb.lessThanOrEqualTo(auction.<Instant>get("expiredDate"), new Date().toInstant());
+        }
+        return null;
     }
 
     private Long getAuctionsByCityFilterCount(List<Auction> auctions, FilterVM filterVM) {

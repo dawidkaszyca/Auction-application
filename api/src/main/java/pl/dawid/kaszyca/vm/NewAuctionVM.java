@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class NewAuctionVM {
+    private Long id;
     private String category;
     private CityDTO city;
     private String condition;
