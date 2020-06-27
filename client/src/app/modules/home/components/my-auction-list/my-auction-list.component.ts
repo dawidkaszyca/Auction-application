@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
@@ -63,6 +63,9 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
         this.auctions = res.auctionListBase;
         this.numberOfAuctions = res.numberOfAuctionByProvidedFilters;
         this.amountOfPages = Math.ceil(this.numberOfAuctions / this.filter.pageSize);
+        if (this.amountOfPages === 0) {
+          this.amountOfPages = 1;
+        }
         this.inputValue = this.page + '/' + this.amountOfPages;
         this.noContent = false;
         if (res == null) {
