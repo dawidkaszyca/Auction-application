@@ -11,6 +11,9 @@ import pl.dawid.kaszyca.model.Message;
 import pl.dawid.kaszyca.util.MapperUtils;
 import pl.dawid.kaszyca.vm.StatusVM;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 @Service
 public class WebSocketService {
 
@@ -30,8 +33,18 @@ public class WebSocketService {
     public void sendMessages(String to, Long id, Message message) {
         StatusVM statusVM = new StatusVM();
         statusVM.setId(id);
+        removeNano(message);
         statusVM.setMessage(MapperUtils.map(message, MessageDTO.class));
         simpMessagingTemplate.convertAndSend(WS_MESSAGE_TRANSFER_DESTINATION + to, statusVM);
+    }
+
+    private void removeNano(Message message) {
+        Instant myRoundedUpInstant = message.getSentDate().truncatedTo(ChronoUnit.SECONDS);
+        double round = message.getSentDate().getNano() / 1_000_000_000.0;
+        if (Math.round(round) == 1) {
+            myRoundedUpInstant = myRoundedUpInstant.plusSeconds(1);
+        }
+        message.setSentDate(myRoundedUpInstant);
     }
 
     public void sendStatusMessageAfterLogin(String user) throws JSONException {
