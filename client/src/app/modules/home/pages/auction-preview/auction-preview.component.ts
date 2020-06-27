@@ -8,6 +8,7 @@ import {SendMessageService} from '../../../../shared/services/send-message.servi
 import {AuthService} from '../../../../core/security/auth.service';
 import {InfoDialogService} from '../../../../shared/services/info-dialog.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Image} from '../../../../shared/models/image';
 
 @Component({
   selector: 'app-auction-preview',
@@ -19,8 +20,8 @@ export class AuctionPreviewComponent implements OnInit {
   auctionDetails: AuctionDetails[];
   category: string;
   auction: Auction;
-  photosUrl: Map<string, string>;
-  selected = 1;
+  images: Image[];
+  selected: Image;
   call: any;
   userPhoto: any;
 
@@ -53,15 +54,21 @@ export class AuctionPreviewComponent implements OnInit {
   private loadAuctionPhotos() {
     this.attachmentService.getAuctionPhotosById(this.auctionId).subscribe(
       res => {
-        this.photosUrl = new Map(Object.entries(res));
+        this.loadImages(res);
       },
       err => {
         alert('TODO');
       });
   }
 
-  select(id: number) {
-    this.selected = id;
+  select(image: Image) {
+    const url = image.url;
+    this.images.forEach(it => {
+      if (it.photoId === image.photoId) {
+        it.url = this.selected.url;
+      }
+    });
+    this.selected.url = url;
   }
 
   sendMessage() {
@@ -81,5 +88,10 @@ export class AuctionPreviewComponent implements OnInit {
 
   routeToUserClassFields() {
 
+  }
+
+  private loadImages(res: Image[]) {
+    this.selected = res.filter(it => it.mainPhoto === true)[0];
+    this.images = res.filter(it => it.mainPhoto === false);
   }
 }
