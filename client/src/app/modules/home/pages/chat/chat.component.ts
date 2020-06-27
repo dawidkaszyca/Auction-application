@@ -8,6 +8,7 @@ import {Message} from '../../../../shared/models/message';
 import {ScrollToBottomDirective} from '../../../../shared/directives/scroll-to-bottom.directive';
 import {ContactComponent} from '../../components/contact/contact.component';
 import {Status} from '../../../../shared/models/status';
+import {timer} from 'rxjs';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   msg: string;
   container: HTMLElement;
   private isNewMSG: boolean;
+  private isRequestPending: boolean;
 
   constructor(private webSocket: WebsocketService, private navigationService: NavigationService, private chatService: ChatService) {
     this.conversations = [];
@@ -51,19 +53,24 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   private getMessageFromServer() {
+    this.isRequestPending = true;
     this.chatService.getMessages().subscribe(res => {
-      if (res) {
-        this.conversations = res;
-        this.selectFirst();
-        this.isNewMSG = true;
-      }
-    });
+        if (res) {
+          this.conversations = res;
+          this.selectFirst();
+          this.isNewMSG = true;
+        }
+        this.isRequestPending = false;
+      },
+      error => {
+        this.isRequestPending = false;
+      });
   }
 
   private selectFirst() {
     if (this.conversations) {
       this.selected = this.conversations[0];
-      this.updateDataAfterSelection();
+      this.createOneArrayFromMessages();
     }
   }
 
@@ -72,17 +79,34 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       const conversation = this.findConversationById(data.id);
       data.message.isYours = false;
       if (!conversation) {
-        this.getConversationById(data);
+        if (!this.isRequestPending) {
+          this.getConversationById(data);
+        } else {
+          timer(100).subscribe(x => {
+            this.setDataAfterNewMessage(data);
+          });
+        }
         return 0;
       } else if (conversation && !conversation.partnerMessages) {
         conversation.partnerMessages = [];
       }
-      conversation.partnerMessages.push(data.message);
+      if (!this.checkIfMessageAllReadyExist(conversation, data)) {
+        conversation.partnerMessages.push(data.message);
+      }
       if (this.selected?.id === data.id) {
-        this.selectedMessages.push(data.message);
-        this.isNewMSG = true;
+        this.createOneArrayFromMessages();
+        if (!this.checkIfMessageAllReadyExist(this.selected, data)) {
+          this.selectedMessages.push(data.message);
+          this.isNewMSG = true;
+        }
       }
     }
+  }
+
+  private checkIfMessageAllReadyExist(conversation: Conversation, data: Status): boolean {
+    return !!conversation.partnerMessages
+      .filter(it => it.content === data.message.content)
+      .filter(it => it.sentDate === data.message.sentDate)[0];
   }
 
   private findConversationById(id: number): Conversation {
@@ -151,6 +175,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.selectedMessages.push(...this.selected.yourMessages);
     this.selectedMessages.push(...this.selected.partnerMessages);
     this.sortSelected();
+    this.isNewMSG = true;
   }
 
   private sortSelected() {
