@@ -1,12 +1,8 @@
 import {CategoryAttributes} from './category-attributes';
 import {City} from './auction-base-field';
+import {Pagination} from './pagination';
 
-export class Filter {
-
-  sortByFieldName = 'createdDate';
-  pageSize = 10;
-  page = 0;
-  sort = 'DESC';
+export class Filter extends Pagination {
   state = 'ACTIVE';
   userId;
   searchWords: string[];
