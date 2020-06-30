@@ -7,6 +7,7 @@ import {AuctionBaseField} from '../models/auction-base-field';
 import {Filter} from '../models/filter';
 import {SERVER_API_URL} from '../../app.constants';
 import {Auction} from '../models/auction';
+import {Pagination} from '../models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,19 @@ export class AuctionService {
   private AUCTIONS_TO_EDIT = this.AUCTIONS + '/edit';
 
   filter: BehaviorSubject<Filter>;
+  pagination: BehaviorSubject<Pagination>;
 
   constructor(private http: HttpClient) {
     this.filter = new BehaviorSubject(new Filter());
+    this.pagination = new BehaviorSubject(new Pagination());
+  }
+
+  updateFilterObj(filter: Filter) {
+    this.filter.next(filter);
+  }
+
+  updatePaginationObj(pagination: Pagination) {
+    this.pagination.next(pagination);
   }
 
   getCategoryAttributes(category: string): Observable<Category> {
@@ -31,12 +42,12 @@ export class AuctionService {
     return this.http.post<NewAuction>(this.AUCTIONS, auction);
   }
 
+
   getAuctions(filter: Filter): Observable<any> {
     let httpParams = new HttpParams();
     httpParams = httpParams.append('criteria', JSON.stringify(filter));
     return this.http.get<any>(this.AUCTIONS, {params: httpParams});
   }
-
 
   getAuctionWithDetailsById(id: number): Observable<Auction> {
     return this.http.get<Auction>(this.AUCTIONS + '/' + id);
@@ -44,10 +55,6 @@ export class AuctionService {
 
   getAuctionForm() {
     return this.http.get<any>(this.AUCTIONS + '/' + 'form');
-  }
-
-  updateFilterObj(filter: Filter) {
-    this.filter.next(filter);
   }
 
   loadTopAuction(category: string) {

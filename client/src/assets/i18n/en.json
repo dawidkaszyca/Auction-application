@@ -41,7 +41,8 @@
   "auction": {
     "condition": "Condition ",
     "views": "Views ",
-    "date": "Added date "
+    "date": "Added date ",
+    "userAuctions": "User auction "
   },
   "newAuction": {
     "start": "let's get started",

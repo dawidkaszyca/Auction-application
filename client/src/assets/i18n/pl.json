@@ -41,7 +41,8 @@
   "auction": {
     "condition": "Stan ",
     "views": "Wyświetleń ",
-    "date": "Data dodania "
+    "date": "Data dodania ",
+    "userAuctions": "Aukcje użytkownika "
   },
   "newAuction": {
     "start": "Zaczynajmy",
