@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Auction} from '../../../../shared/models/auction';
 import {AuctionService} from '../../../../shared/services/auction.service';
 import {AttachmentService} from '../../../../shared/services/attachment.service';
@@ -26,8 +26,8 @@ export class AuctionPreviewComponent implements OnInit {
   userPhoto: any;
 
   constructor(private router: ActivatedRoute, private auctionService: AuctionService, private attachmentService: AttachmentService,
-              private sendMessageService: SendMessageService, private authService: AuthService,
-              private infoDialogService: InfoDialogService, private translate: TranslateService) {
+              private sendMessageService: SendMessageService, private authService: AuthService, private infoDialogService: InfoDialogService,
+              private translate: TranslateService, private route: Router) {
     this.call = false;
   }
 
@@ -87,7 +87,8 @@ export class AuctionPreviewComponent implements OnInit {
   }
 
   routeToUserClassFields() {
-
+    this.route.navigate(['auction-user'],
+      {queryParams: {'id': this.auction.userId, 'name': this.auction.userFirstName}});
   }
 
   private loadImages(res: Image[]) {

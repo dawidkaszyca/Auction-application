@@ -32,6 +32,9 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MyAuctionListComponent} from './components/my-auction-list/my-auction-list.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { EditAuctionComponent } from './pages/edit-auction/edit-auction.component';
+import { UserAuctionsComponent } from './pages/user-auctions/user-auctions.component';
+import { PaginationBarComponent } from './components/pagination/pagination-bar/pagination-bar.component';
+import { PaginationShortBarComponent } from './components/pagination/pagination-short-bar/pagination-short-bar.component';
 
 const appRoutes: Routes = [
   {
@@ -62,6 +65,10 @@ const appRoutes: Routes = [
     component: EditAuctionComponent,
     canActivate: [CanActivateRouteGuard]
   },
+  {
+    path: 'auction-user',
+    component: UserAuctionsComponent,
+  },
 ];
 
 @NgModule({
@@ -79,7 +86,10 @@ const appRoutes: Routes = [
     ReceivedMessageComponent,
     SentMessageComponent,
     MyAuctionListComponent,
-    EditAuctionComponent
+    EditAuctionComponent,
+    UserAuctionsComponent,
+    PaginationBarComponent,
+    PaginationShortBarComponent
   ],
     imports: [
         CommonModule,

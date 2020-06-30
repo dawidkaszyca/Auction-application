@@ -1,0 +1,18 @@
+<div class="row float-right mt-3 mr-2">
+  <div class="nopadding">
+    <button [disabled]="pagination.page <= 0" (click)="changeInput(-1)" type="button"
+            class="btn btn-primary btn-circle btn-xl float-right"><
+    </button>
+  </div>
+  <div class="nopadding">
+    <input type="text"
+           name="minPrice"
+           [value]="inputValue"
+           class="form-control w-100 text-center" disabled/>
+  </div>
+  <div class="nopadding">
+    <button [disabled]="pagination.page >= amountOfPages + 1" (click)="changeInput(1)" type="button"
+            class="btn btn-primary btn-circle btn-xl">>
+    </button>
+  </div>
+</div>
