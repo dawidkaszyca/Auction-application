@@ -15,6 +15,4 @@ public interface AuctionRepository  extends JpaRepository<Auction, Long>, Auctio
 
     List<Auction> findTop4ByOrderByViewersDesc();
 
-    Long countAllByCategoryCategory(String category);
-
 }

@@ -1,19 +1,14 @@
 package pl.dawid.kaszyca.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import pl.dawid.kaszyca.config.StatisticKeyEnum;
 import pl.dawid.kaszyca.model.auction.Auction;
 
-import javax.annotation.Nullable;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class Statistic implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,18 +17,13 @@ public class Statistic implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private StatisticKeyEnum key;
+    private String enumKey;
 
     @Temporal(TemporalType.DATE)
-    @NotNull
-    private Date day;
+    private Date date;
 
-    @NotNull
-    private int value;
+    private Long value;
 
     @ManyToOne
-    @Nullable
     private Auction auction;
-
 }
