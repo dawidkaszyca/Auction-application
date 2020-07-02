@@ -1,6 +1,7 @@
 package pl.dawid.kaszyca.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ import pl.dawid.kaszyca.util.MapperUtils;
 import pl.dawid.kaszyca.util.RandomUtil;
 import pl.dawid.kaszyca.util.SecurityUtils;
 
-import javax.swing.text.html.Option;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
@@ -30,16 +30,24 @@ import java.util.Set;
 @Slf4j
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthorityRepository authorityRepository;
-    private final MailService mailService;
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+    private StatisticService statisticService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, MailService mailService) {
+    private AuthorityRepository authorityRepository;
+
+    private MailService mailService;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                       AuthorityRepository authorityRepository, MailService mailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.mailService = mailService;
+    }
+
+    @Autowired
+    public void setStatisticService(StatisticService statisticService) {
+        this.statisticService = statisticService;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -88,6 +96,7 @@ public class UserService {
         log.debug("Created Information for User: {}", newUser);
         log.debug("Send activation mail to ", newUser.getFirstName());
         //mailService.sendActiveMail(newUser.getFirstName(), newUser.getActivationKey(), userDTO.getEmail());
+        statisticService.incrementDailyRegistration();
         return newUser;
     }
 
