@@ -76,7 +76,7 @@ public class AttachmentController {
         return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
-    @GetMapping(value = "/attachments/user")
+    @GetMapping(value = "/attachments/users")
     public ResponseEntity getUserPhoto() {
         try {
             List<String> photos = attachmentService.getUserPhoto();
@@ -87,7 +87,7 @@ public class AttachmentController {
         return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
-    @GetMapping(value = "/attachments/user/{id}")
+    @GetMapping(value = "/attachments/users/{id}")
     public ResponseEntity getUserPhotoById(@PathVariable long id) {
         try {
             List<String> photos = attachmentService.getUserPhoto(id);
@@ -98,7 +98,7 @@ public class AttachmentController {
         return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
-    @PostMapping(value = "/attachments/user", consumes = "multipart/form-data")
+    @PostMapping(value = "/attachments/users", consumes = "multipart/form-data")
     public ResponseEntity saveUserPhoto(@RequestParam("files") MultipartFile file) {
         try {
             attachmentService.saveUserPhoto(file);

@@ -16,7 +16,7 @@ public class SocketController {
         this.webSocketService = webSocketService;
     }
 
-    @MessageMapping("/user/{name}")
+    @MessageMapping("/users/{name}")
     public void getAmountOfNotifications(@DestinationVariable String name) throws JSONException {
         webSocketService.sendStatusMessageAfterLogin(name);
     }

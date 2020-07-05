@@ -11,7 +11,7 @@ import {Image} from '../models/image';
 export class AttachmentService {
 
   private ATTACHMENT = `${SERVER_API_URL}/attachments`;
-  private USER = this.ATTACHMENT + '/user';
+  private USER = this.ATTACHMENT + '/users';
 
   constructor(private http: HttpClient) {
   }
