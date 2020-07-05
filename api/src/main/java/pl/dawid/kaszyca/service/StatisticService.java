@@ -6,18 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.dawid.kaszyca.config.StatisticKeyEnum;
+import pl.dawid.kaszyca.dto.StatisticDTO;
 import pl.dawid.kaszyca.model.Statistic;
 import pl.dawid.kaszyca.model.auction.Auction;
 import pl.dawid.kaszyca.repository.MessageRepository;
 import pl.dawid.kaszyca.repository.StatisticRepository;
 import pl.dawid.kaszyca.repository.UserRepository;
+import pl.dawid.kaszyca.util.MapperUtils;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -226,5 +225,20 @@ public class StatisticService {
         statistics.put(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS, 0L);
         statistics.put(StatisticKeyEnum.DAILY_AUCTION_VIEWS, 0L);
         statistics.put(StatisticKeyEnum.DAILY_REMOVED_AUCTIONS, 0L);
+    }
+
+    public Map<StatisticKeyEnum, List<StatisticDTO>> getAuctionStatisticsById(Long id) {
+        Map<StatisticKeyEnum, List<StatisticDTO>> result = new HashMap<>();
+        putAuctionStatisticByKey(result, StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS_BY_ID, id);
+        putAuctionStatisticByKey(result, StatisticKeyEnum.DAILY_AUCTION_VIEWS_BY_ID, id);
+        return result;
+    }
+
+    private void putAuctionStatisticByKey(Map<StatisticKeyEnum, List<StatisticDTO>> result, StatisticKeyEnum key, Long id) {
+        List<Statistic> statistics = statisticRepository.findAllByEnumKeyAndAuctionId(key.name(), id);
+        if (!statistics.isEmpty()) {
+            List<StatisticDTO> statisticDTOS = MapperUtils.mapAll(statistics, StatisticDTO.class);
+            result.put(key, statisticDTOS);
+        }
     }
 }
