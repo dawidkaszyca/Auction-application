@@ -108,12 +108,11 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
         String login = ((String) Objects.requireNonNull(message.getHeaders().get(DESTINATION))).split("/")[3];
         if (!checkUserBySessionIdAndLogin(sessionId, login)) {
             throw new LoginFromTokenDoNotMatchToWebSocketChannelException();
-
         }
     }
 
     public boolean checkUserBySessionIdAndLogin(String sessionId, String login) {
-        return userLogin.get(sessionId).equals(login);
+        return userLogin.get(sessionId) != null && userLogin.get(sessionId).equals(login);
     }
 
     private void checkSendAuthorization(StompHeaderAccessor accessor, Message<?> message) {

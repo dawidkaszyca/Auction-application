@@ -101,7 +101,7 @@ public class AuctionController {
     @GetMapping("/auctions/{id}")
     public ResponseEntity getAuctionById(@PathVariable long id) {
         try {
-            AuctionWithDetailsDTO auction = auctionService.getAuctionById(id);
+            AuctionWithDetailsDTO auction = auctionService.getAuctionWithDetailsObjectById(id);
             if (auction != null)
                 return new ResponseEntity(auction, HttpStatus.OK);
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class AuctionController {
     @GetMapping("/auctions/edit/{id}")
     public ResponseEntity getAuctionToEditById(@PathVariable long id) {
         try {
-            AuctionWithDetailsDTO auction = auctionService.getAuctionById(id);
+            AuctionWithDetailsDTO auction = auctionService.getAuctionWithDetailsObjectById(id);
             auctionService.checkPermissionToEdit(auction.getUserId());
             if (auction != null)
                 return new ResponseEntity(auction, HttpStatus.OK);

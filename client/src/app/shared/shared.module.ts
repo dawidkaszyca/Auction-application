@@ -17,6 +17,8 @@ import { MessageDialogComponent } from './components/message-dialog/message-dial
 import {FormsModule} from '@angular/forms';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { InfoDialogComponent } from './components/info-dialog/info-dialog.component';
+import { ColumnComponent } from './components/graphs/column/column.component';
+import { CircularComponent } from './components/graphs/circular/circular.component';
 
 
 
@@ -31,7 +33,9 @@ import { InfoDialogComponent } from './components/info-dialog/info-dialog.compon
         MapPreviewComponent,
         SplitCurrencyPipe,
         MessageDialogComponent,
-        InfoDialogComponent
+        InfoDialogComponent,
+        ColumnComponent,
+        CircularComponent
     ],
   imports: [
     CommonModule,
@@ -48,7 +52,8 @@ import { InfoDialogComponent } from './components/info-dialog/info-dialog.compon
     DragDropComponent,
     ImageComponent,
     MapPreviewComponent,
-    SplitCurrencyPipe
+    SplitCurrencyPipe,
+    CircularComponent
   ],
   bootstrap: [AppComponent]
 })

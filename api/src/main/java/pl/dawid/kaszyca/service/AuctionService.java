@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.exception.PermissionDeniedToAuction;
+import pl.dawid.kaszyca.model.Statistic;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
@@ -23,14 +24,17 @@ public class AuctionService {
     AuctionRepository auctionRepository;
     UserService userService;
     CategoryService categoryService;
+    StatisticService statisticService;
 
-    public AuctionService(AuctionRepository auctionRepository, UserService userService, CategoryService categoryService) {
+    public AuctionService(AuctionRepository auctionRepository, UserService userService, CategoryService categoryService,
+                          StatisticService statisticService) {
         this.auctionRepository = auctionRepository;
         this.userService = userService;
         this.categoryService = categoryService;
+        this.statisticService = statisticService;
     }
 
-    public AuctionWithDetailsDTO getAuctionById(long id) {
+    public AuctionWithDetailsDTO getAuctionWithDetailsObjectById(long id) {
         Optional<Auction> auctionOptional = auctionRepository.findFirstById(id);
         if (auctionOptional.isPresent()) {
             Auction auction = auctionOptional.get();
@@ -41,7 +45,14 @@ public class AuctionService {
         return null;
     }
 
+    public Auction getAuctionById(long id) {
+        Optional<Auction> auctionOptional = auctionRepository.findFirstById(id);
+        return auctionOptional.orElse(null);
+    }
+
     private void incrementViewersAmount(Auction auction) {
+        statisticService.incrementDailyAuctionViews();
+        statisticService.incrementDailyAuctionViewsById(auction.getId());
         auction.setViewers(auction.getViewers() + 1);
         auctionRepository.save(auction);
     }
@@ -53,6 +64,7 @@ public class AuctionService {
         if (user.isPresent()) {
             auction.setUser(user.get());
             auctionRepository.save(auction);
+            statisticService.incrementDailyNewAuction();
             return auction.getId();
         }
         return null;
@@ -79,6 +91,7 @@ public class AuctionService {
             removeOldAuctionDetails(auction.getId());
             auction.getCity().setId(getCityIdToUpdate(auction.getId()));
             auctionRepository.save(auction);
+            statisticService.incrementDailyEditedAuction();
             return auction.getId();
         }
         return null;
@@ -154,6 +167,7 @@ public class AuctionService {
             Optional<Auction> auction = auctionRepository.findById(Long.valueOf(id));
             if (auction.isPresent() && checkPermissionToEdit(auction.get().getUser().getId())) {
                 auctionRepository.delete(auction.get());
+                statisticService.incrementDailyRemovedAuction();
             }
         }
     }
@@ -179,6 +193,10 @@ public class AuctionService {
             return savedAuction.getExpiredDate();
         }
         return null;
+    }
+
+    public Long getTotalAmountOfAuction() {
+        return auctionRepository.count();
     }
 
     private Instant getCurrentDatePlusOneMonth() {

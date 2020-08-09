@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pl.dawid.kaszyca.security.jwt.JWTFilter;
 import pl.dawid.kaszyca.security.jwt.TokenProvider;
+import pl.dawid.kaszyca.service.StatisticService;
 import pl.dawid.kaszyca.vm.LoginFormVM;
 
 import javax.validation.Valid;
@@ -22,13 +23,15 @@ import javax.validation.Valid;
 @RequestMapping("api")
 public class AuthController {
 
-    private final TokenProvider tokenProvider;
+    private TokenProvider tokenProvider;
+    private AuthenticationManagerBuilder authenticationManagerBuilder;
+    private StatisticService statisticService;
 
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
-    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder,
+                          StatisticService statisticService) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.statisticService = statisticService;
     }
 
     @PostMapping("/authenticate")
@@ -42,6 +45,7 @@ public class AuthController {
             String jwt = tokenProvider.createToken(authentication, rememberMe);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+            statisticService.incrementDailyLogin();
             return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
         } catch (BadCredentialsException | InternalAuthenticationServiceException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.valueOf(401));

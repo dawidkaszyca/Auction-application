@@ -27,10 +27,12 @@ public class ChatService {
     UserService userService;
     ConversationRepository conversationRepository;
     WebSocketService webSocketService;
+    StatisticService statisticService;
 
-    public ChatService(UserService userService, ConversationRepository messageRepository) {
+    public ChatService(UserService userService, ConversationRepository messageRepository, StatisticService statisticService) {
         this.userService = userService;
         this.conversationRepository = messageRepository;
+        this.statisticService = statisticService;
     }
 
     @Autowired
@@ -97,6 +99,7 @@ public class ChatService {
             conversation.setSentMessages(messages);
             conversationRepository.save(conversation);
             webSocketService.sendMessages(recipient.getLogin(), conversation.getRecipientMessage().getId(), message);
+            statisticService.incrementDailyMessages();
             return MapperUtils.map(message, MessageDTO.class);
         } else {
             throw new RecipientNotExistException();
