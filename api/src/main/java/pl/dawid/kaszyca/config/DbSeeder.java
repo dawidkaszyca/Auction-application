@@ -1,6 +1,7 @@
 package pl.dawid.kaszyca.config;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.mock.web.MockMultipartFile;
@@ -13,6 +14,7 @@ import pl.dawid.kaszyca.repository.*;
 import pl.dawid.kaszyca.service.AttachmentService;
 import pl.dawid.kaszyca.vm.AttachmentToSaveVM;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +32,9 @@ class DbSeeder implements CommandLineRunner {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private ConversationRepository conversationRepository;
+
+    private StatisticRepository statisticRepository;
+
     Map<String, List<String>> categoriesMap;
     Map<String, List<String>> attributesMap;
     Map<String, List<String>> attachmentMap;
@@ -38,10 +43,10 @@ class DbSeeder implements CommandLineRunner {
     Random random;
     @Autowired
     PasswordEncoder encoder;
-
     public DbSeeder(AuthorityRepository authorityRepository, CategoryRepository categoryRepository,
                     AuctionRepository auctionRepository, PasswordEncoder password, UserRepository userRepository,
-                    AttachmentService attachmentService, ConversationRepository conversationRepository) {
+                    AttachmentService attachmentService, ConversationRepository conversationRepository,
+                    StatisticRepository statisticRepository) {
         this.authorityRepository = authorityRepository;
         this.categoryRepository = categoryRepository;
         this.auctionRepository = auctionRepository;
@@ -49,6 +54,7 @@ class DbSeeder implements CommandLineRunner {
         this.userRepository = userRepository;
         this.attachmentService = attachmentService;
         this.conversationRepository = conversationRepository;
+        this.statisticRepository = statisticRepository;
         this.random = new Random();
         categoryList = getCategoryList();
     }
@@ -66,6 +72,7 @@ class DbSeeder implements CommandLineRunner {
         //createExampleMessage(sender, recipient);
         createCategories();
         createExampleAuctions();
+        createExampleAuctionStatistic();
         System.out.println("Initialized database");
     }
 
@@ -323,6 +330,10 @@ class DbSeeder implements CommandLineRunner {
         return random.nextInt(100000);
     }
 
+    private long getRandomValue() {
+        return (long) random.nextInt(50);
+    }
+
     private City getRandomCity() {
         City city = cityList.get(random.nextInt(cityList.size()));
         city.setId(null);
@@ -347,5 +358,21 @@ class DbSeeder implements CommandLineRunner {
         list.add("Gry i konsole");
         list.add("Fotografia");
         return list;
+    }
+
+    private void createExampleAuctionStatistic() {
+        List<Auction> auctions = auctionRepository.findAll();
+        for(Auction auction: auctions) {
+            Date date = new Date();
+            for(int i=0;i<50;i++) {
+                Statistic statistic = new Statistic();
+                statistic.setEnumKey(StatisticKeyEnum.DAILY_AUCTION_VIEWS_BY_ID.value);
+                date = DateUtils.addDays(date, 1);
+                statistic.setDate(date);
+                statistic.setAuction(auction);
+                statistic.setValue(getRandomValue());
+                statisticRepository.save(statistic);
+            }
+        }
     }
 }

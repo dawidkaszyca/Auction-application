@@ -9,9 +9,7 @@ import pl.dawid.kaszyca.dto.UserDTO;
 import pl.dawid.kaszyca.exception.InvalidPasswordException;
 import pl.dawid.kaszyca.exception.UserNotExistException;
 import pl.dawid.kaszyca.model.User;
-import pl.dawid.kaszyca.repository.UserRepository;
 import pl.dawid.kaszyca.service.UserService;
-import pl.dawid.kaszyca.service.MailService;
 import pl.dawid.kaszyca.vm.RegisterFormVM;
 
 import javax.validation.Valid;
@@ -23,16 +21,10 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserController {
 
-    private final UserRepository userRepository;
-
     private final UserService userService;
 
-    private final MailService mailService;
-
-    public UserController(UserRepository userRepository, UserService userService, MailService mailService) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.mailService = mailService;
     }
 
     @PostMapping("/register")

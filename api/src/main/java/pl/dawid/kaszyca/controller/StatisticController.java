@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dawid.kaszyca.config.StatisticKeyEnum;
 import pl.dawid.kaszyca.dto.StatisticDTO;
-import pl.dawid.kaszyca.model.Statistic;
 import pl.dawid.kaszyca.service.StatisticService;
 
 import java.util.List;

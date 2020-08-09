@@ -28,6 +28,7 @@ const appRoutes: Routes = [
   FooterComponent],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     HttpClientModule,
     TranslateModule.forRoot({
@@ -39,7 +40,6 @@ const appRoutes: Routes = [
     }),
     RouterModule.forRoot(appRoutes, {enableTracing: true}),
     BrowserAnimationsModule,
-    CommonModule,
     MatFormFieldModule,
     MatSelectModule,
     FormsModule,
