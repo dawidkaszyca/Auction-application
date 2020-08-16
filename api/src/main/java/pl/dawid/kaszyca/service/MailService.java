@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Properties;
 
 @Service
@@ -21,7 +22,7 @@ public class MailService {
         mailSender.setUsername(environment.getProperty("spring.mail.username"));
         mailSender.setPassword(environment.getProperty("spring.mail.password"));
         mailSender.setHost(environment.getProperty("spring.mail.host"));
-        mailSender.setPort(Integer.parseInt(environment.getProperty("spring.mail.port")));
+        mailSender.setPort(Integer.parseInt(Objects.requireNonNull(environment.getProperty("spring.mail.port"))));
         Properties prop = mailSender.getJavaMailProperties();
         prop.put("mail.transport.protocol", "smtp");
         prop.put("mail.smtp.auth", "true");
@@ -36,7 +37,7 @@ public class MailService {
             message.setTo(to);
             message.setSubject(subject);
             message.setText(content);
-            message.setFrom(mailSender.getUsername());
+            message.setFrom(Objects.requireNonNull(mailSender.getUsername()));
             this.mailSender.send(message);
             log.debug("Sent email to User '{}'", to);
         } catch (MailException e) {
@@ -46,8 +47,8 @@ public class MailService {
 
     @Async
     public void sendActiveMail(String firstName, String activeUrl, String email) {
-        String suffixMessage = " for your registration at our service. Confirm your account by clicking here : http://localhost:4200/api/confirm-registration/";
         String prefixMessage = "Thanks ";
+        String suffixMessage = " for your registration at our service. Confirm your account by clicking here : http://localhost:4200/api/confirm-registration/";
         String content = prefixMessage + firstName + suffixMessage + activeUrl;
         String subject = "Confirm your registration at ...TODO...";
         sendMail(email, content, subject);

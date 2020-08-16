@@ -43,9 +43,9 @@ public class TokenProvider {
     public void init() {
         this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
         this.tokenValidityInMilliseconds =
-                1000 * jsonWebTokenProperties.getTokenValidityInSeconds();
+                1000L * jsonWebTokenProperties.getTokenValidityInSeconds();
         this.tokenValidityInMillisecondsForRememberMe =
-                1000 * jsonWebTokenProperties.getTokenValidityInSecondsForRememberMe();
+                1000L * jsonWebTokenProperties.getTokenValidityInSecondsForRememberMe();
     }
 
     public String createToken(Authentication authentication, boolean rememberMe) {

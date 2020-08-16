@@ -1,6 +1,7 @@
 package pl.dawid.kaszyca.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,12 +32,15 @@ import java.util.Set;
 public class UserService {
 
     private UserRepository userRepository;
+
     private PasswordEncoder passwordEncoder;
+
     private StatisticService statisticService;
 
     private AuthorityRepository authorityRepository;
 
     private MailService mailService;
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
                        AuthorityRepository authorityRepository, MailService mailService) {
         this.userRepository = userRepository;
@@ -62,7 +66,10 @@ public class UserService {
                 });
     }
 
-    public User registerUser(UserDTO userDTO, String password) {
+    public void registerUser(UserDTO userDTO, String password) {
+        if (!checkPasswordLength(userDTO.getPassword())) {
+            throw new InvalidPasswordException();
+        }
         userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).ifPresent(existingUser -> {
             boolean removed = removeNonActivatedUser(existingUser);
             if (!removed) {
@@ -78,16 +85,13 @@ public class UserService {
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(userDTO.getLogin().toLowerCase());
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
         if (userDTO.getEmail() != null) {
             newUser.setEmail(userDTO.getEmail().toLowerCase());
         }
-        // new user is not active
         newUser.setActivated(false);
-        // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
@@ -97,7 +101,12 @@ public class UserService {
         log.debug("Send activation mail to ", newUser.getFirstName());
         //mailService.sendActiveMail(newUser.getFirstName(), newUser.getActivationKey(), userDTO.getEmail());
         statisticService.incrementDailyRegistration();
-        return newUser;
+    }
+
+    private static boolean checkPasswordLength(String password) {
+        return !StringUtils.isEmpty(password) &&
+                password.length() >= UserDTO.PASSWORD_MIN_LENGTH &&
+                password.length() <= UserDTO.PASSWORD_MAX_LENGTH;
     }
 
     public void updateUser(String firstName, String lastName, String email) {
@@ -120,7 +129,7 @@ public class UserService {
 
     public User getUserObjectById(Long id) {
         Optional<User> user = userRepository.findOneById(id);
-        return Optional.ofNullable(user.get()).orElse(null);
+        return user.orElse(null);
     }
 
     public String getCurrentUserName() {
@@ -151,7 +160,7 @@ public class UserService {
                 });
     }
 
-    public UserDTO getUserProfileData() {
+    public UserDTO getCurrentUser() {
         Optional<User> user = getCurrentUserObject();
         if (user.isPresent())
             return MapperUtils.map(user.get(), UserDTO.class);

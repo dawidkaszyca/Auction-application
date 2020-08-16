@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class AuctionVM {
+
     List<AuctionBaseDTO> auctionListBase;
+
     Long numberOfAuctionByProvidedFilters;
 }

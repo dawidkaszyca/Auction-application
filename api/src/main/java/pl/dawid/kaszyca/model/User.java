@@ -28,7 +28,7 @@ public class User implements Serializable {
 
     @Nullable
     @OneToOne(cascade = {CascadeType.ALL})
-    private Attachment profile_Image;
+    private Attachment profileImage;
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)

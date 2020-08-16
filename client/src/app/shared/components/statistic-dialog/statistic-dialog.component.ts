@@ -4,6 +4,7 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {StatisticService} from '../../services/statistic.service';
 import {Graph} from '../../models/graph';
 import * as CanvasJS from 'src/assets/canvasjs.min';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-statistic-dialog',
@@ -15,7 +16,7 @@ export class StatisticDialogComponent implements OnInit {
   dailyViewsKey = 'DAILY_AUCTION_VIEWS_BY_ID';
   dailyViewData: Graph[];
 
-  constructor(private statisticService: StatisticService, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(private statisticService: StatisticService, @Inject(MAT_DIALOG_DATA) public data: any, private translate: TranslateService) {
     this.dailyViewData = [];
     this.getData();
   }
@@ -26,6 +27,8 @@ export class StatisticDialogComponent implements OnInit {
   private getData() {
     this.statisticService.getAuctionStatisticById(this.data.auctionData.id).subscribe(it => {
       this.convertToData(it[this.dailyViewsKey]);
+      this.renderChart(this.dailyViewData, 'chartContainer1', this.translate.instant('dialog.dailyViews'));
+      this.renderChart(this.dailyViewData, 'chartContainer2', this.translate.instant('dialog.dailyPhone'));
     });
   }
 
@@ -36,11 +39,9 @@ export class StatisticDialogComponent implements OnInit {
       graph.label = it.date;
       this.dailyViewData.push(graph);
     });
-    this.renderChart('chartContainer1', 'daily');
-    this.renderChart('chartContainer2', 'Other');
   }
 
-  private renderChart(containerName: string, title: string) {
+  private renderChart(data: any, containerName: string, title: string) {
     const chart = new CanvasJS.Chart(containerName, {
       animationEnabled: true,
       exportEnabled: false,
@@ -49,7 +50,7 @@ export class StatisticDialogComponent implements OnInit {
       },
       data: [{
         type: 'column',
-        dataPoints: this.dailyViewData
+        dataPoints: data
       }]
     });
 

@@ -25,8 +25,11 @@ import java.util.Optional;
 public class ChatService {
 
     UserService userService;
+
     ConversationRepository conversationRepository;
+
     WebSocketService webSocketService;
+
     StatisticService statisticService;
 
     public ChatService(UserService userService, ConversationRepository messageRepository, StatisticService statisticService) {
@@ -55,26 +58,6 @@ public class ChatService {
             conversationModel.add(convertConversationToVM(conversation));
         }
         return conversationModel;
-    }
-
-    private ConversationVM convertConversationToVM(Conversation conversation) {
-        ConversationVM conversationVM = new ConversationVM();
-        conversationVM.setName(getFullNameFromRecipient(conversation.getRecipient()));
-        conversationVM.setYourMessages(getMessagesDTOFromConversation(conversation));
-        conversationVM.setPartnerMessages(getMessagesDTOFromConversation(conversation.getRecipientMessage()));
-        conversationVM.setId(conversation.getId());
-        conversationVM.setPartnerId(conversation.getRecipient().getId());
-        return conversationVM;
-    }
-
-    private List<MessageDTO> getMessagesDTOFromConversation(Conversation conversation) {
-        List<MessageDTO> messages = MapperUtils.mapAll(conversation.getSentMessages(), MessageDTO.class);
-        messages.sort(Comparator.comparing(MessageDTO::getSentDate));
-        return messages;
-    }
-
-    private String getFullNameFromRecipient(User recipient) {
-        return recipient.getFirstName() + " " + recipient.getLastName();
     }
 
     public MessageDTO sendMessage(MessageDispatchVM messageDispatchVM) {
@@ -133,10 +116,16 @@ public class ChatService {
         Integer result = 0;
         if (user.isPresent()) {
             List<Conversation> listOfReceivedConversations = conversationRepository.findAllByRecipient(user.get());
-            for (Conversation conversation : listOfReceivedConversations) {
-                if (checkIfListContainsUnViewedMessage(conversation.getSentMessages()))
-                    result++;
-            }
+            result = getAmountOfUnViewedConversation(listOfReceivedConversations);
+        }
+        return result;
+    }
+
+    private Integer getAmountOfUnViewedConversation(List<Conversation> listOfReceivedConversations) {
+        Integer result = 0;
+        for (Conversation conversation : listOfReceivedConversations) {
+            if (checkIfListContainsUnViewedMessage(conversation.getSentMessages()))
+                result++;
         }
         return result;
     }
@@ -154,12 +143,16 @@ public class ChatService {
         User sender = userService.getUserObjectById(id);
         if (recipient.isPresent() && sender != null) {
             Optional<Conversation> conversation = conversationRepository.findFirstBySenderAndRecipient(sender, recipient.get());
-            if (conversation.isPresent()) {
-                for (Message message : conversation.get().getSentMessages()) {
-                    message.setDisplayed(true);
-                }
-                conversationRepository.save(conversation.get());
+            setConversationMessagesAsDisplayed(conversation);
+        }
+    }
+
+    private void setConversationMessagesAsDisplayed(Optional<Conversation> conversation) {
+        if (conversation.isPresent()) {
+            for (Message message : conversation.get().getSentMessages()) {
+                message.setDisplayed(true);
             }
+            conversationRepository.save(conversation.get());
         }
     }
 
@@ -174,5 +167,25 @@ public class ChatService {
                 throw new LoginFromTokenDoNotMatchToConversationException();
         }
         return null;
+    }
+
+    private ConversationVM convertConversationToVM(Conversation conversation) {
+        ConversationVM conversationVM = new ConversationVM();
+        conversationVM.setName(getFullNameFromRecipient(conversation.getRecipient()));
+        conversationVM.setYourMessages(getMessagesDTOFromConversation(conversation));
+        conversationVM.setPartnerMessages(getMessagesDTOFromConversation(conversation.getRecipientMessage()));
+        conversationVM.setId(conversation.getId());
+        conversationVM.setPartnerId(conversation.getRecipient().getId());
+        return conversationVM;
+    }
+
+    private String getFullNameFromRecipient(User recipient) {
+        return recipient.getFirstName() + " " + recipient.getLastName();
+    }
+
+    private List<MessageDTO> getMessagesDTOFromConversation(Conversation conversation) {
+        List<MessageDTO> messages = MapperUtils.mapAll(conversation.getSentMessages(), MessageDTO.class);
+        messages.sort(Comparator.comparing(MessageDTO::getSentDate));
+        return messages;
     }
 }

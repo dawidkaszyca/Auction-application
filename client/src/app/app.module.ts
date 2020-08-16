@@ -1,8 +1,8 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {HttpClientModule, HttpClient, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavigationComponent} from './core/header/navigation/navigation.component';
@@ -21,8 +21,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {NgxWebstorageModule} from 'ngx-webstorage';
 import {CoreModule} from './core/core.module';
 import {HomeModule} from './modules/home/home.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
+import {MatDialog} from '@angular/material/dialog';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -40,7 +41,7 @@ const appRoutes: Routes = [
   {
     path: 'api/confirm-registration/:text',
     component: ConfirmRegisterComponent
-  },
+  }
   /*{
     path: '**',
     component: NotFoundComponent
@@ -62,6 +63,7 @@ const appRoutes: Routes = [
     AppRoutingModule,
     HttpClientModule,
     NgxWebstorageModule.forRoot(),
+    RouterModule.forRoot(appRoutes, {enableTracing: true}),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -69,7 +71,6 @@ const appRoutes: Routes = [
         deps: [HttpClient]
       }
     }),
-    RouterModule.forRoot(appRoutes, {enableTracing: true}),
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -81,8 +82,7 @@ const appRoutes: Routes = [
     FontAwesomeModule,
     GooglePlaceModule
   ],
-  providers: [
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {

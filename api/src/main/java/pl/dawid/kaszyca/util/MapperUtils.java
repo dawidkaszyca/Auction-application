@@ -1,16 +1,10 @@
 package pl.dawid.kaszyca.util;
 
+import com.google.gson.Gson;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import pl.dawid.kaszyca.dto.AttributeValuesDTO;
-import pl.dawid.kaszyca.dto.CategoryAttributesDTO;
-import pl.dawid.kaszyca.dto.CategoryDTO;
-import pl.dawid.kaszyca.model.auction.AttributeValues;
-import pl.dawid.kaszyca.model.auction.Category;
-import pl.dawid.kaszyca.model.auction.CategoryAttributes;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,29 +54,14 @@ public class MapperUtils {
         return destination;
     }
 
-    public static CategoryDTO mapCategoryToDTO(Category category) {
-        CategoryDTO categoryDTO = map(category, CategoryDTO.class);
-        List<CategoryAttributesDTO> categoryAttributesDTOS = new ArrayList<>();
-        for (CategoryAttributes categoryAttributes : category.getCategoryAttributes()) {
-            CategoryAttributesDTO categoryAttributesDTO = map(categoryAttributes, CategoryAttributesDTO.class);
-            List<AttributeValuesDTO> attributeValuesDTOS = mapAll(categoryAttributes.getAttributeValues(), AttributeValuesDTO.class);
-            categoryAttributesDTO.setAttributeValues(attributeValuesDTOS);
-            categoryAttributesDTOS.add(categoryAttributesDTO);
-        }
-        categoryDTO.setCategoryAttributes(categoryAttributesDTOS);
-        return categoryDTO;
-    }
-
-    public static Category mapDTOTOCategory(CategoryDTO categoryDTO) {
-        Category category = map(categoryDTO, Category.class);
-        List<CategoryAttributes> categoryAttributesList = new ArrayList<>();
-        for (CategoryAttributesDTO categoryAttributesDTO : categoryDTO.getCategoryAttributes()) {
-            CategoryAttributes categoryAttributes = map(categoryAttributesDTO, CategoryAttributes.class);
-            List<AttributeValues> attributeValues = mapAll(categoryAttributes.getAttributeValues(), AttributeValues.class);
-            categoryAttributes.setAttributeValues(attributeValues);
-            categoryAttributesList.add(categoryAttributes);
-        }
-        category.setCategoryAttributes(categoryAttributesList);
-        return category;
+    /**
+     * Maps {json string} to {@code destination}.
+     *
+     * @param data     String json
+     * @param outClass class of result object.
+     */
+    public static <D> D mapJsonToObject(String data, Class<D> outClass) {
+        Gson gson = new Gson();
+        return gson.fromJson(data, outClass);
     }
 }

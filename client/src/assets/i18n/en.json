@@ -86,7 +86,7 @@
   },
   "myProfile": {
     "photoButton": "Click to change photo",
-    "welcome": "Welcome",
+    "welcome": "About me",
     "call": "Call",
     "changeData": "Change data",
     "changePassword": "Change password",
@@ -98,7 +98,9 @@
     "cancel": "Cancel",
     "sent": "Your message has been sent",
     "confirm": "Confirmation",
-    "login": "Please login to your account before you can send a message"
+    "login": "Please login to your account before you can send a message",
+    "dailyViews": "Daily views",
+    "dailyPhone": "Daily phone clicks"
   },
   "myAuction": {
     "all": "All",

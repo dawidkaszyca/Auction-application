@@ -23,22 +23,17 @@ import java.util.*;
 public class StatisticService {
 
     private Map<StatisticKeyEnum, Long> statistics;
+
     private Date statisticCollectDate;
-    /**
-     * Map<Long, Long>
-     * key - auctionId
-     * value - amount
-     */
+
     private Map<StatisticKeyEnum, Map<Long, Long>> statisticsWithAuctionId;
+
     private StatisticRepository statisticRepository;
 
-    @Autowired
-    public void setAuctionService(AuctionService auctionService) {
-        this.auctionService = auctionService;
-    }
-
     private AuctionService auctionService;
+
     private UserRepository userRepository;
+
     private MessageRepository messageRepository;
 
     StatisticService(StatisticRepository statisticRepository, UserRepository userRepository, MessageRepository messageRepository) {
@@ -50,10 +45,9 @@ public class StatisticService {
         statisticCollectDate = new Date();
     }
 
-    private void createNewEmptyStatisticsWithIdMap() {
-        statisticsWithAuctionId = new HashMap<>();
-        statisticsWithAuctionId.put(StatisticKeyEnum.DAILY_AUCTION_VIEWS_BY_ID, new HashMap<>());
-        statisticsWithAuctionId.put(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS_BY_ID, new HashMap<>());
+    @Autowired
+    public void setAuctionService(AuctionService auctionService) {
+        this.auctionService = auctionService;
     }
 
     public void incrementDailyAuctionViewsById(Long id) {
@@ -102,9 +96,7 @@ public class StatisticService {
         incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_VIEWS);
     }
 
-    public void incrementDailyAuctionPhoneClicksBy() {
-        incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS);
-    }
+    public void incrementDailyAuctionPhoneClicks() { incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS); }
 
     public void incrementDailyRemovedAuction() {
         incrementValueByKey(StatisticKeyEnum.DAILY_REMOVED_AUCTIONS);
@@ -134,6 +126,19 @@ public class StatisticService {
         log.info("end cron to daily statistics");
     }
 
+    @Scheduled(cron = "0 * * * * *")
+    public void updateDaailyStatistics() {
+        log.info("start cron to daily statistics");
+        saveStatistics();
+        saveStatisticsWithAuctionId();
+        if (!isNewDay()) {
+            statisticCollectDate = new Date();
+            createNewEmptyMapWithKeys();
+            createNewEmptyStatisticsWithIdMap();
+        }
+        log.info("end cron to daily statistics");
+    }
+
     private void saveStatistics() {
         Optional<Statistic> optionalStatistic;
         Statistic statistic;
@@ -151,10 +156,6 @@ public class StatisticService {
         }
     }
 
-    private boolean isNewDay() {
-        return DateUtils.isSameDay(new Date(), statisticCollectDate);
-    }
-
     private void saveStatisticsWithAuctionId() {
         for (Map.Entry<StatisticKeyEnum, Map<Long, Long>> entry : statisticsWithAuctionId.entrySet()) {
             saveAuctionsStatistic(entry.getKey(), entry.getValue());
@@ -162,24 +163,51 @@ public class StatisticService {
     }
 
     private void saveAuctionsStatistic(StatisticKeyEnum key, Map<Long, Long> auctionStatistic) {
-        Optional<Statistic> optionalStatistic;
-        Statistic statistic;
-        for (Map.Entry<Long, Long> entry : auctionStatistic.entrySet()) {
-            optionalStatistic = statisticRepository.findFirstByEnumKeyAndDateAndAuctionId(key.name(), statisticCollectDate, entry.getKey());
-            if (optionalStatistic.isPresent())
-                statistic = optionalStatistic.get();
-            else {
-                statistic = new Statistic();
-                statistic.setDate(statisticCollectDate);
-                statistic.setEnumKey(key.name());
-                Auction auction = auctionService.getAuctionById(entry.getKey());
-                if (auction == null)
-                    break;
-                statistic.setAuction(auction);
+        try {
+            Optional<Statistic> optionalStatistic;
+            Statistic statistic;
+            for (Map.Entry<Long, Long> entry : auctionStatistic.entrySet()) {
+                optionalStatistic = statisticRepository.findFirstByEnumKeyAndDateAndAuctionId(key.name(), statisticCollectDate, entry.getKey());
+                if (optionalStatistic.isPresent())
+                    statistic = optionalStatistic.get();
+                else {
+                    statistic = new Statistic();
+                    statistic.setDate(statisticCollectDate);
+                    statistic.setEnumKey(key.name());
+                    Auction auction = auctionService.getAuctionById(entry.getKey());
+                    if (auction == null)
+                        break;
+                    statistic.setAuction(auction);
+                }
+                statistic.setValue(entry.getValue());
+                statisticRepository.save(statistic);
             }
-            statistic.setValue(entry.getValue());
-            statisticRepository.save(statistic);
+        } catch (Exception e) {
+            log.error("Cannot save daily statistics");
         }
+    }
+
+    private boolean isNewDay() {
+        return DateUtils.isSameDay(new Date(), statisticCollectDate);
+    }
+
+    private void createNewEmptyMapWithKeys() {
+        statistics = new EnumMap<>(StatisticKeyEnum.class);
+        statistics.put(StatisticKeyEnum.DAILY_NEW_AUCTIONS, 0L);
+        statistics.put(StatisticKeyEnum.DAILY_EDITED_AUCTIONS, 0L);
+        statistics.put(StatisticKeyEnum.DAILY_MESSAGES, 0L);
+        statistics.put(StatisticKeyEnum.DAILY_REGISTRATIONS, 0L);
+        statistics.put(StatisticKeyEnum.DAILY_USERS_LOGIN, 0L);
+        statistics.put(StatisticKeyEnum.DAILY_AUCTION_REPORTS, 0L);
+        statistics.put(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS, 0L);
+        statistics.put(StatisticKeyEnum.DAILY_AUCTION_VIEWS, 0L);
+        statistics.put(StatisticKeyEnum.DAILY_REMOVED_AUCTIONS, 0L);
+    }
+
+    private void createNewEmptyStatisticsWithIdMap() {
+        statisticsWithAuctionId = new EnumMap<>(StatisticKeyEnum.class);
+        statisticsWithAuctionId.put(StatisticKeyEnum.DAILY_AUCTION_VIEWS_BY_ID, new HashMap<>());
+        statisticsWithAuctionId.put(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS_BY_ID, new HashMap<>());
     }
 
     /**
@@ -214,30 +242,17 @@ public class StatisticService {
         return Date.from(yesterday);
     }
 
-    private void createNewEmptyMapWithKeys() {
-        statistics = new HashMap<>();
-        statistics.put(StatisticKeyEnum.DAILY_NEW_AUCTIONS, 0L);
-        statistics.put(StatisticKeyEnum.DAILY_EDITED_AUCTIONS, 0L);
-        statistics.put(StatisticKeyEnum.DAILY_MESSAGES, 0L);
-        statistics.put(StatisticKeyEnum.DAILY_REGISTRATIONS, 0L);
-        statistics.put(StatisticKeyEnum.DAILY_USERS_LOGIN, 0L);
-        statistics.put(StatisticKeyEnum.DAILY_AUCTION_REPORTS, 0L);
-        statistics.put(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS, 0L);
-        statistics.put(StatisticKeyEnum.DAILY_AUCTION_VIEWS, 0L);
-        statistics.put(StatisticKeyEnum.DAILY_REMOVED_AUCTIONS, 0L);
-    }
-
     public Map<StatisticKeyEnum, List<StatisticDTO>> getAuctionStatisticsById(Long id) {
-        Map<StatisticKeyEnum, List<StatisticDTO>> result = new HashMap<>();
+        Map<StatisticKeyEnum, List<StatisticDTO>> result = new EnumMap<>(StatisticKeyEnum.class);
         putAuctionStatisticByKey(result, StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS_BY_ID, id);
         putAuctionStatisticByKey(result, StatisticKeyEnum.DAILY_AUCTION_VIEWS_BY_ID, id);
         return result;
     }
 
     private void putAuctionStatisticByKey(Map<StatisticKeyEnum, List<StatisticDTO>> result, StatisticKeyEnum key, Long id) {
-        List<Statistic> statistics = statisticRepository.findAllByEnumKeyAndAuctionId(key.name(), id);
-        if (!statistics.isEmpty()) {
-            List<StatisticDTO> statisticDTOS = MapperUtils.mapAll(statistics, StatisticDTO.class);
+        List<Statistic> savedStatistics = statisticRepository.findAllByEnumKeyAndAuctionId(key.name(), id);
+        if (!savedStatistics.isEmpty()) {
+            List<StatisticDTO> statisticDTOS = MapperUtils.mapAll(savedStatistics, StatisticDTO.class);
             result.put(key, statisticDTOS);
         }
     }

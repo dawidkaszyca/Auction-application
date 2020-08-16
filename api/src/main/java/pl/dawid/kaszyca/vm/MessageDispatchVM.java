@@ -1,12 +1,11 @@
 package pl.dawid.kaszyca.vm;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class MessageDispatchVM {
 
-    public Long to;
-    public String content;
+    Long to;
+
+    String content;
 }

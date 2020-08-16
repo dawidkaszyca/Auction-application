@@ -86,7 +86,7 @@
   },
   "myProfile": {
     "photoButton": "Dodaj lub zmień zdjęcie",
-    "welcome": "Witaj",
+    "welcome": "O mnie",
     "changeData": "Zmień dane",
     "changePassword": "Zmień hasło",
     "call": "Zadzwoń",
@@ -98,7 +98,9 @@
     "cancel": "Zamknij",
     "sent": "Twoja wiadomość została wysłana",
     "confirm": "Potwierdzenie",
-    "login": "Proszę o zalogowanie się przed wysłaniem wiadomości"
+    "login": "Proszę o zalogowanie się przed wysłaniem wiadomości",
+    "dailyViews": "Dzienne wyświetlenia",
+    "dailyPhone": "Dzienne wyświetlenia telefonu"
   },
   "myAuction": {
     "all": "Wszystkie",

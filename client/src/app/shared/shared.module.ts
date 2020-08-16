@@ -17,8 +17,8 @@ import { MessageDialogComponent } from './components/message-dialog/message-dial
 import {FormsModule} from '@angular/forms';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { InfoDialogComponent } from './components/info-dialog/info-dialog.component';
-import { ColumnComponent } from './components/graphs/column/column.component';
-import { CircularComponent } from './components/graphs/circular/circular.component';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {StatisticDialogComponent} from './components/statistic-dialog/statistic-dialog.component';
 
 
 
@@ -34,8 +34,7 @@ import { CircularComponent } from './components/graphs/circular/circular.compone
         SplitCurrencyPipe,
         MessageDialogComponent,
         InfoDialogComponent,
-        ColumnComponent,
-        CircularComponent
+        StatisticDialogComponent
     ],
   imports: [
     CommonModule,
@@ -44,7 +43,8 @@ import { CircularComponent } from './components/graphs/circular/circular.compone
     TranslateModule,
     MatCardModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatDialogModule,
   ],
   providers: [],
   exports: [
@@ -53,7 +53,6 @@ import { CircularComponent } from './components/graphs/circular/circular.compone
     ImageComponent,
     MapPreviewComponent,
     SplitCurrencyPipe,
-    CircularComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -1,10 +1,10 @@
 package pl.dawid.kaszyca.exception;
 
-public class PermissionDeniedToAuction extends RuntimeException {
+public class PermissionDeniedToAuctionException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public PermissionDeniedToAuction() {
+    public PermissionDeniedToAuctionException() {
         super("Invalid permission to auction");
     }
 

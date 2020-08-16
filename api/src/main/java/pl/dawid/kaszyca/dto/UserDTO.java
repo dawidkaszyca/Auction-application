@@ -4,25 +4,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.dawid.kaszyca.model.Authority;
-import pl.dawid.kaszyca.model.User;
 
-import javax.persistence.Column;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO extends UserBaseDTO {
+public class UserDTO {
+
+    public static final int PASSWORD_MIN_LENGTH = 4;
+
+    public static final int PASSWORD_MAX_LENGTH = 100;
 
     private Long id;
 
-    @Email
-    @Size(min = 5, max = 254)
-    @Column(length = 254, unique = true)
+    private String login;
+
+    private String firstName;
+
+    private String lastName;
+
     private String email;
 
     @JsonIgnore
@@ -31,15 +32,8 @@ public class UserDTO extends UserBaseDTO {
     @JsonIgnore
     private Set<String> authorities;
 
-    public UserDTO(User user) {
-        this.id = user.getId();
-        setLogin(user.getLogin());
-        this.setFirstName(user.getFirstName());
-        this.setLastName(user.getLastName());
-        this.email = user.getEmail();
-        this.activated = user.getActivated();
-        this.authorities = user.getAuthorities().stream()
-                .map(Authority::getName)
-                .collect(Collectors.toSet());
-    }
+    @JsonIgnore
+    private String password;
+
+
 }

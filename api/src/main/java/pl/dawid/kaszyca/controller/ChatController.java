@@ -16,6 +16,7 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api")
 public class ChatController {
+
     ChatService messageService;
 
     public ChatController(ChatService messageService) {
@@ -29,8 +30,8 @@ public class ChatController {
             return messages.isEmpty() ? new ResponseEntity(HttpStatus.NO_CONTENT) : new ResponseEntity(messages, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting  messages");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(500));
     }
 
     @PostMapping("/messages")
@@ -40,8 +41,8 @@ public class ChatController {
             return new ResponseEntity(messageDTO, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during sending message");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(500));
     }
 
     @PutMapping("/messages")
@@ -51,8 +52,8 @@ public class ChatController {
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during update message display");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(500));
     }
 
     @GetMapping("/messages/{id}")
@@ -62,7 +63,7 @@ public class ChatController {
             return new ResponseEntity(conversation, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Cannot get conversation by id");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(500));
     }
 }

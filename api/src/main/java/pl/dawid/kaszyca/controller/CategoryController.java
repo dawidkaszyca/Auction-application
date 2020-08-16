@@ -25,12 +25,12 @@ public class CategoryController {
     public ResponseEntity getAllCategoryName() {
         try {
             List<String> categories = categoryService.getCategoriesName();
-            if (!categories.isEmpty())
-                return new ResponseEntity(categories, HttpStatus.OK);
+            return categories.isEmpty() ?
+                    new ResponseEntity(HttpStatus.NO_CONTENT) : new ResponseEntity(categories, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting  categories name");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/categories")
@@ -40,7 +40,7 @@ public class CategoryController {
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             log.info("Something went wrong during saving new Category Object");
-            return new ResponseEntity(HttpStatus.valueOf(422));
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
     }
 
@@ -48,12 +48,12 @@ public class CategoryController {
     public ResponseEntity getCategoryById(@PathVariable String id) {
         try {
             CategoryDTO category = categoryService.getCategoryDTOById(id);
-            if (category != null)
-                return new ResponseEntity(category, HttpStatus.OK);
+            return category == null ?
+                    new ResponseEntity(HttpStatus.NO_CONTENT) : new ResponseEntity(category, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting category by id");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/categories/{id}")
@@ -63,7 +63,7 @@ public class CategoryController {
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during saving new Category Object");
-            return new ResponseEntity(HttpStatus.valueOf(422));
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
     }
 }

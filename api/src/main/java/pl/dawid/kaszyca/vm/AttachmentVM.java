@@ -1,14 +1,21 @@
 package pl.dawid.kaszyca.vm;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.List;
+
+@Data
 @NoArgsConstructor
-public class AttachmentToSaveVM {
+public class AttachmentVM {
+
     Long auctionId;
+
     Long mainPhotoId;
+
     boolean isUserImagePhoto;
+
+    List<Long> idsToRemoved;
+
+    boolean isMainPhotoAllReadySaved;
 }

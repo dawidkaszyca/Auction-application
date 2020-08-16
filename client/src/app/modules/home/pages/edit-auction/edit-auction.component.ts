@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {CategoryAttributes} from '../../../../shared/models/category-attributes';
 import {NewAuction} from '../../../../shared/models/new-auction';
 import {City} from '../../../../shared/models/auction-base-field';
@@ -13,6 +13,7 @@ import {AuctionDetails} from '../../../../shared/models/auction-details';
 import {AttributesValues} from '../../../../shared/models/attributes-values';
 import {Auction} from '../../../../shared/models/auction';
 import {Image} from '../../../../shared/models/image';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-auction',
@@ -49,14 +50,15 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
   isSaving: boolean;
 
   constructor(private navigationService: NavigationService, private auctionService: AuctionService,
-              private attachmentService: AttachmentService, private activatedRoute: ActivatedRoute, private router: Router) {
+              @Inject(MAT_DIALOG_DATA) public data: any, private attachmentService: AttachmentService,
+              private activatedRoute: ActivatedRoute, private router: Router, private dialogRef: MatDialogRef<EditAuctionComponent>) {
     navigationService.show = false;
     this.maxSizeOfImages = 4;
     this.isSaving = false;
   }
 
   ngOnInit(): void {
-    this.auctionId = this.activatedRoute.snapshot.queryParams.id;
+    this.auctionId = this.data.auctionData.id;
     this.previewUrl = [];
     this.files = [];
     this.selected = this.maxSizeOfImages;
@@ -181,7 +183,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
           this.updateAttachments();
         } else {
           this.isSaving = false;
-          this.openAuctionPage(this.auctionId);
+          this.closeDialog();
         }
       },
       err => {
@@ -216,7 +218,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
       res => {
         timer(1500).subscribe(x => {
           this.isSaving = false;
-          this.openAuctionPage(this.auctionId);
+          this.closeDialog();
         });
       },
       err => {
@@ -224,8 +226,8 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
       });
   }
 
-  openAuctionPage(id: number): void {
-    this.router.navigate(['auction'], {queryParams: {'title': this.auction.title, 'category': this.auction.category, 'id': id}});
+  closeDialog(): void {
+    this.dialogRef.close();
   }
 
   checkName(): boolean {

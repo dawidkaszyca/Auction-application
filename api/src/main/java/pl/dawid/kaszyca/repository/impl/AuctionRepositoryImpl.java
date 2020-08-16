@@ -1,6 +1,7 @@
 package pl.dawid.kaszyca.repository.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.util.SloppyMath;
 import org.springframework.stereotype.Repository;
 import pl.dawid.kaszyca.config.SortEnum;
 import pl.dawid.kaszyca.config.StateEnum;
@@ -118,7 +119,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             predicates.add(getCategoryPredicate(filterVM.getCategory(), auction, cb));
         if (filterVM.getUserId() != null && filterVM.getUserId() != 0)
             predicates.add(getUserIdPredicate(filterVM.getUserId(), auction, cb));
-        if(filterVM.getState() != StateEnum.ALL) {
+        if (filterVM.getState() != StateEnum.ALL) {
             predicates.add(getState(cb, filterVM.getState(), auction));
         }
         return cb.and(predicates.toArray(new Predicate[predicates.size()]));
@@ -129,12 +130,11 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
     }
 
     private Predicate getSearchPredicate(FilterVM filterVM, CriteriaBuilder cb, Root<Auction> auction) {
-        List<Predicate> titleOrPredicates = new ArrayList<Predicate>();
+        List<Predicate> titleOrPredicates = new ArrayList<>();
         for (String word : filterVM.getSearchWords()) {
             titleOrPredicates.add(cb.or(cb.like(auction.get("title"), "%" + word + "%")));
         }
-        Predicate searchPredicate = cb.or(titleOrPredicates.toArray(new Predicate[titleOrPredicates.size()]));
-        return searchPredicate;
+        return cb.or(titleOrPredicates.toArray(new Predicate[titleOrPredicates.size()]));
     }
 
     private Predicate getPricePredicate(FilterVM filterVM, Root<Auction> auction, CriteriaBuilder cb) {
@@ -165,17 +165,21 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
     private Predicate getAttributesPredicate(FilterVM filterVM, Root<Auction> auction, CriteriaBuilder cb) {
         List<Predicate> attributesPredicate = new ArrayList<>();
         Join<Auction, AuctionDetails> join = auction.join("auctionDetails", JoinType.LEFT);
-        List<String> values;
         for (CategoryAttributesDTO obj : filterVM.getFilters()) {
-            Predicate predicate = cb.equal(join.get("categoryAttribute"), obj.getAttribute());
-            List<Predicate> att = new ArrayList<>();
-            for (AttributeValuesDTO value : obj.getAttributeValues()) {
-                att.add(cb.or(cb.equal(join.get("attributeValue"), value.getValue())));
-            }
-            Predicate attr = cb.or(att.toArray(new Predicate[att.size()]));
-            attributesPredicate.add(cb.and(attr, predicate));
+            addAttributePredicate(cb, attributesPredicate, join, obj);
         }
         return cb.or(attributesPredicate.toArray(new Predicate[attributesPredicate.size()]));
+    }
+
+    private void addAttributePredicate(CriteriaBuilder cb, List<Predicate> attributesPredicate, Join<Auction,
+            AuctionDetails> join, CategoryAttributesDTO obj) {
+        Predicate predicate = cb.equal(join.get("categoryAttribute"), obj.getAttribute());
+        List<Predicate> att = new ArrayList<>();
+        for (AttributeValuesDTO value : obj.getAttributeValues()) {
+            att.add(cb.or(cb.equal(join.get("attributeValue"), value.getValue())));
+        }
+        Predicate attr = cb.or(att.toArray(new Predicate[att.size()]));
+        attributesPredicate.add(cb.and(attr, predicate));
     }
 
     private Predicate getCategoryPredicate(String category, Root<Auction> auction, CriteriaBuilder cb) {
@@ -190,7 +194,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         if (state == StateEnum.ACTIVE) {
             return cb.greaterThan(auction.<Instant>get("expiredDate"), new Date().toInstant());
         } else if (state == StateEnum.INACTIVE) {
-           return cb.lessThanOrEqualTo(auction.<Instant>get("expiredDate"), new Date().toInstant());
+            return cb.lessThanOrEqualTo(auction.<Instant>get("expiredDate"), new Date().toInstant());
         }
         return null;
     }
@@ -203,16 +207,19 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
     private List getAuctionsFilteredByCity(List<Auction> auctions, FilterVM filterVM) {
         List auctionsAfterFilter = new ArrayList();
         for (Auction auction : auctions) {
-            if (calculateDistanceInKilometers(auction.getCity().getLatitude(), auction.getCity().getLongitude(),
-                    filterVM.getCity().getLatitude(), filterVM.getCity().getLongitude()) <= filterVM.getKilometers()) {
+            if (calculateDistanceInKilometers(auction, filterVM) <= filterVM.getKilometers()) {
                 auctionsAfterFilter.add(auction);
             }
         }
         return auctionsAfterFilter;
     }
 
-    public double calculateDistanceInKilometers(double lat1, double long1, double lat2, double long2) {
-        double dist = org.apache.lucene.util.SloppyMath.haversinMeters(lat1, long1, lat2, long2);
+    public double calculateDistanceInKilometers(Auction auction, FilterVM filterVM) {
+        double auctionLat = auction.getCity().getLatitude();
+        double auctionLong = auction.getCity().getLongitude();
+        double filterLat = filterVM.getCity().getLatitude();
+        double filterLong = filterVM.getCity().getLongitude();
+        double dist = SloppyMath.haversinMeters(auctionLat, auctionLong, filterLat, filterLong);
         return dist / 1000;
     }
 

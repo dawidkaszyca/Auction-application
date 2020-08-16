@@ -1,16 +1,12 @@
 package pl.dawid.kaszyca.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dawid.kaszyca.dto.UserDTO;
-import pl.dawid.kaszyca.exception.InvalidPasswordException;
-import pl.dawid.kaszyca.exception.UserNotExistException;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.service.UserService;
-import pl.dawid.kaszyca.vm.RegisterFormVM;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -21,55 +17,53 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserController {
 
-    private final UserService userService;
+    private UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody RegisterFormVM managedUserVM) {
-        if (!checkPasswordLength(managedUserVM.getPassword())) {
-            throw new InvalidPasswordException();
+    public ResponseEntity registerAccount(@Valid @RequestBody UserDTO managedUserVM) {
+        try {
+            userService.registerUser(managedUserVM, managedUserVM.getPassword());
+            return new ResponseEntity(HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("Cannot create user");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        userService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
 
     @GetMapping("/activate")
-    public void activateAccount(@RequestParam(value = "key") String key) {
-        Optional<User> user = userService.activateRegistration(key);
-        if (!user.isPresent()) {
-            throw new UserNotExistException();
+    public ResponseEntity activateAccount(@RequestParam(value = "key") String key) {
+        try {
+            Optional<User> user = userService.activateRegistration(key);
+            return user != null ? new ResponseEntity(user, HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            log.error("Cannot find user");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
     }
 
     @GetMapping("/profile")
-    public ResponseEntity getUserProfileData() {
+    public ResponseEntity getCurrentUser() {
         try {
-            UserDTO user = userService.getUserProfileData();
-            if (user != null)
-                return new ResponseEntity(user, HttpStatus.OK);
+            UserDTO user = userService.getCurrentUser();
+            return user != null ? new ResponseEntity(user, HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             log.error("Cannot find user");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateUserData(@RequestBody UserDTO user) {
+    public ResponseEntity updateUser(@RequestBody UserDTO user) {
         try {
             userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail());
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             log.error("Cannot change user data");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(500));
-    }
-
-    private static boolean checkPasswordLength(String password) {
-        return !StringUtils.isEmpty(password) &&
-                password.length() >= RegisterFormVM.PASSWORD_MIN_LENGTH &&
-                password.length() <= RegisterFormVM.PASSWORD_MAX_LENGTH;
     }
 }
