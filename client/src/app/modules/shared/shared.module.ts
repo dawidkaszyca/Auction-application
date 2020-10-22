@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {AppComponent} from '../app.component';
+import {AppComponent} from '../../app.component';
 import {DragDropComponent} from './components/drag-drop/drag-drop.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressBarModule} from '@angular/material/progress-bar';

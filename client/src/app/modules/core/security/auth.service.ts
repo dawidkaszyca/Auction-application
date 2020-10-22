@@ -5,7 +5,7 @@ import {LoginViewModel} from './model/login-view-model';
 import {UserViewModel} from './model/user-view-model';
 import {map} from 'rxjs/operators';
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
-import {SERVER_API_URL} from '../../app.constants';
+import {SERVER_API_URL} from '../../../app.constants';
 import {ActivatedRoute, Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {User} from '../../shared/models/user';
@@ -100,7 +100,7 @@ export class AuthService {
   }
 
   private reConnectIfIsRequired() {
-    if (this.websocketService.isConnected === false) {
+    if (this.websocketService.isConnected === false && this.websocketService.isReconnecting === false) {
       this.websocketService._connect(this.getLoginFromToken(), this.getTokenFromStorage());
     }
   }

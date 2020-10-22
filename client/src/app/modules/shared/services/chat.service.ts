@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {Conversation} from '../models/conversation';
 import {NewMessage} from '../models/new-message';
 import {Message} from '../models/message';
-import {SERVER_API_URL} from '../../app.constants';
+import {SERVER_API_URL} from '../../../app.constants';
 
 
 @Injectable({

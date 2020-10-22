@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Attachment} from '../models/attachment';
 import {Observable} from 'rxjs';
-import {SERVER_API_URL} from '../../app.constants';
+import {SERVER_API_URL} from '../../../app.constants';
 import {Image} from '../models/image';
 
 @Injectable({

@@ -5,7 +5,7 @@ import {Category} from '../models/category';
 import {NewAuction} from '../models/new-auction';
 import {AuctionBaseField} from '../models/auction-base-field';
 import {Filter} from '../models/filter';
-import {SERVER_API_URL} from '../../app.constants';
+import {SERVER_API_URL} from '../../../app.constants';
 import {Auction} from '../models/auction';
 import {Pagination} from '../models/pagination';
 

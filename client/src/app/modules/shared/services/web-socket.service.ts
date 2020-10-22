@@ -4,7 +4,7 @@ import * as Stomp from 'stompjs';
 import {Status} from '../models/status';
 import {BehaviorSubject} from 'rxjs';
 import {Router} from '@angular/router';
-import {WEB_SOCKET_URL} from '../../app.constants';
+import {WEB_SOCKET_URL} from '../../../app.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,7 @@ export class WebsocketService {
   stompClient: any;
   isConnected = false;
   notification: BehaviorSubject<number>;
+  isReconnecting = false;
   token: string;
 
   newMessage: BehaviorSubject<Status>;
@@ -31,25 +32,27 @@ export class WebsocketService {
   _connect(login: string, token: string) {
     this.token = token;
     this.userName = login;
-    this.subscribeChannel = '/queue/user/' + login;
-    this.privateChannel = '/app/queue/user/' + login;
+    this.subscribeChannel = '/queue/users/' + login;
+    this.privateChannel = '/app/queue/users/' + login;
     if (this.userName != null && this.userName !== '') {
       console.log('Initialize WebSocket Connection');
       const ws = new SockJS(this.webSocketEndPoint);
       this.stompClient = Stomp.over(ws);
       const _this = this;
       _this.isConnected = true;
+      _this.isReconnecting = false;
       _this.stompClient.connect({'X-Authorization': 'Bearer ' + token}, function(frame) {
         _this._sendMessage('getStatus');
         _this.stompClient.subscribe(_this.subscribeChannel, function(sdkEvent) {
           _this.onMessageReceived(sdkEvent);
 
         });
-      }, this.errorCallBack);
+      }, this.errorCallBack.bind(_this));
     }
   }
 
   _disconnect() {
+    this.userName = null;
     if (this.stompClient !== null) {
       this.stompClient.disconnect();
       this.isConnected = false;
@@ -58,10 +61,11 @@ export class WebsocketService {
 
   // on error, schedule a reconnection attempt
   errorCallBack(error) {
+    this.isReconnecting = true;
     this.isConnected = false;
     setTimeout(() => {
       this._connect(this.userName, this.token);
-    }, 1000);
+    }, 3000);
   }
 
   /**
