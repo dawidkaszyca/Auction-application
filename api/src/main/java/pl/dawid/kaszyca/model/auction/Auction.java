@@ -78,5 +78,4 @@ public class Auction implements Serializable {
     private Instant getCurrentDatePlusOneMonth() {
         return DateUtils.addMonths(new Date(), 1).toInstant();
     }
-
 }

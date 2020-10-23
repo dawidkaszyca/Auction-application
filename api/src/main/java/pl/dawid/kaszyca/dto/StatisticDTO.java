@@ -10,5 +10,4 @@ public class StatisticDTO {
     private Date date;
 
     private Long value;
-
 }

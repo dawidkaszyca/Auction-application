@@ -31,7 +31,6 @@ class DbSeeder implements CommandLineRunner {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private ConversationRepository conversationRepository;
-
     private StatisticRepository statisticRepository;
 
     Map<String, List<String>> categoriesMap;

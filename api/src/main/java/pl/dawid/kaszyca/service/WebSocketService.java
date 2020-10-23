@@ -19,7 +19,7 @@ public class WebSocketService {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    private static final String WS_MESSAGE_TRANSFER_DESTINATION = "/queue/user/";
+    private static final String WS_MESSAGE_TRANSFER_DESTINATION = "/queue/users/";
 
     private ChatService chatService;
 

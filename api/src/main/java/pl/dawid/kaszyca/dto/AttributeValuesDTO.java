@@ -16,5 +16,4 @@ public class AttributeValuesDTO {
 
     @JsonIgnore
     private CategoryAttributesDTO categoryAttributes;
-
 }

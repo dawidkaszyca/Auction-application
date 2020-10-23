@@ -46,7 +46,7 @@ public class AttachmentController {
             attachmentService.updateAuctionAttachments(files, attachment);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Something went wrong during saving attachments");
+            log.error("Something went wrong during updating attachments");
             return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
     }

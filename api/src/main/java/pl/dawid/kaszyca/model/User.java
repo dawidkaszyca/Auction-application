@@ -75,5 +75,4 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_name"))
     private Set<Authority> authorities = new HashSet<>();
-
 }

@@ -1,6 +1,8 @@
 package pl.dawid.kaszyca.model.auction;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -26,5 +28,4 @@ public class Category implements Serializable {
     public Category(String category) {
         this.category = category;
     }
-
 }
