@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavigationService} from '../../../../core/header/navigation/navigation.service';
-import {NewAuction} from '../../../../shared/models/new-auction';
-import {AuctionService} from '../../../../shared/services/auction.service';
-import {CategoryAttributes} from '../../../../shared/models/category-attributes';
-import {Attachment} from '../../../../shared/models/attachment';
-import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {NavigationService} from '../../../core/header/navigation/navigation.service';
+import {NewAuction} from '../../../shared/models/new-auction';
+import {AuctionService} from '../../../shared/services/auction.service';
+import {CategoryAttributes} from '../../../shared/models/category-attributes';
+import {Attachment} from '../../../shared/models/attachment';
+import {AttachmentService} from '../../../shared/services/attachment.service';
 import {Router} from '@angular/router';
-import {City} from '../../../../shared/models/auction-base-field';
+import {City} from '../../../shared/models/auction-base-field';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 import {timer} from 'rxjs';
 

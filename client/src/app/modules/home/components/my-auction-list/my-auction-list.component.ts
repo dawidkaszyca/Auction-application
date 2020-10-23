@@ -1,12 +1,12 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
-import {AuctionService} from '../../../../shared/services/auction.service';
-import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {AuctionBaseField} from '../../../shared/models/auction-base-field';
+import {AuctionService} from '../../../shared/services/auction.service';
+import {AttachmentService} from '../../../shared/services/attachment.service';
 import {Router} from '@angular/router';
-import {Filter} from '../../../../shared/models/filter';
+import {Filter} from '../../../shared/models/filter';
 import {MatSelectChange} from '@angular/material/select';
 import {MatDialog} from '@angular/material/dialog';
-import {StatisticDialogComponent} from '../../../../shared/components/statistic-dialog/statistic-dialog.component';
+import {StatisticDialogComponent} from '../../../shared/components/statistic-dialog/statistic-dialog.component';
 import {EditAuctionComponent} from '../../pages/edit-auction/edit-auction.component';
 
 @Component({

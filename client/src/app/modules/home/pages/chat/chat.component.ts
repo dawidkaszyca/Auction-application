@@ -1,13 +1,13 @@
 import {AfterViewChecked, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {WebsocketService} from '../../../../shared/services/web-socket.service';
-import {NavigationService} from '../../../../core/header/navigation/navigation.service';
-import {ChatService} from '../../../../shared/services/chat.service';
-import {Conversation} from '../../../../shared/models/conversation';
-import {NewMessage} from '../../../../shared/models/new-message';
-import {Message} from '../../../../shared/models/message';
-import {ScrollToBottomDirective} from '../../../../shared/directives/scroll-to-bottom.directive';
+import {WebsocketService} from '../../../shared/services/web-socket.service';
+import {NavigationService} from '../../../core/header/navigation/navigation.service';
+import {ChatService} from '../../../shared/services/chat.service';
+import {Conversation} from '../../../shared/models/conversation';
+import {NewMessage} from '../../../shared/models/new-message';
+import {Message} from '../../../shared/models/message';
+import {ScrollToBottomDirective} from '../../../shared/directives/scroll-to-bottom.directive';
 import {ContactComponent} from '../../components/contact/contact.component';
-import {Status} from '../../../../shared/models/status';
+import {Status} from '../../../shared/models/status';
 import {timer} from 'rxjs';
 
 

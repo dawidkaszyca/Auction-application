@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Filter} from '../../../../shared/models/filter';
-import {AuctionService} from '../../../../shared/services/auction.service';
-import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
-import {Pagination} from '../../../../shared/models/pagination';
+import {Filter} from '../../../shared/models/filter';
+import {AuctionService} from '../../../shared/services/auction.service';
+import {AuctionBaseField} from '../../../shared/models/auction-base-field';
+import {Pagination} from '../../../shared/models/pagination';
 
 @Component({
   selector: 'app-user-auctions',

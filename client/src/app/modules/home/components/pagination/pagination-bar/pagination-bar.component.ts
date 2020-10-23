@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {MatSelectChange} from '@angular/material/select';
-import {Pagination} from '../../../../../shared/models/pagination';
-import {AuctionService} from '../../../../../shared/services/auction.service';
+import {Pagination} from '../../../../shared/models/pagination';
+import {AuctionService} from '../../../../shared/services/auction.service';
 
 @Component({
   selector: 'app-pagination-bar',
@@ -28,9 +28,7 @@ export class PaginationBarComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.numberOfAuctions) {
       this.setDataAfterChanges();
-    }
   }
 
   private addPaginationListener() {

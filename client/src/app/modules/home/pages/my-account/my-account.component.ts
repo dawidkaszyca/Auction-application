@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavigationService} from '../../../../core/header/navigation/navigation.service';
-import {User} from '../../../../shared/models/user';
-import {AuthService} from '../../../../core/security/auth.service';
-import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {NavigationService} from '../../../core/header/navigation/navigation.service';
+import {User} from '../../../shared/models/user';
+import {AuthService} from '../../../core/security/auth.service';
+import {AttachmentService} from '../../../shared/services/attachment.service';
 
 @Component({
   selector: 'app-my-account',

@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Filter} from '../../../../shared/models/filter';
-import {AuctionService} from '../../../../shared/services/auction.service';
-import {CategoryAttributes} from '../../../../shared/models/category-attributes';
+import {Filter} from '../../../shared/models/filter';
+import {AuctionService} from '../../../shared/services/auction.service';
+import {CategoryAttributes} from '../../../shared/models/category-attributes';
 import {MatSelectChange} from '@angular/material/select';
-import {AttributesValues} from '../../../../shared/models/attributes-values';
+import {AttributesValues} from '../../../shared/models/attributes-values';
 
 @Component({
   selector: 'app-filter-bar',

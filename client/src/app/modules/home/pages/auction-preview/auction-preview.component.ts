@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Auction} from '../../../../shared/models/auction';
-import {AuctionService} from '../../../../shared/services/auction.service';
-import {AttachmentService} from '../../../../shared/services/attachment.service';
-import {AuctionDetails} from '../../../../shared/models/auction-details';
-import {SendMessageService} from '../../../../shared/services/send-message.service';
-import {AuthService} from '../../../../core/security/auth.service';
-import {InfoDialogService} from '../../../../shared/services/info-dialog.service';
+import {Auction} from '../../../shared/models/auction';
+import {AuctionService} from '../../../shared/services/auction.service';
+import {AttachmentService} from '../../../shared/services/attachment.service';
+import {AuctionDetails} from '../../../shared/models/auction-details';
+import {SendMessageService} from '../../../shared/services/send-message.service';
+import {AuthService} from '../../../core/security/auth.service';
+import {InfoDialogService} from '../../../shared/services/info-dialog.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Image} from '../../../../shared/models/image';
+import {Image} from '../../../shared/models/image';
 
 @Component({
   selector: 'app-auction-preview',

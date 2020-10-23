@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
+import {AuctionBaseField} from '../../../shared/models/auction-base-field';
 import {Router} from '@angular/router';
 
 @Component({
