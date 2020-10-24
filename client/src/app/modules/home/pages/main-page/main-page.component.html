@@ -1,18 +1,19 @@
-<div class="container">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-3">
+    <div class="col-3 remove-padding">
       <app-filter-bar></app-filter-bar>
     </div>
     <div class="col-9">
       <ng-container *ngIf="!this.noContent">
-        <div class="row" #div1>
-          <ng-container *ngIf="topAuctions?.length === 4">
-            <div [ngStyle]="{'height.px': div1.offsetWidth / 4 }"
-                 class="col-3 w-100 mt-3 nopadding" *ngFor="let auction of topAuctions">
-              <app-auction-base [auction]="auction"></app-auction-base>
-            </div>
-          </ng-container>
-        </div>
+          <div #div1>
+            <ng-container *ngIf="topAuctions?.length === 4">
+              <div [ngStyle]="{'height.px': div1.offsetWidth / 4 }" class="w-100 mt-3 nopadding row skip">
+                  <div class="col-3 h-100" *ngFor="let auction of topAuctions">
+                    <app-auction-base [auction]="auction"></app-auction-base>
+                  </div>
+              </div>
+            </ng-container>
+          </div>
         <div class="mt-3">
           <app-pagination-bar [numberOfAuctions]="numberOfAuctions"></app-pagination-bar>
         </div>
@@ -28,8 +29,6 @@
           <mat-card-title class="text-center">{{"sort.noContent" | translate}}</mat-card-title>
         </mat-card>
       </ng-container>
-
-
     </div>
   </div>
 </div>
