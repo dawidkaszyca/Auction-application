@@ -2,10 +2,11 @@ img {
   object-fit: contain !important;
   display: block;
   position: absolute;
-  height: 90%;
-  width: 90%;
+  height: 80% !important;
+  width: 80% !important;
   left: 50%;
   top: 50%;
+  z-index: -1;
   transform: translate(-50%, -50%);
 }
 mat-card {
