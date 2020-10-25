@@ -1,9 +1,9 @@
-<div class="container h-100">
+<div class="h-100 font-size">
   <mat-card class="w-100 h-100" (click)="openAuctionPage()">
-    <mat-card-title class="text-center">{{auction.title}}</mat-card-title>
-    <mat-card class="remove-shadow">
+    <p class="tag hide-params">{{auction.title}}</p>
+    <mat-card class="remove-shadow to-center">
       <app-image [path]="auction.photoUrl"></app-image>
     </mat-card>
-    <h2 class="text-center">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</h2>
+    <p class="tag hide-params">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</p>
   </mat-card>
 </div>

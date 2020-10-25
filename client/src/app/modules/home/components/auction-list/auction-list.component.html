@@ -9,10 +9,11 @@
             </div>
           </div>
           <div class="col-8 position-relative">
-            <mat-card-title class="mt-2 text-left">{{auction.title}}</mat-card-title>
-            <h1 class="text-right pr-5 m-0 text font-weight-bold pt-1">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</h1>
-            <h3 class="text-right pr-5 m-0 ">{{auction.city?.name}}</h3>
-            <div class="hide-params row position-absolute fixed-bottom font-weight-bold mb-2">
+            <mat-card-title class="mt-2 text-left font-size">{{auction.title}}</mat-card-title>
+            <p
+              class="text-right pr-5 m-0 text font-weight-bold pt-1 font-size">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</p>
+            <p class="text-right pr-5 m-0 font-size">{{auction.city?.name}}</p>
+            <div class="hide-params row position-absolute fixed-bottom ">
               <div class="col-md-4">
                 <div class="text-center d-inline-block">
                   {{'auction.condition' | translate}}<br>{{auction.condition}}
