@@ -1,20 +1,20 @@
 <mat-card>
   <div class="row">
-    <div class="col-5">
+    <div class="col-5 col-sm-3 col-md-2 col-lg col-xl-5">
       <mat-select class="form-control w-25 float-left" [(value)]="pagination.pageSize"
                   (selectionChange)="changePageSize($event)">
         <mat-option *ngFor="let values of pageSizeList" [value]="values">{{values}}</mat-option>
       </mat-select>
     </div>
-    <div class="col-4">
+    <div class="col-12 col-sm-4 col-md-5 col-lg col-xl-4 d-none d-sm-block">
       <mat-select class="form-control w-75 float-right" [(value)]="sortValue"
                   (selectionChange)="selectValue($event)">
         <mat-option *ngFor="let values of sortList" [value]="values">{{values | translate}}</mat-option>
       </mat-select>
     </div>
-    <div class="col-3">
+    <div class="col-7 col-sm-5 col-md-5 col-lg col-xl-3">
       <div class="row">
-        <div class="col-3 nopadding">
+        <div class="col-4 nopadding">
           <button [disabled]="pagination.page <= 0" (click)="changeInput(-1)" type="button"
                   class="btn btn-primary btn-circle btn-xl float-right"><
           </button>
@@ -25,12 +25,18 @@
                  [value]="inputValue"
                  class="form-control w-100 text-center" disabled/>
         </div>
-        <div class="col-5 float-left nopadding float-left">
+        <div class="col-4 float-left nopadding float-left">
           <button [disabled]="pagination.page >= amountOfPages - 1" (click)="changeInput(1)" type="button"
                   class="btn btn-primary btn-circle btn-xl">>
           </button>
         </div>
       </div>
+    </div>
+    <div class="col-12 hidden-sm-only mt-2">
+      <mat-select class="form-control w-100 float-right" [(value)]="sortValue"
+                  (selectionChange)="selectValue($event)">
+        <mat-option *ngFor="let values of sortList" [value]="values">{{values | translate}}</mat-option>
+      </mat-select>
     </div>
   </div>
 </mat-card>
