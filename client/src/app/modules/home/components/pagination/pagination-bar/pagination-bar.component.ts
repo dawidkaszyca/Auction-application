@@ -15,6 +15,8 @@ export class PaginationBarComponent implements OnInit, OnChanges {
   amountOfPages: number;
   pagination: Pagination;
   pageSizeList: any;
+  @Input()
+  isSortDisabled: false;
   sortList: any;
   inputValue: any;
 

@@ -7,7 +7,7 @@
       </mat-select>
     </div>
     <div class="col-12 col-sm-4 col-md-5 col-lg col-xl-4 d-none d-sm-block">
-      <mat-select class="form-control w-75 float-right" [(value)]="sortValue"
+      <mat-select *ngIf="!isSortDisabled" class="form-control w-75 float-right" [(value)]="sortValue"
                   (selectionChange)="selectValue($event)">
         <mat-option *ngFor="let values of sortList" [value]="values">{{values | translate}}</mat-option>
       </mat-select>
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="col-12 hidden-sm-only mt-2">
-      <mat-select class="form-control w-100 float-right" [(value)]="sortValue"
+      <mat-select *ngIf="!isSortDisabled" class="form-control w-100 float-right" [(value)]="sortValue"
                   (selectionChange)="selectValue($event)">
         <mat-option *ngFor="let values of sortList" [value]="values">{{values | translate}}</mat-option>
       </mat-select>
