@@ -18,6 +18,7 @@
           <span class="navbar-toggler-icon" [matMenuTriggerFor]="menu"></span>
           <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/my-profile">My account</button>
+            <button mat-menu-item routerLink="/favorite-auction">Favorite auction</button>
             <button mat-menu-item routerLink="/messages">Messages</button>
             <button mat-menu-item (click)="authService.logout()">Logout</button>
           </mat-menu>
@@ -42,6 +43,7 @@
           <a [matMenuTriggerFor]="menu1" class="nav-link">{{'Navigation.Myprofile' | translate}}</a>
           <mat-menu #menu1="matMenu">
             <button mat-menu-item routerLink="/my-profile">My account</button>
+            <button mat-menu-item routerLink="/favorite-auction">Favorite auction</button>
             <button mat-menu-item routerLink="/messages">Messages</button>
             <button mat-menu-item (click)="authService.logout()">Logout</button>
           </mat-menu>
