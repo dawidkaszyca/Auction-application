@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Message} from '../../../shared/models/message';
-import {Conversation} from '../../../shared/models/conversation';
-import {WebsocketService} from '../../../shared/services/web-socket.service';
+import {Message} from '../../../../shared/models/message';
+import {Conversation} from '../../../../shared/models/conversation';
+import {WebsocketService} from '../../../../shared/services/web-socket.service';
 import {timer} from 'rxjs';
 
 @Component({

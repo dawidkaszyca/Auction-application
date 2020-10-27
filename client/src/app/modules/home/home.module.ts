@@ -23,9 +23,9 @@ import {CanActivateRouteGuard} from '../core/security/can-activate-route-guard';
 import {AuctionBaseComponent} from './components/auction-base/auction-base.component';
 import {MyAccountComponent} from './pages/my-account/my-account.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {ReceivedMessageComponent} from './components/received-message/received-message.component';
-import {ContactComponent} from './components/contact/contact.component';
-import {SentMessageComponent} from './components/sent-message/sent-message.component';
+import {ReceivedMessageComponent} from './components/chat/received-message/received-message.component';
+import {ContactComponent} from './components/chat/contact/contact.component';
+import {SentMessageComponent} from './components/chat/sent-message/sent-message.component';
 import {ChatComponent} from './pages/chat/chat.component';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -36,6 +36,8 @@ import { UserAuctionsComponent } from './pages/user-auctions/user-auctions.compo
 import { PaginationBarComponent } from './components/pagination/pagination-bar/pagination-bar.component';
 import { PaginationShortBarComponent } from './components/pagination/pagination-short-bar/pagination-short-bar.component';
 import { FavoriteAuctionComponent } from './pages/favorite-auction/favorite-auction.component';
+import { ReportAuctionComponent } from './components/report-auction/report-auction.component';
+import { SendMessageComponent } from './components/send-message/send-message.component';
 
 const appRoutes: Routes = [
   {
@@ -96,7 +98,9 @@ const appRoutes: Routes = [
     UserAuctionsComponent,
     PaginationBarComponent,
     PaginationShortBarComponent,
-    FavoriteAuctionComponent
+    FavoriteAuctionComponent,
+    ReportAuctionComponent,
+    SendMessageComponent
   ],
     imports: [
         CommonModule,
