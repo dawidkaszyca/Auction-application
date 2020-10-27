@@ -95,4 +95,8 @@ export class AuctionPreviewComponent implements OnInit {
     this.selected = res.filter(it => it.mainPhoto === true)[0];
     this.images = res.filter(it => it.mainPhoto === false);
   }
+
+  addToFavorite() {
+    this.auctionService.addToFavorite(this.auctionId).subscribe();
+  }
 }

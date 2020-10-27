@@ -32,14 +32,12 @@
               <div class="col-6 h-100">
                 <p *ngIf="auction?.price"
                     class="text-right pr-2">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</p>
-                <button *ngIf="!call" class="btn btn-primary w-100 mt-3"
+                <button *ngIf="!call" class="btn btn-primary w-100 mt-1"
                         (click)="call = true">{{'myProfile.call' | translate}}</button>
-                <button *ngIf="call" (click)="call = false"
-                        class="btn btn-primary w-100 mt-3">{{auction?.phone}}</button>
-                <button class="btn btn-primary w-100 mt-3"
-                        (click)="routeToUserClassFields()">{{'myProfile.classifieds' | translate}}</button>
-                <button class="btn btn-primary w-100 mt-3"
-                        (click)="sendMessage()">{{'dialog.title' | translate}}</button>
+                <button *ngIf="call" (click)="call = false" class="btn btn-primary w-100 mt-1">{{auction?.phone}}</button>
+                <button class="btn btn-primary w-100 mt-2" (click)="routeToUserClassFields()">{{'myProfile.classifieds' | translate}}</button>
+                <button class="btn btn-primary w-100 mt-2" (click)="sendMessage()">{{'dialog.title' | translate}}</button>
+                <button class="btn btn-primary w-100 mt-2" (click)="addToFavorite()">{{'auction.favorite' | translate}}</button>
               </div>
             </div>
           </div>
