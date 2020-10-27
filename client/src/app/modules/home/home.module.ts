@@ -35,6 +35,7 @@ import { EditAuctionComponent } from './pages/edit-auction/edit-auction.componen
 import { UserAuctionsComponent } from './pages/user-auctions/user-auctions.component';
 import { PaginationBarComponent } from './components/pagination/pagination-bar/pagination-bar.component';
 import { PaginationShortBarComponent } from './components/pagination/pagination-short-bar/pagination-short-bar.component';
+import { FavoriteAuctionComponent } from './pages/favorite-auction/favorite-auction.component';
 
 const appRoutes: Routes = [
   {
@@ -53,6 +54,11 @@ const appRoutes: Routes = [
   {
     path: 'my-profile',
     component: MyAccountComponent,
+    canActivate: [CanActivateRouteGuard]
+  },
+  {
+    path: 'favorite-auction',
+    component: FavoriteAuctionComponent,
     canActivate: [CanActivateRouteGuard]
   },
   {
@@ -89,7 +95,8 @@ const appRoutes: Routes = [
     EditAuctionComponent,
     UserAuctionsComponent,
     PaginationBarComponent,
-    PaginationShortBarComponent
+    PaginationShortBarComponent,
+    FavoriteAuctionComponent
   ],
     imports: [
         CommonModule,

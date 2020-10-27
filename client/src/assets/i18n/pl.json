@@ -42,7 +42,9 @@
     "condition": "Stan ",
     "views": "Wyświetleń ",
     "date": "Data dodania ",
-    "userAuctions": "Aukcje użytkownika "
+    "userAuctions": "Aukcje użytkownika ",
+    "favorite": "Dodaj do ulubionych",
+    "savedFavorite": "Twoje zapisane aukcje"
   },
   "newAuction": {
     "start": "Zaczynajmy",

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Category} from '../models/category';
 import {NewAuction} from '../models/new-auction';
@@ -17,6 +17,7 @@ export class AuctionService {
   private CATEGORIES = `${SERVER_API_URL}/categories`;
   private AUCTIONS = `${SERVER_API_URL}/auctions`;
   private AUCTIONS_TO_EDIT = this.AUCTIONS + '/edit';
+  private FAVORITE_AUCTIONS = `${SERVER_API_URL}/auction` + '/favorites';
 
   filter: BehaviorSubject<Filter>;
   pagination: BehaviorSubject<Pagination>;
@@ -80,5 +81,18 @@ export class AuctionService {
 
   extendAuctionTime(id: number) {
     return this.http.put<string>(this.AUCTIONS + '/' + id, null);
+  }
+
+  getFavoritesAuction(page: number, pageSize: number) {
+    let httpParams = new HttpParams();
+    httpParams = httpParams.append('page', page.toString());
+    httpParams = httpParams.append('pageSize', pageSize.toString());
+    return this.http.get<any>(this.FAVORITE_AUCTIONS, {params: httpParams});
+  }
+
+  addToFavorite(auctionId: number) {
+    let headers = new HttpHeaders();
+    headers = headers.append('content-type', 'application/json');
+    return this.http.post<JSON>(this.FAVORITE_AUCTIONS, auctionId.toString(), {headers});
   }
 }

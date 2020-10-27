@@ -42,7 +42,9 @@
     "condition": "Condition ",
     "views": "Views ",
     "date": "Added date ",
-    "userAuctions": "User auction "
+    "userAuctions": "User auction ",
+    "favorite": "Add to favorite",
+    "savedFavorite": "Your saved auctions"
   },
   "newAuction": {
     "start": "let's get started",
