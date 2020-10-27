@@ -116,7 +116,7 @@ public class AuctionController {
             AuctionWithDetailsDTO auction = auctionService.getAuctionWithDetailsObjectById(id);
             if (auction != null) {
                 auctionService.checkPermissionToEdit(auction.getUserId());
-                new ResponseEntity(auction, HttpStatus.OK);
+                return new ResponseEntity(auction, HttpStatus.OK);
             }
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -133,6 +133,29 @@ public class AuctionController {
                     new ResponseEntity(auctionData, HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             log.info("Something went wrong during getting auctionsDetail");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
+        }
+    }
+
+    @PostMapping("/auction/favorites")
+    public ResponseEntity addAuctionToFavorites(@RequestBody String id) {
+        try {
+            auctionService.addAuctionToFavorites(Long.valueOf(id));
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during add favorites auction");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
+        }
+    }
+
+    @GetMapping("/auction/favorites")
+    public ResponseEntity getFavoriteAuctions(@RequestParam Integer page, Integer pageSize) {
+        try {
+            AuctionVM auctions = auctionService.getFavoritesAuction(page, pageSize);
+            return auctions != null ?
+                    new ResponseEntity(auctions, HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            log.info("Something went wrong during add favorites auction");
             return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
     }

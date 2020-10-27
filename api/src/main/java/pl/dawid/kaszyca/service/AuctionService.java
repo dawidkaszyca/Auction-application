@@ -1,6 +1,8 @@
 package pl.dawid.kaszyca.service;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
@@ -10,6 +12,7 @@ import pl.dawid.kaszyca.exception.PermissionDeniedToAuctionException;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
+import pl.dawid.kaszyca.repository.FavoriteAuctionRepository;
 import pl.dawid.kaszyca.util.MapperUtils;
 import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
@@ -22,15 +25,19 @@ public class AuctionService {
 
     AuctionRepository auctionRepository;
 
+    FavoriteAuctionRepository favoriteAuctionRepository;
+
     UserService userService;
 
     CategoryService categoryService;
 
     StatisticService statisticService;
 
-    public AuctionService(AuctionRepository auctionRepository, UserService userService, CategoryService categoryService,
-                          StatisticService statisticService) {
+
+    public AuctionService(AuctionRepository auctionRepository, FavoriteAuctionRepository favoriteAuctionRepository,
+                          UserService userService, CategoryService categoryService, StatisticService statisticService) {
         this.auctionRepository = auctionRepository;
+        this.favoriteAuctionRepository = favoriteAuctionRepository;
         this.userService = userService;
         this.categoryService = categoryService;
         this.statisticService = statisticService;
@@ -168,10 +175,16 @@ public class AuctionService {
         for (Integer id : ids) {
             Optional<Auction> auction = auctionRepository.findById(Long.valueOf(id));
             if (auction.isPresent() && checkPermissionToEdit(auction.get().getUser().getId())) {
+                removeAuctionFromFavoritesList(auction.get());
                 auctionRepository.delete(auction.get());
                 statisticService.incrementDailyRemovedAuction();
             }
         }
+    }
+
+    private void removeAuctionFromFavoritesList(Auction auction) {
+        List<FavoriteAuction> favoriteAuctions = favoriteAuctionRepository.findAllByAuction(auction);
+        favoriteAuctionRepository.deleteAll(favoriteAuctions);
     }
 
     public Auction getAuctionById(long id) {
@@ -210,4 +223,41 @@ public class AuctionService {
         return DateUtils.addMonths(new Date(), 1).toInstant();
     }
 
+    public void addAuctionToFavorites(long id) {
+        Optional<Auction> auction = auctionRepository.findById(id);
+        Optional<User> optionalUser = userService.getCurrentUserObject();
+        if (auction.isPresent() && optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<FavoriteAuction> isNotSaved = favoriteAuctionRepository.findAllByUserAndAuction(user, auction.get());
+            if (isNotSaved.isEmpty()) {
+                FavoriteAuction favoriteAuction = new FavoriteAuction();
+                favoriteAuction.setAuction(auction.get());
+                favoriteAuction.setUser(user);
+                favoriteAuctionRepository.save(favoriteAuction);
+            }
+        }
+    }
+
+    public AuctionVM getFavoritesAuction(int page, int pageSize) {
+        Optional<User> optionalUser = userService.getCurrentUserObject();
+        Pageable pageable = PageRequest.of(page, pageSize);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<FavoriteAuction> favoriteAuctions = favoriteAuctionRepository.findAllByUser(user, pageable);
+            List<Auction> auctions = getAuctionFromFavoriteAuctions(favoriteAuctions);
+            AuctionVM auctionVM = new AuctionVM();
+            auctionVM.setAuctionListBase(MapperUtils.mapAll(auctions, AuctionBaseDTO.class));
+            auctionVM.setNumberOfAuctionByProvidedFilters(favoriteAuctionRepository.countByUser(user));
+            return auctionVM;
+        }
+        return null;
+    }
+
+    private List<Auction> getAuctionFromFavoriteAuctions(List<FavoriteAuction> favoriteAuctions) {
+        List<Auction> auctions = new ArrayList<>();
+        for (FavoriteAuction favoriteAuction : favoriteAuctions) {
+            auctions.add(favoriteAuction.getAuction());
+        }
+        return auctions;
+    }
 }

@@ -1,6 +1,7 @@
-package pl.dawid.kaszyca.model;
+package pl.dawid.kaszyca.model.auction;
 
 import lombok.Data;
+import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.Auction;
 
 import javax.persistence.*;
