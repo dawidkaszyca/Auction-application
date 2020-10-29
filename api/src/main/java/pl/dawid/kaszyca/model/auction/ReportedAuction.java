@@ -1,10 +1,10 @@
 package pl.dawid.kaszyca.model.auction;
 
 import lombok.Data;
-import pl.dawid.kaszyca.model.User;
-import pl.dawid.kaszyca.model.auction.Auction;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -18,10 +18,20 @@ public class ReportedAuction implements Serializable {
     private Long id;
 
     @ManyToOne
+    @NotNull
     private Auction auction;
 
-    @ManyToOne
-    private User user;
+    @Email
+    @NotNull
+    private String email;
 
+    @NotNull
+    private String reason;
+
+    @NotNull
     private String description;
+
+    private String decision;
+
+    private boolean active = true;
 }
