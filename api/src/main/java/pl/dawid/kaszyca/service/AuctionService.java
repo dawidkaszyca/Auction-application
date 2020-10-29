@@ -1,19 +1,21 @@
 package pl.dawid.kaszyca.service;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
+import pl.dawid.kaszyca.dto.AuctionDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
-import pl.dawid.kaszyca.exception.PermissionDeniedToAuction;
-import pl.dawid.kaszyca.model.Statistic;
+import pl.dawid.kaszyca.exception.PermissionDeniedToAuctionException;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
+import pl.dawid.kaszyca.repository.FavoriteAuctionRepository;
 import pl.dawid.kaszyca.util.MapperUtils;
 import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
-import pl.dawid.kaszyca.vm.NewAuctionVM;
 
 import java.time.Instant;
 import java.util.*;
@@ -22,13 +24,20 @@ import java.util.*;
 public class AuctionService {
 
     AuctionRepository auctionRepository;
+
+    FavoriteAuctionRepository favoriteAuctionRepository;
+
     UserService userService;
+
     CategoryService categoryService;
+
     StatisticService statisticService;
 
-    public AuctionService(AuctionRepository auctionRepository, UserService userService, CategoryService categoryService,
-                          StatisticService statisticService) {
+
+    public AuctionService(AuctionRepository auctionRepository, FavoriteAuctionRepository favoriteAuctionRepository,
+                          UserService userService, CategoryService categoryService, StatisticService statisticService) {
         this.auctionRepository = auctionRepository;
+        this.favoriteAuctionRepository = favoriteAuctionRepository;
         this.userService = userService;
         this.categoryService = categoryService;
         this.statisticService = statisticService;
@@ -39,15 +48,9 @@ public class AuctionService {
         if (auctionOptional.isPresent()) {
             Auction auction = auctionOptional.get();
             incrementViewersAmount(auction);
-            AuctionWithDetailsDTO auctionWithDetailsDTO = MapperUtils.map(auction, AuctionWithDetailsDTO.class);
-            return auctionWithDetailsDTO;
+            return MapperUtils.map(auction, AuctionWithDetailsDTO.class);
         }
         return null;
-    }
-
-    public Auction getAuctionById(long id) {
-        Optional<Auction> auctionOptional = auctionRepository.findFirstById(id);
-        return auctionOptional.orElse(null);
     }
 
     private void incrementViewersAmount(Auction auction) {
@@ -57,7 +60,7 @@ public class AuctionService {
         auctionRepository.save(auction);
     }
 
-    public Long saveAuction(NewAuctionVM auctionVM) {
+    public Long saveAuction(AuctionDTO auctionVM) {
         Auction auction = MapperUtils.map(auctionVM, Auction.class);
         setDataToNewAuction(auctionVM, auction);
         Optional<User> user = userService.getCurrentUserObject();
@@ -70,16 +73,10 @@ public class AuctionService {
         return null;
     }
 
-    private void setDataToNewAuction(NewAuctionVM auctionVM, Auction auction) {
-        auctionVM.setPrice(auctionVM.getPrice().replace(",", "."));
-        Category category = categoryService.getCategoryById(auctionVM.getCategory());
-        auction.setCategory(category);
-        setAuctionDetails(auction, auctionVM);
-    }
-
-    public Long updateAuction(NewAuctionVM auctionVM) {
+    public Long updateAuction(AuctionDTO auctionVM) {
         Auction auction = MapperUtils.map(auctionVM, Auction.class);
         setDataToNewAuction(auctionVM, auction);
+        setViewers(auction);
         if (auctionVM.getId() != null) {
             auction.setId(auctionVM.getId());
             setAuctionImages(auction);
@@ -97,26 +94,14 @@ public class AuctionService {
         return null;
     }
 
-    private void removeOldAuctionDetails(Long id) {
-        Optional<Auction> auction = auctionRepository.findById(id);
-        if (auction.isPresent()) {
-            auction.get().getAuctionDetails().clear();
-            auctionRepository.save(auction.get());
-        }
+    private void setDataToNewAuction(AuctionDTO auctionVM, Auction auction) {
+        auctionVM.setPrice(auctionVM.getPrice().replace(",", "."));
+        Category category = categoryService.getCategoryById(auctionVM.getCategory());
+        auction.setCategory(category);
+        setAuctionDetails(auction, auctionVM);
     }
 
-    private Long getCityIdToUpdate(Long id) {
-        Optional<Auction> auction = auctionRepository.findById(id);
-        return auction.map(value -> value.getCity().getId()).orElse(null);
-    }
-
-    private void setAuctionImages(Auction auction) {
-        Optional<Auction> auctionAllReadySaved = auctionRepository.findFirstById(auction.getId());
-        if (auctionAllReadySaved.isPresent())
-            auction.setImages(auctionAllReadySaved.get().getImages());
-    }
-
-    private void setAuctionDetails(Auction auction, NewAuctionVM auctionVM) {
+    private void setAuctionDetails(Auction auction, AuctionDTO auctionVM) {
         List<CategoryAttributes> categoryAttributesList = MapperUtils.mapAll(auctionVM.getAttributes(), CategoryAttributes.class);
         List<AuctionDetails> detailsToSave = new ArrayList<>();
         for (CategoryAttributes categoryAttributes : categoryAttributesList) {
@@ -129,6 +114,30 @@ public class AuctionService {
             }
         }
         auction.setAuctionDetails(detailsToSave);
+    }
+
+    private void setViewers(Auction auction) {
+        Optional<Auction> savedAuction = auctionRepository.findFirstById(auction.getId());
+        savedAuction.ifPresent(value -> auction.setViewers(value.getViewers()));
+    }
+
+    private void setAuctionImages(Auction auction) {
+        Optional<Auction> auctionAllReadySaved = auctionRepository.findFirstById(auction.getId());
+        if (auctionAllReadySaved.isPresent())
+            auction.setImages(auctionAllReadySaved.get().getImages());
+    }
+
+    private void removeOldAuctionDetails(Long id) {
+        Optional<Auction> auction = auctionRepository.findById(id);
+        if (auction.isPresent()) {
+            auction.get().getAuctionDetails().clear();
+            auctionRepository.save(auction.get());
+        }
+    }
+
+    private Long getCityIdToUpdate(Long id) {
+        Optional<Auction> auction = auctionRepository.findById(id);
+        return auction.map(value -> value.getCity().getId()).orElse(null);
     }
 
     public AuctionVM getAuctionsFilter(FilterVM filterVM) {
@@ -166,22 +175,21 @@ public class AuctionService {
         for (Integer id : ids) {
             Optional<Auction> auction = auctionRepository.findById(Long.valueOf(id));
             if (auction.isPresent() && checkPermissionToEdit(auction.get().getUser().getId())) {
+                removeAuctionFromFavoritesList(auction.get());
                 auctionRepository.delete(auction.get());
                 statisticService.incrementDailyRemovedAuction();
             }
         }
     }
 
-    public boolean checkPermissionToEdit(Long auctionUserId) {
-        Optional<User> user = userService.getCurrentUserObject();
-        if (!isUserAuctionId(user, auctionUserId)) {
-            throw new PermissionDeniedToAuction();
-        }
-        return true;
+    private void removeAuctionFromFavoritesList(Auction auction) {
+        List<FavoriteAuction> favoriteAuctions = favoriteAuctionRepository.findAllByAuction(auction);
+        favoriteAuctionRepository.deleteAll(favoriteAuctions);
     }
 
-    private boolean isUserAuctionId(Optional<User> optionalUser, Long auction) {
-        return optionalUser.isPresent() && optionalUser.get().getId().equals(auction);
+    public Auction getAuctionById(long id) {
+        Optional<Auction> auctionOptional = auctionRepository.findFirstById(id);
+        return auctionOptional.orElse(null);
     }
 
     public Instant extendAuctionEndTimeById(long id) {
@@ -195,6 +203,18 @@ public class AuctionService {
         return null;
     }
 
+    public boolean checkPermissionToEdit(Long auctionUserId) {
+        Optional<User> user = userService.getCurrentUserObject();
+        if (!isUserAuctionId(user, auctionUserId)) {
+            throw new PermissionDeniedToAuctionException();
+        }
+        return true;
+    }
+
+    private boolean isUserAuctionId(Optional<User> optionalUser, Long auction) {
+        return optionalUser.isPresent() && optionalUser.get().getId().equals(auction);
+    }
+
     public Long getTotalAmountOfAuction() {
         return auctionRepository.count();
     }
@@ -203,4 +223,41 @@ public class AuctionService {
         return DateUtils.addMonths(new Date(), 1).toInstant();
     }
 
+    public void addAuctionToFavorites(long id) {
+        Optional<Auction> auction = auctionRepository.findById(id);
+        Optional<User> optionalUser = userService.getCurrentUserObject();
+        if (auction.isPresent() && optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<FavoriteAuction> isNotSaved = favoriteAuctionRepository.findAllByUserAndAuction(user, auction.get());
+            if (isNotSaved.isEmpty()) {
+                FavoriteAuction favoriteAuction = new FavoriteAuction();
+                favoriteAuction.setAuction(auction.get());
+                favoriteAuction.setUser(user);
+                favoriteAuctionRepository.save(favoriteAuction);
+            }
+        }
+    }
+
+    public AuctionVM getFavoritesAuction(int page, int pageSize) {
+        Optional<User> optionalUser = userService.getCurrentUserObject();
+        Pageable pageable = PageRequest.of(page, pageSize);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<FavoriteAuction> favoriteAuctions = favoriteAuctionRepository.findAllByUser(user, pageable);
+            List<Auction> auctions = getAuctionFromFavoriteAuctions(favoriteAuctions);
+            AuctionVM auctionVM = new AuctionVM();
+            auctionVM.setAuctionListBase(MapperUtils.mapAll(auctions, AuctionBaseDTO.class));
+            auctionVM.setNumberOfAuctionByProvidedFilters(favoriteAuctionRepository.countByUser(user));
+            return auctionVM;
+        }
+        return null;
+    }
+
+    private List<Auction> getAuctionFromFavoriteAuctions(List<FavoriteAuction> favoriteAuctions) {
+        List<Auction> auctions = new ArrayList<>();
+        for (FavoriteAuction favoriteAuction : favoriteAuctions) {
+            auctions.add(favoriteAuction.getAuction());
+        }
+        return auctions;
+    }
 }

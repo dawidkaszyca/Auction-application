@@ -12,5 +12,4 @@ public interface AuctionRepositoryCustom {
     Long countByFilters(FilterVM filterVM);
 
     List<Auction> findTop4ByCategoryOrderByViewers(String category);
-
 }

@@ -9,7 +9,7 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpLoaderFactory} from '../../app.module';
 import {AuctionListComponent} from './components/auction-list/auction-list.component';
 import {MatCardModule} from '@angular/material/card';
-import {SharedModule} from '../../shared/shared.module';
+import {SharedModule} from '../shared/shared.module';
 import {NewAuctionComponent} from './pages/new-auction/new-auction.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -19,13 +19,13 @@ import {MatSelectModule} from '@angular/material/select';
 import {FilterBarComponent} from './components/filter-bar/filter-bar.component';
 import {AuctionPreviewComponent} from './pages/auction-preview/auction-preview.component';
 import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
-import {CanActivateRouteGuard} from '../../core/security/can-activate-route-guard';
+import {CanActivateRouteGuard} from '../core/security/can-activate-route-guard';
 import {AuctionBaseComponent} from './components/auction-base/auction-base.component';
 import {MyAccountComponent} from './pages/my-account/my-account.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {ReceivedMessageComponent} from './components/received-message/received-message.component';
-import {ContactComponent} from './components/contact/contact.component';
-import {SentMessageComponent} from './components/sent-message/sent-message.component';
+import {ReceivedMessageComponent} from './components/chat/received-message/received-message.component';
+import {ContactComponent} from './components/chat/contact/contact.component';
+import {SentMessageComponent} from './components/chat/sent-message/sent-message.component';
 import {ChatComponent} from './pages/chat/chat.component';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -35,6 +35,9 @@ import { EditAuctionComponent } from './pages/edit-auction/edit-auction.componen
 import { UserAuctionsComponent } from './pages/user-auctions/user-auctions.component';
 import { PaginationBarComponent } from './components/pagination/pagination-bar/pagination-bar.component';
 import { PaginationShortBarComponent } from './components/pagination/pagination-short-bar/pagination-short-bar.component';
+import { FavoriteAuctionComponent } from './pages/favorite-auction/favorite-auction.component';
+import { ReportAuctionComponent } from './components/report-auction/report-auction.component';
+import { SendMessageComponent } from './components/send-message/send-message.component';
 
 const appRoutes: Routes = [
   {
@@ -53,6 +56,11 @@ const appRoutes: Routes = [
   {
     path: 'my-profile',
     component: MyAccountComponent,
+    canActivate: [CanActivateRouteGuard]
+  },
+  {
+    path: 'favorite-auction',
+    component: FavoriteAuctionComponent,
     canActivate: [CanActivateRouteGuard]
   },
   {
@@ -89,7 +97,10 @@ const appRoutes: Routes = [
     EditAuctionComponent,
     UserAuctionsComponent,
     PaginationBarComponent,
-    PaginationShortBarComponent
+    PaginationShortBarComponent,
+    FavoriteAuctionComponent,
+    ReportAuctionComponent,
+    SendMessageComponent
   ],
     imports: [
         CommonModule,

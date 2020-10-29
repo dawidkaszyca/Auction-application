@@ -8,7 +8,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ImageVM {
+
     Long photoId;
+
     boolean isMainPhoto;
+
     String url;
 }

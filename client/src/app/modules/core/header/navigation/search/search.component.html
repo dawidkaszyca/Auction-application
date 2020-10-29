@@ -1,0 +1,29 @@
+<div class="row h-100">
+  <div class="col-lg-5 col-md-5 col-6">
+    <input class="form-control w-100 h-100" [(ngModel)]="search" type="text"
+           placeholder='{{"search.looking" | translate}}'>
+  </div>
+  <div class="col-lg-3 col-md-3 col-6">
+    <input class="form-control w-100"
+           autocomplete="off"
+           ngx-google-places-autocomplete
+           [options]='options'
+           [(ngModel)]="cityName"
+           name="input"
+           placeholder="{{'newAuction.setCity' | translate}}"
+           #placesRef="ngx-places"
+           (onAddressChange)="handleAddressChange($event)"
+           required/>
+  </div>
+  <div class="col-lg-2 text-center col-md-2 col-6 col-md-4-margin-top">
+    <mat-select class="form-control w-100"
+                [(ngModel)]="kilometers"
+                required>
+      <mat-option *ngFor="let obj of kilometersToSelect" [value]="obj">{{obj}}&nbsp;KM</mat-option>
+    </mat-select>
+  </div>
+  <div class="col-lg-2 col-md-2 col-6 col-md-4-margin-top">
+    <button type="button" class="w-100 h-100 btn btn-primary text-center"
+            (click)="updateFilter()">{{"search.Search" | translate}}</button>
+  </div>
+</div>

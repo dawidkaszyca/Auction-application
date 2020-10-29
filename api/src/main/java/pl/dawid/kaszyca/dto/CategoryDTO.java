@@ -14,5 +14,4 @@ public class CategoryDTO {
     private String name;
 
     private List<CategoryAttributesDTO> categoryAttributes;
-
 }

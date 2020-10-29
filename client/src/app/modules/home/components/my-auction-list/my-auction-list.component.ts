@@ -1,10 +1,13 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
-import {AuctionService} from '../../../../shared/services/auction.service';
-import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {AuctionBaseField} from '../../../shared/models/auction-base-field';
+import {AuctionService} from '../../../shared/services/auction.service';
+import {AttachmentService} from '../../../shared/services/attachment.service';
 import {Router} from '@angular/router';
-import {Filter} from '../../../../shared/models/filter';
+import {Filter} from '../../../shared/models/filter';
 import {MatSelectChange} from '@angular/material/select';
+import {MatDialog} from '@angular/material/dialog';
+import {StatisticDialogComponent} from '../../../shared/components/statistic-dialog/statistic-dialog.component';
+import {EditAuctionComponent} from '../../pages/edit-auction/edit-auction.component';
 
 @Component({
   selector: 'app-my-auction-list',
@@ -19,7 +22,6 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   private category;
   private filter: Filter;
   auctions: AuctionBaseField[];
-  auctionToEdit: AuctionBaseField;
   sortList: string[];
   sortValue = 'sort.newest';
   pageSizeList: number[];
@@ -33,7 +35,8 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   states: string[];
   selectedAuctions: number[];
 
-  constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router) {
+  constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router,
+              public dialog: MatDialog) {
     this.selectedAuctions = [];
     this.selectedState = [];
   }
@@ -156,7 +159,17 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   }
 
   editAuction(auction: AuctionBaseField) {
-    this.router.navigate(['edit-auction'], {queryParams: {'title': auction.title, 'category': auction.category, 'id': auction.id}});
+    const dialogRef = this.dialog.open(EditAuctionComponent,
+      {
+        width: '60%',
+        height: '80%',
+        data: {
+          auctionData: auction
+        }
+      });
+    dialogRef.afterClosed().subscribe(it => {
+      this.loadAuctionsData();
+    });
   }
 
   selectAuction(id: number) {
@@ -206,5 +219,16 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
     this.auctionService.extendAuctionTime(auction.id).subscribe(res => {
       auction.expiredDate = res;
     });
+  }
+
+  getStatisticDialog(auction: AuctionBaseField) {
+    this.dialog.open(StatisticDialogComponent,
+      {
+        width: '80%',
+        height: '80%',
+        data: {
+          auctionData: auction
+        }
+      });
   }
 }

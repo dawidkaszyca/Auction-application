@@ -52,14 +52,15 @@ mat-card {
   margin-right: calc(50% - 50px);
 }
 
-.removeImage {
-  width: 24px;
-  height: 24px;
+.remove-image {
   font-size: 24px;
   margin-right: 0px;
   float: right;
   display: inline-block;
   position: relative;
-  cursor: pointer;
   color: red;
+}
+
+.remove-image:hover {
+  cursor: pointer;
 }

@@ -1,0 +1,67 @@
+<form #f="ngForm" (ngSubmit)="f.form.valid && sendReport()" novalidate class="feedback-form h-100"
+      autocomplete="off">
+  <mat-card class="h-100">
+    <div class="row">
+      <div class="form-group col-12">
+        <label>{{'report.reason' | translate}}</label><br>
+        <mat-select class="form-control"
+                    [(ngModel)]="reportAuction.reason"
+                    name="category"
+                    #category="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && category.invalid }"
+                    required>
+          <mat-option *ngFor="let reason of reasons" [value]="reason">{{reason}}</mat-option>
+        </mat-select>
+        <div *ngIf="f.submitted && category.invalid" class="invalid-input mt-2">
+          <!-- individual validation errors -->
+          <div *ngIf="category.errors?.required">{{'register.isEmpty' | translate}}</div>
+        </div>
+      </div>
+      <div class="w-100"></div>
+      <div class="form-group col-12">
+        <label for="comment">{{'report.description' | translate}}</label>
+        <textarea class="form-control"
+                  rows="7"
+                  id="comment"
+                  required minlength="5"
+                  required maxlength="600"
+                  #description="ngModel"
+                  [(ngModel)]="reportAuction.description"
+                  [ngClass]="{ 'is-invalid': f.submitted && description.invalid }"
+                  name="description" required></textarea>
+        <div *ngIf="f.submitted && description.invalid" class="invalid-input mt-2">
+          <!-- individual validation errors -->
+          <div *ngIf="description.errors?.required">{{'register.isEmpty' | translate}}</div>
+          <div *ngIf="description.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+        </div>
+      </div>
+      <div class="w-100"></div>
+      <div class="form-group col-8 col-sm-6 col-md-5 col-lg-6">
+        <label>{{'newAuction.email' | translate}}</label>
+        <input type="text"
+               id="email"
+               class="form-control"
+               required minlength="5"
+               required maxlength="60"
+               name="email"
+               #email="ngModel"
+               [(ngModel)]="reportAuction.email"
+               [ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
+               required/>
+        <div *ngIf="f.submitted && description.invalid" class="invalid-input mt-2">
+          <div *ngIf="email.errors?.required">{{'register.isEmpty' | translate}}</div>
+          <div *ngIf="email.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+        </div>
+
+      </div>
+      <div class="form-group d-none d-sm-block col-sm-2 col-md-3 col-lg-3">
+      </div>
+      <div class="form-group col-4 col-sm-4 col-md-4 col-lg-3">
+        <label class="float-right text-right w-100">&#8205;</label>
+        <button type="submit" class="btn btn-info float-right w-100" (click)="f.onSubmit($event)">
+          <span>{{'report.send' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</form>

@@ -1,21 +1,23 @@
 <div>
   <mat-card>
     <div class="row">
-      <div class="col-7 row">
-        <div class="col-4">
-          <div class="h-100 w-100 text-left d-inline-block">
+      <div class="col-12 col-lg-6 row">
+        <div class="col-4 col-lg-4">
+          <div class="h-100 w-50 text-left d-inline-block">
             <div class="h-100 w-50 float-left">
-              <input class="h-75 w-100 inline pl-2" [checked]="auctions?.length === selectedAuctions?.length" type="checkbox" (click)="selectAllAuctions()"/>
+              <input class="h-75 w-50 pl-2" [checked]="auctions?.length === selectedAuctions?.length"
+                     type="checkbox" (click)="selectAllAuctions()"/>
             </div>
-            <div class="h-100 w-50 floatingDiv float-right">
+            <div class="h-100 w-50 floating-div float-left">
               {{'myAuction.all' | translate}}
             </div>
           </div>
         </div>
-        <div class="col-3">
-          <button class="w-100 h-100 btn btn-primary text-center" (click)="removeSelectedAuctions()">{{'myAuction.delete' | translate}}</button>
+        <div class="col-4 col-lg-3">
+          <button class="w-100 h-100 btn btn-primary text-center"
+                  (click)="removeSelectedAuctions()">{{'myAuction.delete' | translate}}</button>
         </div>
-        <div class="col-4">
+        <div class="col-4 col-lg-4">
           <mat-select class="form-control w-100"
                       [(value)]="selectedState"
                       (selectionChange)="selectState($event)" multiple>
@@ -23,15 +25,19 @@
           </mat-select>
         </div>
       </div>
-      <div class="col-3">
-        <mat-select class="form-control w-75 float-right" [(value)]="sortValue"
+
+
+      <div class="col-4 col-lg-3 col-lg-margin-top">
+        <mat-select class="form-control float-right" [(value)]="sortValue"
                     (selectionChange)="selectSort($event)">
           <mat-option *ngFor="let value of sortList" [value]="value">{{value | translate}}</mat-option>
         </mat-select>
       </div>
-      <div class="col-2">
+
+
+      <div class="col-8 col-lg-3 col-lg-margin-top">
         <div class="row">
-          <div class="col-3 nopadding">
+          <div class="col-6 nopadding">
             <button [disabled]="page <= 1" (click)="changeInput(-1)" type="button"
                     class="btn btn-primary btn-circle btn-xl float-right"><
             </button>
@@ -42,62 +48,69 @@
                    [value]="inputValue"
                    class="form-control w-100 text-center" disabled/>
           </div>
-          <div class="col-5 float-left nopadding float-left">
+          <div class="col-2 float-left nopadding float-left">
             <button [disabled]="page >= amountOfPages" (click)="changeInput(1)" type="button"
                     class="btn btn-primary btn-circle btn-xl">>
             </button>
           </div>
         </div>
+
       </div>
     </div>
   </mat-card>
+
   <div class="row">
     <ng-container *ngFor="let auction of auctions">
-      <div class="col-1">
-        <div class="h-100 text-center">
-          <input class="h-50 w-50 inline" type="checkbox" [checked]="selectedAuctions.includes(auction.id)" (click)="selectAuction(auction.id)"/>
+      <div class="col-2 col-md-1">
+        <div class="text-center h-100">
+          <input class="h-100 w-50 inline" type="checkbox" [checked]="selectedAuctions.includes(auction.id)"
+                 (click)="selectAuction(auction.id)"/>
         </div>
       </div>
-      <div class="col-11">
+      <div class="col-10 col-md-11">
         <mat-card appMaterialElevation class="rounded-0 auction-card">
           <mat-card-content class="h-100">
             <div class="row h-100">
-              <div class="col-2">
+              <div class="col-lg-3 col-4">
                 <div>
                   <app-image [path]="auction.photoUrl"></app-image>
                 </div>
               </div>
-              <div class="col-10 position-relative">
+              <div class="col-lg-9 col-8 position-relative">
                 <div class="row">
-                  <div class="col-8">
+                  <div class="col-6 col-md-8">
                     <mat-card-title class="mt-2 text-left">{{auction.title}}</mat-card-title>
                   </div>
-                  <div class="col-4">
-                    <h1 class="text-center m-0 text font-weight-bold pt-1">
+                  <div class="col-6 col-md-4">
+                    <p class="text-center m-0 text font-weight-bold pt-1 font-size">
                       {{auction.price|currency:"zł": true|splitCurrency:auction.price}}
-                    </h1>
+                    </p>
                   </div>
                 </div>
                 <div class="row mt-5">
-                  <div class="col-7">
+                  <div class="col-7 col-md-8">
                     <div class="row">
-                      <div class="col-3">
-                      <button class="btn btn-info text-center w-100" (click)="openAuctionPage(auction)">{{'myAuction.preview' | translate}}</button>
+                      <div class="col-xl-3 col-md-6">
+                        <button class="btn btn-info text-center w-100"
+                                (click)="openAuctionPage(auction)">{{'myAuction.preview' | translate}}</button>
                       </div>
-                      <div class="col-3">
-                      <button class="btn btn-info text-center w-100" (click)="editAuction(auction)">{{'myAuction.edit' | translate}}</button>
+                      <div class="col-xl-3 col-md-6 col-mt-2">
+                        <button class="btn btn-info text-center w-100"
+                                (click)="editAuction(auction)">{{'myAuction.edit' | translate}}</button>
                       </div>
-                      <div class="col-3">
-                      <button class="btn btn-info text-center w-100" (click)="extendAuctionTime(auction)">{{'myAuction.extend' | translate}}</button>
+                      <div class="col-xl-3 col-md-6 col-md-6-mt-2">
+                        <button class="btn btn-info text-center w-100"
+                                (click)="extendAuctionTime(auction)">{{'myAuction.extend' | translate}}</button>
                       </div>
-                      <div class="col-3">
-                        <button class="  btn btn-info text-center">{{'myAuction.statistics' | translate}}</button>
+                      <div class="col-xl-3 col-md-6 col-md-6-mt-2">
+                        <button class="  btn btn-info text-cente w-100"
+                                (click)="getStatisticDialog(auction)">{{'myAuction.statistics' | translate}}</button>
                       </div>
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div class="col-5 col-md-4">
                     <div class="row">
-                      <div class="col-4 text-center">
+                      <div class="col-4 text-center d-none d-lg-block">
                         {{'myAuction.createDate' | translate}}
                         {{auction.createdDate| date:'mediumDate'}}
                       </div>

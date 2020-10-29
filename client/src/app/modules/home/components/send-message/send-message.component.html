@@ -1,0 +1,34 @@
+<form #f="ngForm" (ngSubmit)="f.form.valid && save()" novalidate class="feedback-form mt-4"
+      autocomplete="off">
+  <mat-card (click)="loginUser()">
+    <label>{{'dialog.title' | translate}}</label>
+    <div class="row">
+      <div class="form-group col-12 mt-2">
+        <label for="comment">{{'dialog.content' | translate}}</label>
+        <textarea class="form-control"
+                  rows="7"
+                  id="comment"
+                  required minlength="5"
+                  required maxlength="600"
+                  #description="ngModel"
+                  [(ngModel)]="content"
+                  [ngClass]="{ 'is-invalid': f.submitted && description.invalid }"
+                  name="description" required></textarea>
+        <div *ngIf="f.submitted && description.invalid" class="invalid-input mt-2">
+          <!-- individual validation errors -->
+          <div *ngIf="description.errors?.required">{{'register.isEmpty' | translate}}</div>
+          <div *ngIf="description.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+        </div>
+      </div>
+      <div class="w-100"></div>
+      <div class="form-group col-8 col-sm-8 col-md-8 col-lg-9">
+
+      </div>
+      <div class="form-group col-4 col-sm-4 col-md-4 col-lg-3">
+        <button type="submit" class="btn btn-info float-right w-100" (click)="f.onSubmit($event)">
+          <span>{{'report.send' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</form>

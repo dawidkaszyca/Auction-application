@@ -9,10 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 import pl.dawid.kaszyca.security.jwt.JWTConfigurer;
-import pl.dawid.kaszyca.security.jwt.JWTFilter;
 import pl.dawid.kaszyca.security.jwt.TokenProvider;
 
 @EnableWebSecurity
@@ -21,10 +19,8 @@ import pl.dawid.kaszyca.security.jwt.TokenProvider;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenProvider tokenProvider;
-    private final SecurityProblemSupport problemSupport;
 
-    public WebSecurityConfig(SecurityProblemSupport problemSupport, TokenProvider tokenProvider) {
-        this.problemSupport = problemSupport;
+    public WebSecurityConfig(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
@@ -37,15 +33,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                    .antMatchers( "/api/messages").hasAuthority(AuthoritiesConstants.USER)
-                    .antMatchers(HttpMethod.POST, "/api/auctions").hasAuthority(AuthoritiesConstants.USER)
-                    .antMatchers(HttpMethod.POST, "/api/attachments").hasAuthority(AuthoritiesConstants.USER)
-                    .antMatchers(HttpMethod.POST, "/api/categories").hasAuthority(AuthoritiesConstants.ADMIN)
-                    .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/messages").hasAuthority(AuthoritiesConstants.USER)
+                .antMatchers(HttpMethod.POST, "/api/auctions").hasAuthority(AuthoritiesConstants.USER)
+                .antMatchers(HttpMethod.POST, "/api/attachments").hasAuthority(AuthoritiesConstants.USER)
+                .antMatchers(HttpMethod.POST, "/api/categories").hasAuthority(AuthoritiesConstants.ADMIN)
+                .antMatchers("/api/**").permitAll()
                 .and()
-                    .httpBasic()
+                .httpBasic()
                 .and()
-                    .apply(securityConfigurerAdapter());
+                .apply(securityConfigurerAdapter());
     }
 
     private JWTConfigurer securityConfigurerAdapter() {

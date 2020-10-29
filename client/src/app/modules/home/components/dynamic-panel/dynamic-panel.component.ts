@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {AuctionService} from '../../../../shared/services/auction.service';
-import {CategoryAttributes} from '../../../../shared/models/category-attributes';
-import {AttributesValues} from '../../../../shared/models/attributes-values';
+import {AuctionService} from '../../../shared/services/auction.service';
+import {CategoryAttributes} from '../../../shared/models/category-attributes';
+import {AttributesValues} from '../../../shared/models/attributes-values';
 import {MatSelectChange} from '@angular/material/select';
 
 @Component({
@@ -70,7 +70,7 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
     this.selectEmitter.emit(this.selectedValues);
   }
 
-  doSomething($event: MatSelectChange, id: string) {
+  selectValue($event: MatSelectChange, id: string) {
     for (const attribute of this.selectedValues) {
       if (attribute.attribute === id) {
         attribute.attributeValues[0].value = $event.value;

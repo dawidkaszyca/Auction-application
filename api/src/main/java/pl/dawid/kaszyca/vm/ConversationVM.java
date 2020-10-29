@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.dawid.kaszyca.dto.MessageDTO;
 
-import javax.persistence.OneToOne;
 import java.util.List;
 
 @Getter
@@ -13,15 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 public class ConversationVM {
 
-    private Long id;
+    Long id;
 
-    @OneToOne
-    private String name;
+    String name;
 
-    private Long partnerId;
+    Long partnerId;
 
-    private List<MessageDTO> partnerMessages;
+    List<MessageDTO> partnerMessages;
 
-    private List<MessageDTO> yourMessages;
+    List<MessageDTO> yourMessages;
 
 }

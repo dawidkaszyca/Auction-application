@@ -42,7 +42,9 @@
     "condition": "Stan ",
     "views": "Wyświetleń ",
     "date": "Data dodania ",
-    "userAuctions": "Aukcje użytkownika "
+    "userAuctions": "Aukcje użytkownika ",
+    "favorite": "Dodaj do ulubionych",
+    "savedFavorite": "Twoje zapisane aukcje"
   },
   "newAuction": {
     "start": "Zaczynajmy",
@@ -86,7 +88,7 @@
   },
   "myProfile": {
     "photoButton": "Dodaj lub zmień zdjęcie",
-    "welcome": "Witaj",
+    "welcome": "O mnie",
     "changeData": "Zmień dane",
     "changePassword": "Zmień hasło",
     "call": "Zadzwoń",
@@ -96,9 +98,13 @@
     "title": "Wyślij wiadomość",
     "send": "Wyślij",
     "cancel": "Zamknij",
+    "content": "Treść wiadomości",
     "sent": "Twoja wiadomość została wysłana",
     "confirm": "Potwierdzenie",
-    "login": "Proszę o zalogowanie się przed wysłaniem wiadomości"
+    "login": "Proszę o zalogowanie się przed wysłaniem wiadomości",
+    "dailyViews": "Dzienne wyświetlenia",
+    "dailyPhone": "Dzienne wyświetlenia telefonu",
+    "after-sent": "Twoja wiadomość została wysłana"
   },
   "myAuction": {
     "all": "Wszystkie",
@@ -115,6 +121,13 @@
     "extend": "Przedłuż",
     "createDate": "Data dodania",
     "expiredDate": "Data wygasnięcia"
+  },
+  "report": {
+    "reason": "Wybierz powód",
+    "description": "Opisz przyczynę zgłoszenia",
+    "email": "e-mail",
+    "send": "Wyślij",
+    "auction": "Zgłoś naruszenie"
   }
 }
 

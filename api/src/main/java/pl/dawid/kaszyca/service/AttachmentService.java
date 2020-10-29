@@ -9,8 +9,7 @@ import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.Auction;
 import pl.dawid.kaszyca.repository.AuctionRepository;
 import pl.dawid.kaszyca.repository.ImageRepository;
-import pl.dawid.kaszyca.vm.AttachmentToSaveVM;
-import pl.dawid.kaszyca.vm.AttachmentToUpdateVm;
+import pl.dawid.kaszyca.vm.AttachmentVM;
 import pl.dawid.kaszyca.vm.ImageVM;
 
 import java.io.IOException;
@@ -20,7 +19,9 @@ import java.util.*;
 public class AttachmentService {
 
     AuctionRepository auctionRepository;
+
     ImageRepository imageRepository;
+
     UserService userService;
 
     public AttachmentService(AuctionRepository auctionRepository,
@@ -30,7 +31,7 @@ public class AttachmentService {
         this.userService = userService;
     }
 
-    public void saveAuctionAttachments(List<MultipartFile> files, AttachmentToSaveVM attachmentToSaveVM) throws IOException {
+    public void saveAuctionAttachments(List<MultipartFile> files, AttachmentVM attachmentToSaveVM) throws IOException {
         Optional<Auction> auction = auctionRepository.findById(attachmentToSaveVM.getAuctionId());
         List<Attachment> attachments = prepareAttachmentToSave(files);
         if (auction.isPresent()) {
@@ -39,33 +40,6 @@ public class AttachmentService {
             auctionObj.setImages(imageList);
             auctionRepository.save(auctionObj);
         }
-    }
-
-    private List<Attachment> prepareAttachmentToSave(List<MultipartFile> fileList) throws IOException {
-        List<Attachment> attachmentList = new ArrayList<>();
-        for (MultipartFile file : fileList) {
-            attachmentList.add(convertMultiPartFileToAttachment(file));
-        }
-        return attachmentList;
-    }
-
-    private Attachment convertMultiPartFileToAttachment(MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        return new Attachment(fileName, file.getContentType(), file.getBytes());
-    }
-
-    private List<Image> prepareImageListToSave(Auction auction, List<Attachment> attachments, Long mainPhotoId) {
-        List<Image> imageList = new ArrayList<>();
-        for (int i = 0; i < attachments.size(); i++) {
-            Attachment attachment = attachments.get(i);
-            Image image = new Image();
-            image.setAttachment(attachment);
-            image.setAuction(auction);
-            if (i == mainPhotoId)
-                image.setIsMainAuctionPhoto(true);
-            imageList.add(image);
-        }
-        return imageList;
     }
 
     public Map<String, String> getPhotosByListId(List<Long> idOfAuctionMainPhotoToGet) {
@@ -95,6 +69,29 @@ public class AttachmentService {
         return photosUrl;
     }
 
+    public List<String> getUserPhoto() {
+        Optional<User> user = userService.getCurrentUserObject();
+        List<String> userUrl = new ArrayList<>();
+        if (user.isPresent())
+            userUrl.add(convertImageToResponseIfExist(user.get().getProfileImage()));
+        return userUrl;
+    }
+
+    public void saveUserPhoto(MultipartFile file) throws IOException {
+        Optional<User> user = userService.getCurrentUserObject();
+        if (user.isPresent()) {
+            user.get().setProfileImage(convertMultiPartFileToAttachment(file));
+            userService.updateUser(user.get());
+        }
+    }
+
+    public List<String> getUserPhoto(long id) {
+        User user = userService.getUserObjectById(id);
+        List<String> userUrl = new ArrayList<>();
+        userUrl.add(convertImageToResponseIfExist(user.getProfileImage()));
+        return userUrl;
+    }
+
     private String convertImageToResponseIfExist(Attachment attachment) {
         if (attachment != null) {
             byte[] bytes = attachment.getData();
@@ -104,30 +101,7 @@ public class AttachmentService {
         return null;
     }
 
-    public List<String> getUserPhoto() {
-        Optional<User> user = userService.getCurrentUserObject();
-        List<String> userUrl = new ArrayList<>();
-        if (user.isPresent())
-            userUrl.add(convertImageToResponseIfExist(user.get().getProfile_Image()));
-        return userUrl;
-    }
-
-    public void saveUserPhoto(MultipartFile file) throws IOException {
-        Optional<User> user = userService.getCurrentUserObject();
-        if (user.isPresent()) {
-            user.get().setProfile_Image(convertMultiPartFileToAttachment(file));
-            userService.updateUser(user.get());
-        }
-    }
-
-    public List<String> getUserPhoto(long id) {
-        User user = userService.getUserObjectById(id);
-        List<String> userUrl = new ArrayList<>();
-        userUrl.add(convertImageToResponseIfExist(user.getProfile_Image()));
-        return userUrl;
-    }
-
-    public void updateAuctionAttachments(List<MultipartFile> files, AttachmentToUpdateVm attachment) throws IOException {
+    public void updateAuctionAttachments(List<MultipartFile> files, AttachmentVM attachment) throws IOException {
         removeImages(attachment.getIdsToRemoved());
         List<Image> images = imageRepository.findAllByAuctionId(attachment.getAuctionId());
         List<Attachment> attachments = prepareAttachmentToSave(files);
@@ -141,7 +115,29 @@ public class AttachmentService {
         }
     }
 
-    private void changeMainPhoto(List<Image> images, AttachmentToUpdateVm attachment) {
+    private void removeImages(List<Long> idsToRemoved) {
+        for (Long id : idsToRemoved) {
+            Optional<Image> image = imageRepository.findById(id);
+            if (image.isPresent()) {
+                imageRepository.delete(image.get());
+            }
+        }
+    }
+
+    private List<Attachment> prepareAttachmentToSave(List<MultipartFile> fileList) throws IOException {
+        List<Attachment> attachmentList = new ArrayList<>();
+        for (MultipartFile file : fileList) {
+            attachmentList.add(convertMultiPartFileToAttachment(file));
+        }
+        return attachmentList;
+    }
+
+    private Attachment convertMultiPartFileToAttachment(MultipartFile file) throws IOException {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        return new Attachment(fileName, file.getContentType(), file.getBytes());
+    }
+
+    private void changeMainPhoto(List<Image> images, AttachmentVM attachment) {
         for (Image image : images) {
             image.setIsMainAuctionPhoto(isMainPhoto(image, attachment));
         }
@@ -151,16 +147,21 @@ public class AttachmentService {
         }
     }
 
-    private Boolean isMainPhoto(Image image, AttachmentToUpdateVm attachment) {
+    private Boolean isMainPhoto(Image image, AttachmentVM attachment) {
         return image.getId().equals(attachment.getMainPhotoId()) && attachment.isMainPhotoAllReadySaved();
     }
 
-    private void removeImages(List<Long> idsToRemoved) {
-        for (Long id : idsToRemoved) {
-            Optional<Image> image = imageRepository.findById(id);
-            if (image.isPresent()) {
-                imageRepository.delete(image.get());
-            }
+    private List<Image> prepareImageListToSave(Auction auction, List<Attachment> attachments, Long mainPhotoId) {
+        List<Image> imageList = new ArrayList<>();
+        for (int i = 0; i < attachments.size(); i++) {
+            Attachment attachment = attachments.get(i);
+            Image image = new Image();
+            image.setAttachment(attachment);
+            image.setAuction(auction);
+            if (i == mainPhotoId)
+                image.setIsMainAuctionPhoto(true);
+            imageList.add(image);
         }
+        return imageList;
     }
 }

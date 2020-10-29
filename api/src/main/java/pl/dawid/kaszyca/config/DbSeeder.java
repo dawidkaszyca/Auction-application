@@ -12,9 +12,8 @@ import pl.dawid.kaszyca.model.*;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.*;
 import pl.dawid.kaszyca.service.AttachmentService;
-import pl.dawid.kaszyca.vm.AttachmentToSaveVM;
+import pl.dawid.kaszyca.vm.AttachmentVM;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,7 +31,6 @@ class DbSeeder implements CommandLineRunner {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private ConversationRepository conversationRepository;
-
     private StatisticRepository statisticRepository;
 
     Map<String, List<String>> categoriesMap;
@@ -244,7 +242,7 @@ class DbSeeder implements CommandLineRunner {
                 auction.setAuctionDetails(auctionDetails);
             }
             auction = auctionRepository.save(auction);
-            AttachmentToSaveVM attachmentToSaveVM = new AttachmentToSaveVM();
+            AttachmentVM attachmentToSaveVM = new AttachmentVM();
             attachmentToSaveVM.setMainPhotoId(0L);
             attachmentToSaveVM.setAuctionId(auction.getId());
             list = new ArrayList<>();

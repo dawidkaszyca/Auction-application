@@ -1,14 +1,13 @@
 package pl.dawid.kaszyca.controller;
 
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dawid.kaszyca.service.AttachmentService;
-import pl.dawid.kaszyca.vm.AttachmentToSaveVM;
-import pl.dawid.kaszyca.vm.AttachmentToUpdateVm;
+import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.vm.AttachmentVM;
 import pl.dawid.kaszyca.vm.ImageVM;
 
 import java.util.List;
@@ -26,76 +25,78 @@ public class AttachmentController {
         this.attachmentService = attachmentService;
     }
 
-    @RequestMapping(value = "/attachments", method = RequestMethod.POST, consumes = "multipart/form-data")
+    @PostMapping(value = "/attachments", consumes = "multipart/form-data")
     public ResponseEntity saveAttachments(@RequestParam("files") List<MultipartFile> files,
                                           @RequestParam("data") String data) {
         try {
-            Gson gson = new Gson();
-            AttachmentToSaveVM attachmentToSaveVM = gson.fromJson(data, AttachmentToSaveVM.class);
+            AttachmentVM attachmentToSaveVM = MapperUtils.mapJsonToObject(data, AttachmentVM.class);
             attachmentService.saveAuctionAttachments(files, attachmentToSaveVM);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Something went wrong during saving attachments");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
-    @RequestMapping(value = "/attachments", method = RequestMethod.PUT, consumes = "multipart/form-data")
+    @PutMapping(value = "/attachments", consumes = "multipart/form-data")
     public ResponseEntity updateAttachments(@RequestParam("files") List<MultipartFile> files,
                                             @RequestParam("data") String data) {
         try {
-            Gson gson = new Gson();
-            AttachmentToUpdateVm attachment = gson.fromJson(data, AttachmentToUpdateVm.class);
+            AttachmentVM attachment = MapperUtils.mapJsonToObject(data, AttachmentVM.class);
             attachmentService.updateAuctionAttachments(files, attachment);
-            return new ResponseEntity(HttpStatus.CREATED);
+            return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Something went wrong during saving attachments");
+            log.error("Something went wrong during updating attachments");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
     @GetMapping(value = "/attachments/{auctionIdList}")
     public ResponseEntity getPhotosByListOfAuctions(@PathVariable List<Long> auctionIdList) {
         try {
             Map<String, String> photosUrlMap = attachmentService.getPhotosByListId(auctionIdList);
-            return new ResponseEntity(photosUrlMap, HttpStatus.OK);
+            return photosUrlMap.isEmpty() ? new ResponseEntity(photosUrlMap, HttpStatus.NO_CONTENT)
+                    : new ResponseEntity(photosUrlMap, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Something went wrong during saving attachments");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
     @GetMapping(value = "/attachments")
     public ResponseEntity getPhotosForAuctionById(@RequestParam("id") long auctionId) {
         try {
             List<ImageVM> photosUrlMap = attachmentService.getPhotosForAuctionById(auctionId);
-            return new ResponseEntity(photosUrlMap, HttpStatus.OK);
+            return photosUrlMap.isEmpty() ? new ResponseEntity(photosUrlMap, HttpStatus.NO_CONTENT)
+                    : new ResponseEntity(photosUrlMap, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Something went wrong during saving attachments");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
     @GetMapping(value = "/attachments/users")
     public ResponseEntity getUserPhoto() {
         try {
             List<String> photos = attachmentService.getUserPhoto();
-            return new ResponseEntity(photos, HttpStatus.OK);
+            return photos.isEmpty() ? new ResponseEntity(photos, HttpStatus.NO_CONTENT)
+                    : new ResponseEntity(photos, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Cannot get user photo");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
     @GetMapping(value = "/attachments/users/{id}")
     public ResponseEntity getUserPhotoById(@PathVariable long id) {
         try {
             List<String> photos = attachmentService.getUserPhoto(id);
-            return new ResponseEntity(photos, HttpStatus.OK);
+            return photos.isEmpty() ? new ResponseEntity(photos, HttpStatus.NO_CONTENT)
+                    : new ResponseEntity(photos, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Cannot get user photo by id");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(422));
     }
 
     @PostMapping(value = "/attachments/users", consumes = "multipart/form-data")
@@ -105,7 +106,7 @@ public class AttachmentController {
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             log.error("Something went wrong during saving user photo image");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
-        return new ResponseEntity(HttpStatus.valueOf(422));
     }
 }

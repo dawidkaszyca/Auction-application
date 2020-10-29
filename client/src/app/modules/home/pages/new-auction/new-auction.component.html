@@ -3,135 +3,143 @@
   <form #f="ngForm" (ngSubmit)="f.form.valid && checkName() && saveAuction()" novalidate class="feedback-form"
         autocomplete="off">
     <mat-card>
-
-      <div class="form-group">
-        <label>{{'newAuction.title' | translate}}</label>
-        <input type="text"
-               id="title"
-               class="form-control w-50"
-               name="title"
-               [(ngModel)]="auction.title"
-               required minlength="5"
-               required maxlength="40"
-               #title="ngModel"
-               [ngClass]="{ 'is-invalid': f.submitted && title.invalid }"
-               required/>
-        <!-- input validation group -->
-        <div *ngIf="f.submitted && title.invalid" class="invalid-input mt-2">
-          <!-- individual validation errors -->
-          <div *ngIf="title.errors?.required">{{'register.isEmpty' | translate}}</div>
-          <div *ngIf="title.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+      <div class="row">
+        <div class="form-group col-12 col-md-8 col-lg-6">
+          <label>{{'newAuction.title' | translate}}</label>
+          <input type="text"
+                 id="title"
+                 class="form-control"
+                 name="title"
+                 [(ngModel)]="auction.title"
+                 required minlength="5"
+                 required maxlength="40"
+                 #title="ngModel"
+                 [ngClass]="{ 'is-invalid': f.submitted && title.invalid }"
+                 required/>
+          <!-- input validation group -->
+          <div *ngIf="f.submitted && title.invalid" class="invalid-input mt-2">
+            <!-- individual validation errors -->
+            <div *ngIf="title.errors?.required">{{'register.isEmpty' | translate}}</div>
+            <div *ngIf="title.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+          </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-12 col-md-8 col-lg-6">
+          <label>{{'newAuction.category' | translate}}</label><br>
+          <mat-select class="form-control"
+                      [(ngModel)]="auction.category"
+                      name="category"
+                      #category="ngModel"
+                      [ngClass]="{ 'is-invalid': f.submitted && category.invalid }"
+                      required>
+            <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
+          </mat-select>
+          <div *ngIf="f.submitted && category.invalid" class="invalid-input mt-2">
+            <!-- individual validation errors -->
+            <div *ngIf="category.errors?.required">{{'register.isEmpty' | translate}}</div>
+          </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-6 col-sm-5 col-md-4 col-lg-3">
+          <label>{{'newAuction.price' | translate}}</label>
+          <input class="form-control text-right"
+                 [(ngModel)]="auction.price"
+                 type="number"
+                 placeholder="0"
+                 name="price">
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-6 col-sm-5 col-md-4 col-lg-3">
+          <label>{{'newAuction.condition' | translate}}</label><br>
+          <mat-select class="form-control"
+                      [(ngModel)]="auction.condition"
+                      name="condition"
+                      #condition="ngModel"
+                      [ngClass]="{ 'is-invalid': f.submitted && condition.invalid }"
+                      required>
+            <mat-option *ngFor="let condition of conditions" [value]="condition">{{condition}}</mat-option>
+          </mat-select>
+          <div *ngIf="f.submitted && condition.invalid" class="invalid-input mt-2">
+            <!-- individual validation errors -->
+            <div *ngIf="condition.errors?.required">{{'register.isEmpty' | translate}}</div>
+          </div>
         </div>
       </div>
-
-      <div class="form-group">
-        <label>{{'newAuction.category' | translate}}</label><br>
-        <mat-select class="form-control w-50"
-                    [(ngModel)]="auction.category"
-                    name="category"
-                    #category="ngModel"
-                    [ngClass]="{ 'is-invalid': f.submitted && category.invalid }"
-                    required>
-          <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
-        </mat-select>
-        <div *ngIf="f.submitted && category.invalid" class="invalid-input mt-2">
-          <!-- individual validation errors -->
-          <div *ngIf="category.errors?.required">{{'register.isEmpty' | translate}}</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>{{'newAuction.price' | translate}}</label>
-        <input class="form-control w-25 text-right"
-               [(ngModel)]="auction.price"
-               type="number"
-               placeholder="0"
-               name="price">
-      </div>
-
-      <div class="form-group">
-        <label>{{'newAuction.condition' | translate}}</label><br>
-        <mat-select class="form-control w-25"
-                    [(ngModel)]="auction.condition"
-                    name="condition"
-                    #condition="ngModel"
-                    [ngClass]="{ 'is-invalid': f.submitted && condition.invalid }"
-                    required>
-          <mat-option *ngFor="let condition of conditions" [value]="condition">{{condition}}</mat-option>
-        </mat-select>
-        <div *ngIf="f.submitted && condition.invalid" class="invalid-input mt-2">
-          <!-- individual validation errors -->
-          <div *ngIf="condition.errors?.required">{{'register.isEmpty' | translate}}</div>
-        </div>
-      </div>
-
     </mat-card>
 
     <app-dynamic-panel *ngIf="auction.category" [category]="auction.category" [selectedValues]="[]"
                        (selectEmitter)="receiveSelectedData($event)"></app-dynamic-panel>
 
     <mat-card>
-      <div class="form-group w-50">
-        <label for="comment">{{'newAuction.description' | translate}}</label>
-        <textarea class="form-control"
-                  rows="7"
-                  id="comment"
-                  required minlength="5"
-                  required maxlength="600"
-                  #description="ngModel"
-                  [(ngModel)]="auction.description"
-                  [ngClass]="{ 'is-invalid': f.submitted && description.invalid }"
-                  name="description" required></textarea>
-        <div *ngIf="f.submitted && description.invalid" class="invalid-input mt-2">
-          <!-- individual validation errors -->
-          <div *ngIf="description.errors?.required">{{'register.isEmpty' | translate}}</div>
-          <div *ngIf="description.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+      <div class="row">
+        <div class="form-group col-12 col-md-8 col-lg-6">
+          <label for="comment">{{'newAuction.description' | translate}}</label>
+          <textarea class="form-control"
+                    rows="7"
+                    id="comment"
+                    required minlength="5"
+                    required maxlength="600"
+                    #description="ngModel"
+                    [(ngModel)]="auction.description"
+                    [ngClass]="{ 'is-invalid': f.submitted && description.invalid }"
+                    name="description" required></textarea>
+          <div *ngIf="f.submitted && description.invalid" class="invalid-input mt-2">
+            <!-- individual validation errors -->
+            <div *ngIf="description.errors?.required">{{'register.isEmpty' | translate}}</div>
+            <div *ngIf="description.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+          </div>
         </div>
       </div>
     </mat-card>
 
     <mat-card>
       <label>{{'newAuction.contactData' | translate}}</label>
-      <div class="form-group mt-2">
-        <label>{{'newAuction.city' | translate}}</label>
-        <input class="form-control w-50"
-               autocomplete="off"
-               ngx-google-places-autocomplete
-               [options]='options'
-               name="input"
-               placeholder="{{'newAuction.setCity' | translate}}"
-               #placesRef="ngx-places"
-               #city="ngModel"
-               [(ngModel)]="cityName"
-               (onAddressChange)="handleAddressChange($event)"
-               [ngClass]="{ 'is-invalid': f.submitted && cityName.invalid }"
-               required/>
-        <div *ngIf="f.submitted && (city.invalid || !checkName())" class="invalid-input mt-2">
-          <!-- individual validation errors -->
-          <div *ngIf="city.errors?.required">{{'register.isEmpty' | translate}}</div>
-          <div *ngIf="!checkName()">{{'register.cityIsNotProvideByGoogle' | translate}}</div>
+      <div class="row">
+        <div class="form-group col-8 col-sm-6 col-md-4 col-lg-3 mt-2">
+          <label>{{'newAuction.city' | translate}}</label>
+          <input class="form-control"
+                 autocomplete="off"
+                 ngx-google-places-autocomplete
+                 [options]='options'
+                 name="input"
+                 placeholder="{{'newAuction.setCity' | translate}}"
+                 #placesRef="ngx-places"
+                 #city="ngModel"
+                 [(ngModel)]="cityName"
+                 (onAddressChange)="handleAddressChange($event)"
+                 [ngClass]="{ 'is-invalid': f.submitted && city.invalid }"
+                 required/>
+          <div *ngIf="f.submitted && (city.invalid || !checkName())" class="invalid-input mt-2">
+            <!-- individual validation errors -->
+            <div *ngIf="city.errors?.required">{{'register.isEmpty' | translate}}</div>
+            <div *ngIf="!checkName()">{{'register.cityIsNotProvideByGoogle' | translate}}</div>
+          </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-8 col-sm-6 col-md-4 col-lg-3">
+          <label>{{'newAuction.email' | translate}}</label>
+          <input type="text"
+                 id="email"
+                 class="form-control"
+                 name="email"
+                 [(ngModel)]="email"
+                 disabled/>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-8 col-sm-6 col-md-4 col-lg-3">
+          <label>{{'register.urName' | translate}}</label>
+          <input class="form-control" [(ngModel)]="name" name="name" disabled>
+        </div>
+        <div class="w-100"></div>
+        <div class="form-group col-8 col-sm-6 col-md-4 col-lg-3">
+          <label>{{'newAuction.phone' | translate}}</label>
+          <input class="form-control" [(ngModel)]="auction.phone" name="phone">
         </div>
       </div>
-      <div class="form-group">
-        <label>{{'newAuction.email' | translate}}</label>
-        <input type="text"
-               id="email"
-               class="form-control w-50"
-               name="email"
-               [(ngModel)]="email"
-               disabled/>
-      </div>
-
-      <div class="form-group">
-        <label>{{'register.urName' | translate}}</label>
-        <input class="form-control w-25" [(ngModel)]="name" name="name" disabled>
-      </div>
-      <div class="form-group">
-        <label>{{'newAuction.phone' | translate}}</label>
-        <input class="form-control w-25" [(ngModel)]="auction.phone" name="phone">
-      </div>
     </mat-card>
+
     <mat-spinner *ngIf="isSaving" class="spinner-center"></mat-spinner>
+
     <mat-card class="h-100">
       <div class="w-100" #div [ngStyle]="{'height.px': div.offsetWidth / 5}">
         <app-drag-drop class="h-100" [maxAmountOfImages]="maxSizeOfImages"
@@ -139,18 +147,20 @@
       </div>
       <div class="row">
         <ng-container *ngIf="previewUrl.length > 0">
-          <div class="col-3" *ngFor="let number of [0,1,2,3]">
+          <div class="col-6 col-sm-6 col-md-3" *ngFor="let number of [0,1,2,3]">
             <div #div1>
               <mat-card [ngClass]="{'selected': selected == number}" [ngStyle]="{'height.px': div1.offsetWidth}"
                         class="w-100" (click)="selectMainPhoto(number)">
                 <app-image *ngIf="previewUrl[number]" [path]="previewUrl[number]"></app-image>
-                <fa-icon *ngIf="previewUrl[number]" class="removeImage" [icon]="faRemove" (click)="removeImage(number)"></fa-icon>
+                <fa-icon *ngIf="previewUrl[number]" class="remove-image" [icon]="faRemove"
+                         (click)="removeImage(number)"></fa-icon>
               </mat-card>
             </div>
           </div>
         </ng-container>
       </div>
     </mat-card>
+
     <div class="row">
       <div class="col-3"></div>
       <div class="col-6">

@@ -42,7 +42,9 @@
     "condition": "Condition ",
     "views": "Views ",
     "date": "Added date ",
-    "userAuctions": "User auction "
+    "userAuctions": "User auction ",
+    "favorite": "Add to favorite",
+    "savedFavorite": "Your saved auctions"
   },
   "newAuction": {
     "start": "let's get started",
@@ -86,7 +88,7 @@
   },
   "myProfile": {
     "photoButton": "Click to change photo",
-    "welcome": "Welcome",
+    "welcome": "About me",
     "call": "Call",
     "changeData": "Change data",
     "changePassword": "Change password",
@@ -96,9 +98,13 @@
     "title": "Send message",
     "send": "Send",
     "cancel": "Cancel",
+    "content": "Message content",
     "sent": "Your message has been sent",
     "confirm": "Confirmation",
-    "login": "Please login to your account before you can send a message"
+    "login": "Please login to your account before you can send a message",
+    "dailyViews": "Daily views",
+    "dailyPhone": "Daily phone clicks",
+    "after-sent": "Your message has been sent"
   },
   "myAuction": {
     "all": "All",
@@ -115,5 +121,12 @@
     "extend": "Extend",
     "createDate": "Added date",
     "expiredDate": "Expiration  date"
+  },
+  "report": {
+    "reason": "Select reason",
+    "description": "Describe report reason",
+    "email": "e-mail",
+    "send": "Send",
+    "auction": "Report auction"
   }
 }

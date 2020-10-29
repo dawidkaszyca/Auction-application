@@ -11,7 +11,7 @@
            class="form-control w-100 text-center" disabled/>
   </div>
   <div class="nopadding">
-    <button [disabled]="pagination.page >= amountOfPages + 1" (click)="changeInput(1)" type="button"
+    <button [disabled]="pagination.page >= amountOfPages - 1" (click)="changeInput(1)" type="button"
             class="btn btn-primary btn-circle btn-xl">>
     </button>
   </div>

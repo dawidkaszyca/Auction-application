@@ -27,10 +27,11 @@ public class StatisticController {
     public ResponseEntity getAuctionStatisticsById(@PathVariable Long id) {
         try {
             Map<StatisticKeyEnum, List<StatisticDTO>> auctionStatistic = statisticService.getAuctionStatisticsById(id);
-            return new ResponseEntity(auctionStatistic, HttpStatus.OK);
+            return auctionStatistic.isEmpty() ?
+                    new ResponseEntity(HttpStatus.NO_CONTENT) : new ResponseEntity(auctionStatistic, HttpStatus.OK);
         } catch (Exception e) {
-            log.info("Unable to find statistics for the given auction ID");
-            return new ResponseEntity(HttpStatus.valueOf(422));
+            log.info("Unable to find statistics for the given auction id");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
     }
 }

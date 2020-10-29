@@ -1,12 +1,15 @@
 package pl.dawid.kaszyca.controller;
 
-import org.springframework.boot.configurationprocessor.json.JSONException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import pl.dawid.kaszyca.service.WebSocketService;
 
 @Controller
+@Slf4j
 @MessageMapping("/queue")
 public class SocketController {
 
@@ -17,7 +20,13 @@ public class SocketController {
     }
 
     @MessageMapping("/users/{name}")
-    public void getAmountOfNotifications(@DestinationVariable String name) throws JSONException {
-        webSocketService.sendStatusMessageAfterLogin(name);
+    public ResponseEntity getAmountOfNotifications(@DestinationVariable String name) {
+        try {
+            webSocketService.sendStatusMessageAfterLogin(name);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot send status of notifications for current user");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
+        }
     }
 }

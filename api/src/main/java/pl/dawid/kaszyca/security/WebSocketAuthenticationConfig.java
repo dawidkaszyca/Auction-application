@@ -34,6 +34,7 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
     TokenProvider tokenProvider;
 
     private static final String SESSION_ID = "simpSessionId";
+
     private static final String DESTINATION = "simpDestination";
 
     /**

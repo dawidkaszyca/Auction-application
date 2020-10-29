@@ -43,9 +43,9 @@ public class TokenProvider {
     public void init() {
         this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
         this.tokenValidityInMilliseconds =
-                1000 * jsonWebTokenProperties.getTokenValidityInSeconds();
+                1000L * jsonWebTokenProperties.getTokenValidityInSeconds();
         this.tokenValidityInMillisecondsForRememberMe =
-                1000 * jsonWebTokenProperties.getTokenValidityInSecondsForRememberMe();
+                1000L * jsonWebTokenProperties.getTokenValidityInSecondsForRememberMe();
     }
 
     public String createToken(Authentication authentication, boolean rememberMe) {
@@ -70,8 +70,9 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parser()
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
 
@@ -87,7 +88,10 @@ public class TokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(key).parseClaimsJws(authToken);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(authToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             log.info("Invalid JWT token.");

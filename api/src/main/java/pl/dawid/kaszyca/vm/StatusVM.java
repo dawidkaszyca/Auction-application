@@ -5,6 +5,8 @@ import pl.dawid.kaszyca.dto.MessageDTO;
 
 @Data
 public class StatusVM {
+
     Long id;
+
     MessageDTO message;
 }

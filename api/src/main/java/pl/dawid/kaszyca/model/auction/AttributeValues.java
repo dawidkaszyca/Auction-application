@@ -21,5 +21,4 @@ public class AttributeValues implements Serializable {
     @ManyToOne
     @JsonIgnore
     private CategoryAttributes categoryAttributes;
-
 }

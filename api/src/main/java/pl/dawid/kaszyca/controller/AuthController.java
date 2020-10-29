@@ -41,7 +41,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            Boolean rememberMe = (loginVM.getRememberMe() == null) ? false : loginVM.getRememberMe();
+            boolean rememberMe = Boolean.TRUE.equals(loginVM.getRememberMe());
             String jwt = tokenProvider.createToken(authentication, rememberMe);
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);

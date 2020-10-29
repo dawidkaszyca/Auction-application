@@ -2,6 +2,33 @@
   box-shadow: none !important;
   height: 65%;
 }
+
 mat-card-title {
   font-size: medium;
+}
+
+.font-size {
+  font-size: 1.0rem;
+}
+
+
+@media screen and (max-width: 1024px) {
+  .hide-params {
+    display: none !important;
+  }
+  .to-center {
+    object-fit: contain !important;
+    display: block;
+    position: absolute;
+    height: 90%;
+    width: 90%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.tag {
+  text-align: center;
+  z-index: 100;
 }

@@ -2,18 +2,21 @@
   <form #f="ngForm" (ngSubmit)="f.form.valid" novalidate class="feedback-form">
     <label>{{'newAuction.price' | translate}}</label>
     <div class="row">
-      <div class="col-6 form-group">
+      <div class="col-lg-6 col-md-12 form-group">
         <input type="number"
                name="minPrice"
-               class="form-control w-100"
+               name="minPrice"
+               class="form-control"
                [(ngModel)]="minPrice"
+               [ngClass]="{ 'is-invalid': f.submitted && maxPrice != 0 && minPrice != 0 && maxPrice < minPrice}"
                placeholder="{{'filter.from' | translate}}"/>
       </div>
-      <div class="col-6 form-group">
+      <div class="col-lg-6 col-md-12 form-group">
         <input type="number"
                name="maxPrice"
-               class="form-control w-100"
+               class="form-control"
                [(ngModel)]="maxPrice"
+               [ngClass]="{ 'is-invalid': f.submitted && maxPrice != 0 && minPrice != 0 && maxPrice < minPrice}"
                placeholder="{{'filter.to' | translate}}"/>
       </div>
     </div>

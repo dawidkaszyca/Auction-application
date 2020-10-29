@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Pagination} from '../../../../../shared/models/pagination';
-import {AuctionService} from '../../../../../shared/services/auction.service';
+import {Pagination} from '../../../../shared/models/pagination';
+import {AuctionService} from '../../../../shared/services/auction.service';
 
 @Component({
   selector: 'app-pagination-short-bar',
@@ -25,9 +25,7 @@ export class PaginationShortBarComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.numberOfAuctions) {
       this.setDataAfterChanges();
-    }
   }
 
   private addPaginationListener() {

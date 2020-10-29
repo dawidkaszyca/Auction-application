@@ -2,9 +2,7 @@ package pl.dawid.kaszyca.model.auction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,7 +21,7 @@ public class CategoryAttributes implements Serializable {
     @Column(columnDefinition = "VARCHAR(64)")
     private String attribute;
 
-    @OneToMany(mappedBy = "categoryAttributes", cascade ={CascadeType.ALL})
+    @OneToMany(mappedBy = "categoryAttributes", cascade = {CascadeType.ALL})
     private List<AttributeValues> attributeValues;
 
     @ManyToOne

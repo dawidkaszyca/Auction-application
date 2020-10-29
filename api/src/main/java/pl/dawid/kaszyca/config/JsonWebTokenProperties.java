@@ -12,8 +12,11 @@ import org.springframework.stereotype.Component;
 public class JsonWebTokenProperties {
 
     String secretKey;
+
     String base64Secret;
+
     int tokenValidityInSeconds;
+
     int tokenValidityInSecondsForRememberMe;
 }
 

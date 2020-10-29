@@ -1,0 +1,9 @@
+mat-select {
+  min-width: 75px;
+}
+
+@media screen and (min-width: 576px) {
+  .hidden-sm-only {
+    display: none !important;
+  }
+}

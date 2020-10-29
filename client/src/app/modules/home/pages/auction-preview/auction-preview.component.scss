@@ -1,7 +1,29 @@
+mat-card{
+  font-size: 1.0rem;
+}
+
 textarea {
   resize: none;
 }
 
+.font-size {
+  font-size: 1.0rem;
+  font-weight: 900;
+}
+
+
 .remove-shadow {
   box-shadow: none !important;
+}
+
+@media screen and (max-width: 1200px) {
+  .col-12-height {
+    height: 570px!important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .col-12-height {
+    height: 610px!important;
+  }
 }

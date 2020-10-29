@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {AuctionService} from '../../../../shared/services/auction.service';
-import {Filter} from '../../../../shared/models/filter';
-import {AuctionBaseField} from '../../../../shared/models/auction-base-field';
-import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {AuctionService} from '../../../shared/services/auction.service';
+import {Filter} from '../../../shared/models/filter';
+import {AuctionBaseField} from '../../../shared/models/auction-base-field';
+import {AttachmentService} from '../../../shared/services/attachment.service';
 import {PaginationBarComponent} from '../../components/pagination/pagination-bar/pagination-bar.component';
-import {Pagination} from '../../../../shared/models/pagination';
+import {Pagination} from '../../../shared/models/pagination';
 import {PaginationShortBarComponent} from '../../components/pagination/pagination-short-bar/pagination-short-bar.component';
 
 @Component({
