@@ -31,13 +31,17 @@
               </div>
               <div class="col-6 h-100">
                 <p *ngIf="auction?.price"
-                    class="text-right pr-2">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</p>
+                   class="text-right pr-2">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</p>
                 <button *ngIf="!call" class="btn btn-primary w-100 mt-1"
                         (click)="call = true">{{'myProfile.call' | translate}}</button>
-                <button *ngIf="call" (click)="call = false" class="btn btn-primary w-100 mt-1">{{auction?.phone}}</button>
-                <button class="btn btn-primary w-100 mt-2" (click)="routeToUserClassFields()">{{'myProfile.classifieds' | translate}}</button>
-                <button class="btn btn-primary w-100 mt-2" (click)="sendMessage()">{{'dialog.title' | translate}}</button>
-                <button class="btn btn-primary w-100 mt-2" (click)="addToFavorite()">{{'auction.favorite' | translate}}</button>
+                <button *ngIf="call" (click)="call = false"
+                        class="btn btn-primary w-100 mt-1">{{auction?.phone}}</button>
+                <button class="btn btn-primary w-100 mt-2"
+                        (click)="routeToUserClassFields()">{{'myProfile.classifieds' | translate}}</button>
+                <button class="btn btn-primary w-100 mt-2"
+                        (click)="addToFavorite()">{{'auction.favorite' | translate}}</button>
+                <button class="btn btn-primary w-100 mt-2"
+                        (click)="openReportDialog()">{{'report.auction' | translate}}</button>
               </div>
             </div>
           </div>
@@ -61,15 +65,13 @@
             <input class="form-control w-100" [value]="auction?.condition" disabled>
           </div>
         </div>
-        <div class="row" *ngFor="let id of auctionDetails; let i = index">
-          <div *ngIf="auctionDetails.length > i * 2" class="col-sm-6">
-            <label class="mt-2">{{auctionDetails[i * 2].categoryAttribute}}</label>
-            <input class="form-control w-100" [value]="auctionDetails[i * 2].attributeValue" disabled>
-          </div>
-          <div *ngIf="auctionDetails.length > i * 2 + 1" class="col-sm-6">
-            <label class="mt-2">{{auctionDetails[i * 2 + 1].categoryAttribute}}</label>
-            <input class="form-control w-100" [value]="auctionDetails[i * 2 + 1].attributeValue" disabled>
-          </div>
+        <div class="row">
+          <ng-container *ngFor="let id of auctionDetails; let i = index">
+            <div class="col-sm-6">
+              <label class="mt-2">{{auctionDetails[i].categoryAttribute}}</label>
+              <input class="form-control w-100" [value]="auctionDetails[i].attributeValue" disabled>
+            </div>
+          </ng-container>
         </div>
       </div>
       <div class="col-12 col-md-6">
@@ -83,4 +85,5 @@
       </div>
     </div>
   </mat-card>
+  <app-send-message class="mt-4" [userId]="auction?.userId"></app-send-message>
 </div>

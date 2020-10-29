@@ -8,6 +8,7 @@ import {Filter} from '../models/filter';
 import {SERVER_API_URL} from '../../../app.constants';
 import {Auction} from '../models/auction';
 import {Pagination} from '../models/pagination';
+import {ReportAuction} from '../models/report-auction';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class AuctionService {
   private AUCTIONS = `${SERVER_API_URL}/auctions`;
   private AUCTIONS_TO_EDIT = this.AUCTIONS + '/edit';
   private FAVORITE_AUCTIONS = `${SERVER_API_URL}/auction` + '/favorites';
+  private REPORT_AUCTION = `${SERVER_API_URL}/report` + '/auctions';
 
   filter: BehaviorSubject<Filter>;
   pagination: BehaviorSubject<Pagination>;
@@ -94,5 +96,9 @@ export class AuctionService {
     let headers = new HttpHeaders();
     headers = headers.append('content-type', 'application/json');
     return this.http.post<JSON>(this.FAVORITE_AUCTIONS, auctionId.toString(), {headers});
+  }
+
+  sendNewReport(reportAuction: ReportAuction) {
+    return this.http.post<ReportAuction>(this.REPORT_AUCTION, reportAuction);
   }
 }

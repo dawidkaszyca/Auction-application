@@ -98,11 +98,13 @@
     "title": "Send message",
     "send": "Send",
     "cancel": "Cancel",
+    "content": "Message content",
     "sent": "Your message has been sent",
     "confirm": "Confirmation",
     "login": "Please login to your account before you can send a message",
     "dailyViews": "Daily views",
-    "dailyPhone": "Daily phone clicks"
+    "dailyPhone": "Daily phone clicks",
+    "after-sent": "Your message has been sent"
   },
   "myAuction": {
     "all": "All",
@@ -119,5 +121,12 @@
     "extend": "Extend",
     "createDate": "Added date",
     "expiredDate": "Expiration  date"
+  },
+  "report": {
+    "reason": "Select reason",
+    "description": "Describe report reason",
+    "email": "e-mail",
+    "send": "Send",
+    "auction": "Report auction"
   }
 }

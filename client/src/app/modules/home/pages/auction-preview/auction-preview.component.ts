@@ -4,11 +4,11 @@ import {Auction} from '../../../shared/models/auction';
 import {AuctionService} from '../../../shared/services/auction.service';
 import {AttachmentService} from '../../../shared/services/attachment.service';
 import {AuctionDetails} from '../../../shared/models/auction-details';
-import {SendMessageService} from '../../../shared/services/send-message.service';
 import {AuthService} from '../../../core/security/auth.service';
-import {InfoDialogService} from '../../../shared/services/info-dialog.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Image} from '../../../shared/models/image';
+import {MatDialog} from '@angular/material/dialog';
+import {ReportAuctionComponent} from '../../components/report-auction/report-auction.component';
 
 @Component({
   selector: 'app-auction-preview',
@@ -26,8 +26,7 @@ export class AuctionPreviewComponent implements OnInit {
   userPhoto: any;
 
   constructor(private router: ActivatedRoute, private auctionService: AuctionService, private attachmentService: AttachmentService,
-              private sendMessageService: SendMessageService, private authService: AuthService, private infoDialogService: InfoDialogService,
-              private translate: TranslateService, private route: Router) {
+              private authService: AuthService, private translate: TranslateService, private route: Router, public dialog: MatDialog) {
     this.call = false;
   }
 
@@ -71,15 +70,6 @@ export class AuctionPreviewComponent implements OnInit {
     this.selected.url = url;
   }
 
-  sendMessage() {
-    if (this.authService.isLogged()) {
-      this.sendMessageService.openConfirmationDialog(this.auction.userId);
-    } else {
-      const message = this.translate.instant('dialog.login');
-      this.infoDialogService.openConfirmationDialog(message);
-    }
-  }
-
   private loadUserPhoto() {
     this.attachmentService.getUserPhotoById(this.auction.userId).subscribe(res => {
       this.userPhoto = res[0];
@@ -88,7 +78,7 @@ export class AuctionPreviewComponent implements OnInit {
 
   routeToUserClassFields() {
     this.route.navigate(['auction-user'],
-      {queryParams: {'id': this.auction.userId, 'name': this.auction.userFirstName}});
+      {queryParams: {id: this.auction.userId, name: this.auction.userFirstName}});
   }
 
   private loadImages(res: Image[]) {
@@ -97,6 +87,25 @@ export class AuctionPreviewComponent implements OnInit {
   }
 
   addToFavorite() {
-    this.auctionService.addToFavorite(this.auctionId).subscribe();
+    if (this.authService.isLogged()) {
+      this.auctionService.addToFavorite(this.auctionId).subscribe(it => {
+
+      }, error => {
+
+      });
+    } else {
+      this.route.navigate(['/login'], {queryParams: {returnUrl: this.route.url}});
+    }
+  }
+
+  openReportDialog() {
+    this.dialog.open(ReportAuctionComponent,
+      {
+        width: '750px',
+        height: '530px',
+        data: {
+          auctionId: this.auctionId
+        }
+      });
   }
 }

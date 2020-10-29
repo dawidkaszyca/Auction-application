@@ -6,7 +6,7 @@ import {Conversation} from '../../../shared/models/conversation';
 import {NewMessage} from '../../../shared/models/new-message';
 import {Message} from '../../../shared/models/message';
 import {ScrollToBottomDirective} from '../../../shared/directives/scroll-to-bottom.directive';
-import {ContactComponent} from '../../components/contact/contact.component';
+import {ContactComponent} from '../../components/chat/contact/contact.component';
 import {Status} from '../../../shared/models/status';
 import {timer} from 'rxjs';
 

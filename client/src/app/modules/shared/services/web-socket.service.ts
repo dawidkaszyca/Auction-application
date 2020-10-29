@@ -59,7 +59,6 @@ export class WebsocketService {
     }
   }
 
-  // on error, schedule a reconnection attempt
   errorCallBack(error) {
     this.isReconnecting = true;
     this.isConnected = false;
@@ -68,10 +67,6 @@ export class WebsocketService {
     }, 3000);
   }
 
-  /**
-   * Send message to sever via web socket
-   * @param {*} message
-   */
   _sendMessage(message) {
     console.log('calling logout api via web socket');
     this.stompClient.send(this.privateChannel, {'X-Authorization': 'Bearer ' + this.token}, JSON.stringify(message));

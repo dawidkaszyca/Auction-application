@@ -98,11 +98,13 @@
     "title": "Wyślij wiadomość",
     "send": "Wyślij",
     "cancel": "Zamknij",
+    "content": "Treść wiadomości",
     "sent": "Twoja wiadomość została wysłana",
     "confirm": "Potwierdzenie",
     "login": "Proszę o zalogowanie się przed wysłaniem wiadomości",
     "dailyViews": "Dzienne wyświetlenia",
-    "dailyPhone": "Dzienne wyświetlenia telefonu"
+    "dailyPhone": "Dzienne wyświetlenia telefonu",
+    "after-sent": "Twoja wiadomość została wysłana"
   },
   "myAuction": {
     "all": "Wszystkie",
@@ -119,6 +121,13 @@
     "extend": "Przedłuż",
     "createDate": "Data dodania",
     "expiredDate": "Data wygasnięcia"
+  },
+  "report": {
+    "reason": "Wybierz powód",
+    "description": "Opisz przyczynę zgłoszenia",
+    "email": "e-mail",
+    "send": "Wyślij",
+    "auction": "Zgłoś naruszenie"
   }
 }
 
