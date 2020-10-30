@@ -1,9 +1,10 @@
 import {CategoryAttributes} from './category-attributes';
 import {City} from './auction-base-field';
 import {Pagination} from './pagination';
+import {State} from '../config/enums';
 
 export class Filter extends Pagination {
-  state = 'ACTIVE';
+  state = State.ACTIVE;
   userId;
   searchWords: string[];
   city: City;

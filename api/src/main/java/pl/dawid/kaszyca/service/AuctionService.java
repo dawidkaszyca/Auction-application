@@ -61,6 +61,7 @@ public class AuctionService {
 
     public Long saveAuction(AuctionDTO auctionVM) {
         Auction auction = MapperUtils.map(auctionVM, Auction.class);
+        auction.setDataAfterMapper();
         setDataToNewAuction(auctionVM, auction);
         Optional<User> user = userService.getCurrentUserObject();
         if (user.isPresent()) {
@@ -74,6 +75,7 @@ public class AuctionService {
 
     public Long updateAuction(AuctionDTO auctionVM) {
         Auction auction = MapperUtils.map(auctionVM, Auction.class);
+        auction.setDataAfterMapper();
         setDataToNewAuction(auctionVM, auction);
         setViewers(auction);
         if (auctionVM.getId() != null) {

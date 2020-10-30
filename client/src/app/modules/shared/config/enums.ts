@@ -29,6 +29,12 @@ export enum Order {
 }
 
 export enum State {
+  ALL = 'ALL',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}
+
+export enum StateKey {
   ACTIVE = 'myAuction.active',
   INACTIVE = 'myAuction.inactive',
 }

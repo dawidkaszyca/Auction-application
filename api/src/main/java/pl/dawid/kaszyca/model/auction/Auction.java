@@ -71,11 +71,18 @@ public class Auction implements Serializable {
 
     @CreatedDate
     @Column(name = "created_date", updatable = false)
-    private Instant createdDate = Instant.now();
+    private Instant createdDate;
 
     @CreatedDate
     @Column(name = "expired_date")
-    private Instant expiredDate = getCurrentDatePlusOneMonth();
+    private Instant expiredDate;
+
+    public void setDataAfterMapper() {
+        if (id != null) {
+            createdDate = Instant.now();
+        }
+        expiredDate = getCurrentDatePlusOneMonth();
+    }
 
     private Instant getCurrentDatePlusOneMonth() {
         return DateUtils.addMonths(new Date(), 1).toInstant();

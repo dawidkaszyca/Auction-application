@@ -53,7 +53,9 @@ export class AuctionPreviewComponent implements OnInit {
   private loadAuctionPhotos() {
     this.attachmentService.getAuctionPhotosById(this.auctionId).subscribe(
       res => {
-        this.loadImages(res);
+        if (res) {
+          this.loadImages(res);
+        }
       });
   }
 
