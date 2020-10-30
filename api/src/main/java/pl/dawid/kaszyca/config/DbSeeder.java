@@ -234,7 +234,7 @@ class DbSeeder implements CommandLineRunner {
             auction.setCity(getRandomCity());
             auction.setPhone(getRandomPhoneNumber());
             auction.setPrice(getRandomPrice());
-            auction.setViewers(getRandomPrice());
+            auction.setViewers(Long.valueOf(getRandomPrice()));
             auction.setDescription(getDescription());
             auction.setTitle(getTitle());
             if (!categoryString.equals("Fotografia")) {

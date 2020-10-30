@@ -65,7 +65,9 @@ public class Auction implements Serializable {
     @Nullable
     private List<Image> images;
 
-    private int viewers;
+    private Long viewers = 0L;
+
+    private Long phoneClicks = 0L;
 
     @CreatedDate
     @Column(name = "created_date", updatable = false)

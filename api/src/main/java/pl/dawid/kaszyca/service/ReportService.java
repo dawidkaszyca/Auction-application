@@ -16,10 +16,13 @@ public class ReportService {
 
     private ReportAuctionRepository reportAuctionRepository;
     private AuctionService auctionService;
+    private StatisticService statisticService;
 
-    public ReportService(ReportAuctionRepository reportAuctionRepository, AuctionService auctionService) {
+    public ReportService(ReportAuctionRepository reportAuctionRepository, AuctionService auctionService,
+                         StatisticService statisticService) {
         this.reportAuctionRepository = reportAuctionRepository;
         this.auctionService = auctionService;
+        this.statisticService = statisticService;
     }
 
     public void saveNewReport(ReportAuctionDTO reportAuctionDTO) {
@@ -28,6 +31,7 @@ public class ReportService {
         if (auction != null) {
             reportedAuction.setAuction(auction);
             reportAuctionRepository.save(reportedAuction);
+            statisticService.incrementDailyAuctionReports();
         } else {
             throw new AuctionNotExistException();
         }
