@@ -8,6 +8,8 @@ import {MatSelectChange} from '@angular/material/select';
 import {MatDialog} from '@angular/material/dialog';
 import {StatisticDialogComponent} from '../../../shared/components/statistic-dialog/statistic-dialog.component';
 import {EditAuctionComponent} from '../../pages/edit-auction/edit-auction.component';
+import {EnumsHelper, Order, PageSize, SortKey, State, SortField, DialogKey} from '../../../shared/config/enums';
+import {DialogService} from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-my-auction-list',
@@ -18,12 +20,11 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
 
   @Input()
   userId: number;
-
   private category;
   private filter: Filter;
   auctions: AuctionBaseField[];
   sortList: string[];
-  sortValue = 'sort.newest';
+  sortValue = SortKey.NEWEST_KEY;
   pageSizeList: number[];
   noContent: boolean;
   pageSize = 10;
@@ -36,7 +37,7 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   selectedAuctions: number[];
 
   constructor(private auctionService: AuctionService, private attachmentService: AttachmentService, private router: Router,
-              public dialog: MatDialog) {
+              public dialog: MatDialog, private dialogService: DialogService) {
     this.selectedAuctions = [];
     this.selectedState = [];
   }
@@ -75,9 +76,6 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
           this.noContent = true;
         }
         this.loadPhotos();
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -109,21 +107,21 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
 
   selectSort(event: MatSelectChange) {
     this.sortValue = event.value;
-    if (event.value === 'sort.minPrice') {
-      this.filter.sort = 'DESC';
-      this.filter.sortByFieldName = 'price';
-    } else if (event.value === 'sort.maxPrice') {
-      this.filter.sort = 'ASC';
-      this.filter.sortByFieldName = 'price';
-    } else if (event.value === 'sort.popularity') {
-      this.filter.sort = 'DESC';
-      this.filter.sortByFieldName = 'viewers';
-    } else if (event.value === 'sort.newest') {
-      this.filter.sort = 'DESC';
-      this.filter.sortByFieldName = 'createdDate';
-    } else if (event.value === 'sort.latest') {
-      this.filter.sort = 'ASC';
-      this.filter.sortByFieldName = 'createdDate';
+    if (event.value === SortKey.MIN_PRICE_KEY) {
+      this.filter.sort = Order.DESC;
+      this.filter.sortByFieldName = SortField.PRICE;
+    } else if (event.value === SortKey.MAX_PRICE_KEY) {
+      this.filter.sort = Order.ASC;
+      this.filter.sortByFieldName = SortField.PRICE;
+    } else if (event.value === SortKey.POPULARITY_KEY) {
+      this.filter.sort = Order.DESC;
+      this.filter.sortByFieldName = SortField.VIEWERS;
+    } else if (event.value === SortKey.NEWEST_KEY) {
+      this.filter.sort = Order.DESC;
+      this.filter.sortByFieldName = SortField.CREATED_DATE;
+    } else if (event.value === SortKey.LATEST_KEY) {
+      this.filter.sort = Order.ASC;
+      this.filter.sortByFieldName = SortField.CREATED_DATE;
     }
     this.loadAuctionsData();
   }
@@ -136,22 +134,10 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   }
 
   private loadMaps() {
-    this.states = [];
-    this.selectedState.push('myAuction.active');
-    this.states.push('myAuction.active');
-    this.states.push('myAuction.inactive');
-    this.sortList = [];
-    this.sortList.push('sort.minPrice');
-    this.sortList.push('sort.maxPrice');
-    this.sortList.push('sort.newest');
-    this.sortList.push('sort.latest');
-    this.sortList.push('sort.popularity');
-    this.pageSizeList = [];
-    this.pageSizeList.push(10);
-    this.pageSizeList.push(15);
-    this.pageSizeList.push(20);
-    this.pageSizeList.push(25);
-    this.pageSizeList.push(30);
+    this.selectedState.push(State.ACTIVE);
+    this.states = EnumsHelper.getValuesByEnumName(State);
+    this.sortList = EnumsHelper.getValuesByEnumName(SortKey);
+    this.pageSizeList = EnumsHelper.getValuesByEnumName(PageSize);
   }
 
   openAuctionPage(auction: AuctionBaseField) {
@@ -200,6 +186,8 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
       });
       this.selectedAuctions = [];
       this.loadAuctionsData();
+    }, error => {
+      this.dialogService.openWarningDialog(DialogKey.REMOVE_AUCTION_ERROR);
     });
   }
 
@@ -207,10 +195,10 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   selectState(event: MatSelectChange) {
     if (event.value.length === 2) {
       this.filter.state = 'ALL';
-    } else if (event.value[0] === 'myAuction.inactive') {
-      this.filter.state = 'INACTIVE';
+    } else if (event.value[0] === State.INACTIVE) {
+      this.filter.state = State.INACTIVE;
     } else {
-      this.filter.state = 'ACTIVE';
+      this.filter.state = State.ACTIVE;
     }
     this.loadAuctionsData();
   }
@@ -218,6 +206,9 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   extendAuctionTime(auction: AuctionBaseField) {
     this.auctionService.extendAuctionTime(auction.id).subscribe(res => {
       auction.expiredDate = res;
+      this.dialogService.openInfoDialog(DialogKey.EXTEND_AUCTION_TIME);
+    }, error => {
+      this.dialogService.openWarningDialog(DialogKey.EXTEND_AUCTION_TIME_ERROR);
     });
   }
 

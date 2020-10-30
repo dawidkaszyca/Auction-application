@@ -104,7 +104,20 @@
     "login": "Proszę o zalogowanie się przed wysłaniem wiadomości",
     "dailyViews": "Dzienne wyświetlenia",
     "dailyPhone": "Dzienne wyświetlenia telefonu",
-    "after-sent": "Twoja wiadomość została wysłana"
+    "after-sent": "Twoja wiadomość została wysłana",
+    "info": "Wiadomość",
+    "close": "ZAMKNIJ",
+    "warning": "Ups. Coś poszło nie tak",
+    "after-report": "Twoje zgłoszenie zostało wysłane",
+    "after-favorite": "Ogłoszenie zostało dodane do ulubionych",
+    "after-favorite-error": "Próba dodania ogłoszenia do ulubionych nieudana. Spróbuj ponownie później.",
+    "save-auction": "Twoja aukcja nie została zapisana. Spróbuj jeszcze raz.",
+    "update-auction": "Twoja aukcja nie została zmieniona. Spróbuj jeszcze raz.",
+    "remove-auction": "Aukcja nie została usunięta. Spróbuj jeszcze raz.",
+    "extend-time": "Czas ważności aukcji został zwiększony o miesiąc",
+    "extend-time-error": "Czas ważności aukcji nie został zwiększony. Spróbuj jeszcze raz.",
+    "save-attachment": "Załączniki nie zostały zapisane. Spróbuj jeszcze raz.",
+    "update-attachment": "Załączniki nie zostały zmienione. Spróbuj jeszcze raz."
   },
   "myAuction": {
     "all": "Wszystkie",
@@ -127,7 +140,11 @@
     "description": "Opisz przyczynę zgłoszenia",
     "email": "e-mail",
     "send": "Wyślij",
-    "auction": "Zgłoś naruszenie"
+    "auction": "Zgłoś naruszenie",
+    "spam": "Spam",
+    "invalid-content": "Niedozwolona treść / przedmiot / usługa",
+    "expired": "Przeterminowane ogłoszenie / sprzedane",
+    "fraud": "Oszustwo / podejrzenie oszustwa"
   }
 }
 

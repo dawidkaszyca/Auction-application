@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Pagination} from '../../../../shared/models/pagination';
 import {AuctionService} from '../../../../shared/services/auction.service';
+import {EnumsHelper, PageSize} from '../../../../shared/config/enums';
 
 @Component({
   selector: 'app-pagination-short-bar',
@@ -8,6 +9,7 @@ import {AuctionService} from '../../../../shared/services/auction.service';
   styleUrls: ['./pagination-short-bar.component.scss']
 })
 export class PaginationShortBarComponent implements OnInit, OnChanges {
+
   @Input()
   numberOfAuctions: number;
   amountOfPages: number;
@@ -20,7 +22,7 @@ export class PaginationShortBarComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.loadMaps();
+    this.pageSizeList = EnumsHelper.getValuesByEnumName(PageSize);
     this.addPaginationListener();
   }
 
@@ -52,14 +54,5 @@ export class PaginationShortBarComponent implements OnInit, OnChanges {
     this.pagination.page += value;
     this.inputValue = this.pagination.page + 1 + '/' + this.amountOfPages;
     this.auctionService.pagination.next(this.pagination);
-  }
-
-  private loadMaps() {
-    this.pageSizeList = [];
-    this.pageSizeList.push(10);
-    this.pageSizeList.push(15);
-    this.pageSizeList.push(20);
-    this.pageSizeList.push(25);
-    this.pageSizeList.push(30);
   }
 }

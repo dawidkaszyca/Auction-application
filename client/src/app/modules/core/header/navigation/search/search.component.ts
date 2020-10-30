@@ -3,6 +3,7 @@ import {AuctionService} from '../../../../shared/services/auction.service';
 import {Filter} from '../../../../shared/models/filter';
 import {Router} from '@angular/router';
 import {City} from '../../../../shared/models/auction-base-field';
+import {EnumsHelper, Kilometer} from '../../../../shared/config/enums';
 
 @Component({
   selector: 'app-search',
@@ -27,7 +28,7 @@ export class SearchComponent implements OnInit {
 
   constructor(private auctionService: AuctionService, private router: Router) {
     this.clearVariable();
-    this.setKilometersList();
+    this.kilometersToSelect = EnumsHelper.getValuesByEnumName(Kilometer);
   }
 
   ngOnInit(): void {
@@ -74,17 +75,5 @@ export class SearchComponent implements OnInit {
     this.kilometers = 0;
     this.city = new City();
     this.cityName = '';
-  }
-
-  private setKilometersList() {
-    this.kilometersToSelect = [];
-    this.kilometersToSelect.push(0);
-    this.kilometersToSelect.push(5);
-    this.kilometersToSelect.push(10);
-    this.kilometersToSelect.push(15);
-    this.kilometersToSelect.push(20);
-    this.kilometersToSelect.push(30);
-    this.kilometersToSelect.push(50);
-    this.kilometersToSelect.push(100);
   }
 }

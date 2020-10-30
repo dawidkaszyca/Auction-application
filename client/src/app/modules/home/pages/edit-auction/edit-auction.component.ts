@@ -14,6 +14,8 @@ import {AttributesValues} from '../../../shared/models/attributes-values';
 import {Auction} from '../../../shared/models/auction';
 import {Image} from '../../../shared/models/image';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {DialogService} from '../../../shared/services/dialog.service';
+import {DialogKey} from '../../../shared/config/enums';
 
 @Component({
   selector: 'app-edit-auction',
@@ -51,7 +53,8 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
 
   constructor(private navigationService: NavigationService, private auctionService: AuctionService,
               @Inject(MAT_DIALOG_DATA) public data: any, private attachmentService: AttachmentService,
-              private activatedRoute: ActivatedRoute, private router: Router, private dialogRef: MatDialogRef<EditAuctionComponent>) {
+              private activatedRoute: ActivatedRoute, private router: Router, private dialogRef: MatDialogRef<EditAuctionComponent>,
+              private dialogService: DialogService) {
     navigationService.show = false;
     this.maxSizeOfImages = 4;
     this.isSaving = false;
@@ -90,9 +93,6 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
         this.setSelectedAttributes(res.auctionDetails);
         this.setData(res);
         window.scroll(0, 0);
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -117,9 +117,6 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
         this.conditions = res.condition;
         this.email = res.email[0];
         this.name = res.name[0];
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -168,9 +165,6 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
           }
         });
         this.maxSizeOfImages = this.maxSizeOfImages - this.previewUrl.length;
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -188,7 +182,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
       },
       err => {
         this.isSaving = false;
-        alert('TODO');
+        this.dialogService.openWarningDialog(DialogKey.UPDATE_AUCTION_ERROR);
       });
   }
 
@@ -223,6 +217,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
       },
       err => {
         this.isSaving = false;
+        this.dialogService.openWarningDialog(DialogKey.UPDATE_ATTACHMENT_ERROR);
       });
   }
 
