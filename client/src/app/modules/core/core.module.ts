@@ -14,6 +14,7 @@ import {AuthExpiredInterceptor} from './security/interceptor/auth-expired.interc
 import {AuthInterceptor} from './security/interceptor/auth.interceptor';
 import {FooterComponent} from './footer/footer.component';
 import {TranslateModule} from '@ngx-translate/core';
+import {HomeRoutingModule} from '../home/home-routing.module';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {TranslateModule} from '@ngx-translate/core';
     MatSelectModule,
     TranslateModule,
     FormsModule,
+    HomeRoutingModule,
     MatIconModule,
     MatMenuModule,
     SharedModule
