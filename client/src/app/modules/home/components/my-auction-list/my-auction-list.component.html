@@ -5,7 +5,8 @@
         <div class="col-4 col-lg-4">
           <div class="h-100 w-50 text-left d-inline-block">
             <div class="h-100 w-50 float-left">
-              <input class="h-75 w-50 pl-2" [checked]="auctions?.length === selectedAuctions?.length"
+              <input class="h-75 w-50 pl-2"
+                     [checked]="auctions?.length === selectedAuctions?.length && auctions?.length !== 0"
                      type="checkbox" (click)="selectAllAuctions()"/>
             </div>
             <div class="h-100 w-50 floating-div float-left">
@@ -83,7 +84,7 @@
                   </div>
                   <div class="col-6 col-md-4">
                     <p class="text-center m-0 text font-weight-bold pt-1 font-size">
-                      {{auction.price|currency:"zł": true|splitCurrency:auction.price}}
+                      {{auction.price|currency:"zł"|splitCurrency:auction.price}}
                     </p>
                   </div>
                 </div>

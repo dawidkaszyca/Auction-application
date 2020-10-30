@@ -4,8 +4,8 @@ import {Directive, EventEmitter, HostBinding, HostListener, Output} from '@angul
   selector: '[appDragDrop]'
 })
 export class DragDropDirective {
-  @Output() files: EventEmitter<File[]> = new EventEmitter();
 
+  @Output() files: EventEmitter<File[]> = new EventEmitter();
   @HostBinding('style.background') private background = '#eee';
 
   constructor() {

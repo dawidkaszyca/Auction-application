@@ -11,14 +11,13 @@ import {MatSelectChange} from '@angular/material/select';
 })
 export class DynamicPanelComponent implements OnInit, OnChanges {
 
-
-  @Output()
-  selectEmitter: EventEmitter<CategoryAttributes[]> = new EventEmitter();
   @Input()
   private category: string;
   attributes: CategoryAttributes[];
   @Input()
   selectedValues: CategoryAttributes[];
+  @Output()
+  selectEmitter: EventEmitter<CategoryAttributes[]> = new EventEmitter();
   show = false;
 
   constructor(private auctionService: AuctionService) {
@@ -43,9 +42,6 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
       res => {
         this.attributes = res.categoryAttributes;
         this.prepareObjectToReturn();
-      },
-      err => {
-        alert('TODO');
       });
   }
 

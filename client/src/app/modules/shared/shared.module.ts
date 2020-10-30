@@ -16,6 +16,8 @@ import {FormsModule} from '@angular/forms';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {StatisticDialogComponent} from './components/statistic-dialog/statistic-dialog.component';
+import { DialogInfoComponent } from './components/dialog-info/dialog-info.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 
 
@@ -28,18 +30,20 @@ import {StatisticDialogComponent} from './components/statistic-dialog/statistic-
         ScrollToBottomDirective,
         MapPreviewComponent,
         SplitCurrencyPipe,
-        StatisticDialogComponent
+        StatisticDialogComponent,
+        DialogInfoComponent
     ],
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatProgressBarModule,
-    TranslateModule,
-    MatCardModule,
-    FormsModule,
-    FontAwesomeModule,
-    MatDialogModule,
-  ],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatProgressBarModule,
+        TranslateModule,
+        MatCardModule,
+        FormsModule,
+        FontAwesomeModule,
+        MatDialogModule,
+        MatFormFieldModule,
+    ],
   providers: [],
   exports: [
     MaterialElevationDirective,

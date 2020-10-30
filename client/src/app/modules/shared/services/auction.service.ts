@@ -17,9 +17,10 @@ export class AuctionService {
 
   private CATEGORIES = `${SERVER_API_URL}/categories`;
   private AUCTIONS = `${SERVER_API_URL}/auctions`;
+  private INCREMENT_PHONE_CLICK = `${SERVER_API_URL}/auctions/phone/`;
   private AUCTIONS_TO_EDIT = this.AUCTIONS + '/edit';
   private FAVORITE_AUCTIONS = `${SERVER_API_URL}/auction` + '/favorites';
-  private REPORT_AUCTION = `${SERVER_API_URL}/report` + '/auctions';
+  private REPORT_AUCTION = `${SERVER_API_URL}/report` + '/auctions/';
 
   filter: BehaviorSubject<Filter>;
   pagination: BehaviorSubject<Pagination>;
@@ -31,10 +32,6 @@ export class AuctionService {
 
   updateFilterObj(filter: Filter) {
     this.filter.next(filter);
-  }
-
-  updatePaginationObj(pagination: Pagination) {
-    this.pagination.next(pagination);
   }
 
   getCategoryAttributes(category: string): Observable<Category> {
@@ -100,5 +97,9 @@ export class AuctionService {
 
   sendNewReport(reportAuction: ReportAuction) {
     return this.http.post<ReportAuction>(this.REPORT_AUCTION, reportAuction);
+  }
+
+  incrementPhoneClick(auctionId: number) {
+    return this.http.put(this.INCREMENT_PHONE_CLICK + auctionId, null);
   }
 }

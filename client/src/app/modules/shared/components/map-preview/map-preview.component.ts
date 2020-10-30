@@ -9,9 +9,9 @@ import {google} from 'google-maps';
 })
 export class MapPreviewComponent implements OnInit {
 
-  mapElement;
   @Input()
   city: City;
+  mapElement;
   map: any;
 
   constructor() {

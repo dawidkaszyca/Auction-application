@@ -4,6 +4,7 @@ import {Directive, ElementRef} from '@angular/core';
   selector: '[appScrollToBottom]'
 })
 export class ScrollToBottomDirective {
+
   constructor(private _el: ElementRef) { }
 
   public scrollToBottom() {
