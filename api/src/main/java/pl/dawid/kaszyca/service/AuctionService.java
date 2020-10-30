@@ -54,7 +54,6 @@ public class AuctionService {
     }
 
     private void incrementViewersAmount(Auction auction) {
-        statisticService.incrementDailyAuctionViews();
         statisticService.incrementDailyAuctionViewsById(auction.getId());
         auction.setViewers(auction.getViewers() + 1);
         auctionRepository.save(auction);
@@ -259,5 +258,16 @@ public class AuctionService {
             auctions.add(favoriteAuction.getAuction());
         }
         return auctions;
+    }
+
+    public void incrementPhoneClick(long id) {
+        Optional<Auction> optionalAuction = auctionRepository.findById(id);
+        if (optionalAuction.isPresent()) {
+            Auction auction = optionalAuction.get();
+            Long phoneClicks = auction.getPhoneClicks() + 1;
+            auction.setPhoneClicks(phoneClicks);
+            auctionRepository.save(auction);
+            statisticService.incrementDailyAuctionPhoneClicksById(id);
+        }
     }
 }

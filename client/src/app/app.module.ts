@@ -23,7 +23,6 @@ import {CoreModule} from './modules/core/core.module';
 import {HomeModule} from './modules/home/home.module';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
-import {MatDialog} from '@angular/material/dialog';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);

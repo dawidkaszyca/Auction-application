@@ -37,11 +37,11 @@ public class StatisticService {
     private MessageRepository messageRepository;
 
     StatisticService(StatisticRepository statisticRepository, UserRepository userRepository, MessageRepository messageRepository) {
-        createNewEmptyMapWithKeys();
-        createNewEmptyStatisticsWithIdMap();
         this.statisticRepository = statisticRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
+        createNewEmptyMapWithKeys();
+        createNewEmptyStatisticsWithIdMap();
         statisticCollectDate = new Date();
     }
 
@@ -52,10 +52,12 @@ public class StatisticService {
 
     public void incrementDailyAuctionViewsById(Long id) {
         incrementValueByKeyAndAuctionId(StatisticKeyEnum.DAILY_AUCTION_VIEWS_BY_ID, id);
+        incrementDailyAuctionViews();
     }
 
     public void incrementDailyAuctionPhoneClicksById(Long id) {
         incrementValueByKeyAndAuctionId(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS_BY_ID, id);
+        incrementDailyAuctionPhoneClicks();
     }
 
     private void incrementValueByKeyAndAuctionId(StatisticKeyEnum dailyAuctionViews, Long id) {
@@ -88,19 +90,19 @@ public class StatisticService {
         incrementValueByKey(StatisticKeyEnum.DAILY_USERS_LOGIN);
     }
 
-    public void incrementDailyAuctionReports() {
-        incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_REPORTS);
-    }
-
     public void incrementDailyAuctionViews() {
         incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_VIEWS);
     }
 
-    public void incrementDailyAuctionPhoneClicks() { incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS); }
+    public void incrementDailyAuctionReports() {
+        incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_REPORTS);
+    }
 
     public void incrementDailyRemovedAuction() {
         incrementValueByKey(StatisticKeyEnum.DAILY_REMOVED_AUCTIONS);
     }
+
+    private void incrementDailyAuctionPhoneClicks() { incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS); }
 
     private void incrementValueByKey(StatisticKeyEnum statisticKeyEnum) {
         statistics.put(statisticKeyEnum, statistics.get(statisticKeyEnum) + 1);
@@ -115,19 +117,6 @@ public class StatisticService {
     //TODO Active reports
     @Scheduled(cron = "0 0 * * * *")
     public void updateDailyStatistics() {
-        log.info("start cron to daily statistics");
-        saveStatistics();
-        saveStatisticsWithAuctionId();
-        if (!isNewDay()) {
-            statisticCollectDate = new Date();
-            createNewEmptyMapWithKeys();
-            createNewEmptyStatisticsWithIdMap();
-        }
-        log.info("end cron to daily statistics");
-    }
-
-    @Scheduled(cron = "0 * * * * *")
-    public void updateDaailyStatistics() {
         log.info("start cron to daily statistics");
         saveStatistics();
         saveStatisticsWithAuctionId();
@@ -215,7 +204,6 @@ public class StatisticService {
      * <p>
      * This is scheduled to get fired everyday, at 00:00 (am).
      */
-    //TODO Active reports
     @Scheduled(cron = "0 0 0 * * ?")
     public void updateTotalStatistics() {
         log.info("start cron to total statistics");

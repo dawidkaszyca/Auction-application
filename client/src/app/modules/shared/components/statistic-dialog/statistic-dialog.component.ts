@@ -12,6 +12,7 @@ import {TranslateService} from '@ngx-translate/core';
   styleUrls: ['./statistic-dialog.component.scss']
 })
 export class StatisticDialogComponent implements OnInit {
+
   faRemove = faTimes;
   dailyViewsKey = 'DAILY_AUCTION_VIEWS_BY_ID';
   dailyViewData: Graph[];

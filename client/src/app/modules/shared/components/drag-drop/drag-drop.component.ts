@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {EnumsHelper, FileExtension} from '../../config/enums';
 
 @Component({
   selector: 'app-drag-drop',
@@ -8,12 +9,11 @@ import {HttpClient} from '@angular/common/http';
 })
 export class DragDropComponent implements OnChanges {
 
-  @Output() filesEmitter: EventEmitter<File[]> = new EventEmitter();
-
   @Input() maxAmountOfImages: number;
+  @Output() filesEmitter: EventEmitter<File[]> = new EventEmitter();
   files: File[];
   validatedFiles: File[];
-  extensions = ['jpg', 'png', 'jfif'];
+  extensions = EnumsHelper.getValuesByEnumName(FileExtension);
 
   constructor(private http: HttpClient) {
     this.setEmptyArrays();

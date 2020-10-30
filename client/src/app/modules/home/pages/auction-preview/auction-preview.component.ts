@@ -9,6 +9,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {Image} from '../../../shared/models/image';
 import {MatDialog} from '@angular/material/dialog';
 import {ReportAuctionComponent} from '../../components/report-auction/report-auction.component';
+import {DialogService} from '../../../shared/services/dialog.service';
+import {DialogKey} from '../../../shared/config/enums';
 
 @Component({
   selector: 'app-auction-preview',
@@ -26,7 +28,8 @@ export class AuctionPreviewComponent implements OnInit {
   userPhoto: any;
 
   constructor(private router: ActivatedRoute, private auctionService: AuctionService, private attachmentService: AttachmentService,
-              private authService: AuthService, private translate: TranslateService, private route: Router, public dialog: MatDialog) {
+              private authService: AuthService, private translate: TranslateService, private route: Router, public dialog: MatDialog,
+              private dialogService: DialogService) {
     this.call = false;
   }
 
@@ -44,9 +47,6 @@ export class AuctionPreviewComponent implements OnInit {
         this.auctionDetails = this.auction.auctionDetails;
         window.scroll(0, 0);
         this.loadUserPhoto();
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -54,9 +54,6 @@ export class AuctionPreviewComponent implements OnInit {
     this.attachmentService.getAuctionPhotosById(this.auctionId).subscribe(
       res => {
         this.loadImages(res);
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -89,9 +86,9 @@ export class AuctionPreviewComponent implements OnInit {
   addToFavorite() {
     if (this.authService.isLogged()) {
       this.auctionService.addToFavorite(this.auctionId).subscribe(it => {
-
+        this.dialogService.openInfoDialog(DialogKey.AFTER_FAVORITE);
       }, error => {
-
+        this.dialogService.openWarningDialog(DialogKey.AFTER_FAVORITE_ERROR);
       });
     } else {
       this.route.navigate(['/login'], {queryParams: {returnUrl: this.route.url}});
@@ -107,5 +104,12 @@ export class AuctionPreviewComponent implements OnInit {
           auctionId: this.auctionId
         }
       });
+  }
+
+  incrementCall(incrementToStatistic: boolean) {
+    this.call = !this.call;
+    if (incrementToStatistic) {
+      this.auctionService.incrementPhoneClick(this.auctionId).subscribe();
+    }
   }
 }

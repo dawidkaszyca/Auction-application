@@ -4,6 +4,6 @@
     <mat-card class="remove-shadow to-center">
       <app-image [path]="auction.photoUrl"></app-image>
     </mat-card>
-    <p class="tag hide-params">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</p>
+    <p class="tag hide-params">{{auction.price|currency:"zł"|splitCurrency:auction.price}}</p>
   </mat-card>
 </div>

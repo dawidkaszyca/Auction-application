@@ -17,7 +17,7 @@ export class MainPageComponent implements OnInit {
   @ViewChild(PaginationBarComponent)
   paginationBarChild: PaginationBarComponent;
   @ViewChild(PaginationShortBarComponent)
-  shortPaginationChild: PaginationShortBarComponent
+  shortPaginationChild: PaginationShortBarComponent;
   private category;
   private filter: Filter;
   auctions: AuctionBaseField[];
@@ -81,9 +81,6 @@ export class MainPageComponent implements OnInit {
         if (res == null) {
           this.noContent = true;
         }
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -92,9 +89,6 @@ export class MainPageComponent implements OnInit {
       res => {
         this.topAuctions = res;
         this.loadPhotos();
-      },
-      err => {
-        alert('TODO');
       });
   }
 

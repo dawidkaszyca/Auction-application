@@ -10,10 +10,9 @@
                     #category="ngModel"
                     [ngClass]="{ 'is-invalid': f.submitted && category.invalid }"
                     required>
-          <mat-option *ngFor="let reason of reasons" [value]="reason">{{reason}}</mat-option>
+          <mat-option *ngFor="let reason of reasons" [value]="reason">{{reason | translate}}</mat-option>
         </mat-select>
         <div *ngIf="f.submitted && category.invalid" class="invalid-input mt-2">
-          <!-- individual validation errors -->
           <div *ngIf="category.errors?.required">{{'register.isEmpty' | translate}}</div>
         </div>
       </div>

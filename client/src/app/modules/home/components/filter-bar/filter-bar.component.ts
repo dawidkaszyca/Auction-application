@@ -17,10 +17,12 @@ export class FilterBarComponent implements OnInit {
   maxPrice: number;
   selectedCondition: string;
   attributesFilters: CategoryAttributes[];
-  category = 'all';
+  ALL_CATEGORY_SING = 'all';
+  category = this.ALL_CATEGORY_SING;
   attributes: CategoryAttributes[];
   conditions: string[];
   isSearch: boolean;
+  FULL_CONDITION_SIGN = '------------';
 
   constructor(private auctionService: AuctionService) {
   }
@@ -30,7 +32,7 @@ export class FilterBarComponent implements OnInit {
     this.getCondition();
     this.auctionService.filter.subscribe(data => {
       this.filter = data;
-      if (this.category !== data.category && data.category !== 'all') {
+      if (this.category !== data.category && data.category !== this.ALL_CATEGORY_SING) {
         this.maxPrice = null;
         this.maxPrice = null;
         this.selectedCondition = null;
@@ -53,9 +55,6 @@ export class FilterBarComponent implements OnInit {
   private loadFiltersByCategory() {
     this.auctionService.getCategoryAttributes(this.category).subscribe(res => {
         this.attributes = res.categoryAttributes;
-      },
-      err => {
-        alert('TODO');
       });
   }
 
@@ -63,10 +62,7 @@ export class FilterBarComponent implements OnInit {
     this.auctionService.getAuctionForm().subscribe(
       res => {
         this.conditions = res.condition;
-        this.conditions.push('------------');
-      },
-      err => {
-        alert('TODO');
+        this.conditions.push(this.FULL_CONDITION_SIGN);
       });
   }
 
@@ -113,7 +109,7 @@ export class FilterBarComponent implements OnInit {
         this.filter.priceFilter = false;
       }
     }
-    if (this.selectedCondition && this.selectedCondition !== '------------') {
+    if (this.selectedCondition && this.selectedCondition !== this.FULL_CONDITION_SIGN) {
       this.filter.condition = this.selectedCondition;
     } else {
       this.filter.condition = null;

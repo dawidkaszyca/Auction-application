@@ -9,6 +9,8 @@ import {Router} from '@angular/router';
 import {City} from '../../../shared/models/auction-base-field';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 import {timer} from 'rxjs';
+import {DialogService} from '../../../shared/services/dialog.service';
+import {DialogKey} from '../../../shared/config/enums';
 
 
 @Component({
@@ -51,7 +53,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
   }
 
   constructor(private navigationService: NavigationService, private auctionService: AuctionService,
-              private attachmentService: AttachmentService, private router: Router) {
+              private attachmentService: AttachmentService, private router: Router, private dialogService: DialogService) {
     navigationService.show = false;
     this.maxSizeOfImages = 4;
     this.isSaving = false;
@@ -79,7 +81,6 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
         console.log(this.categories);
       },
       err => {
-        alert('TODO');
       });
   }
 
@@ -127,7 +128,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       },
       err => {
         this.isSaving = false;
-        alert('TODO');
+        this.dialogService.openWarningDialog(DialogKey.SAVE_AUCTION_ERROR);
       });
   }
 
@@ -147,11 +148,13 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
           this.isSaving = false;
           this.openAuctionPage(attachment.auctionId);
         });
+      }, error => {
+        this.dialogService.openWarningDialog(DialogKey.SAVE_ATTACHMENT_ERROR);
       });
   }
 
   openAuctionPage(id: number) {
-    this.router.navigate(['auction'], {queryParams: {'title': this.auction.title, 'category': this.auction.category, 'id': id}});
+    this.router.navigate(['auction'], {queryParams: {title: this.auction.title, category: this.auction.category, id: id}});
   }
 
   checkName(): boolean {

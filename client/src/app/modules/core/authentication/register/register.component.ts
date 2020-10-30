@@ -18,8 +18,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     firstName: '',
     lastName: ''
   };
-  isSignedUp = false;
-  isSignUpFailed = false;
 
   constructor(private authService: AuthService, private router: Router, private navigationService: NavigationService) {
     navigationService.show = false;

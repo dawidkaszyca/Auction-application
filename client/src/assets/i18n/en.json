@@ -104,7 +104,20 @@
     "login": "Please login to your account before you can send a message",
     "dailyViews": "Daily views",
     "dailyPhone": "Daily phone clicks",
-    "after-sent": "Your message has been sent"
+    "after-sent": "Your message has been sent",
+    "warning": "Ups. Something went wrong",
+    "info": "Message",
+    "close": "CLOSE",
+    "after-report": "Your report has been sent",
+    "after-favorite": "Added auction to favorite",
+    "after-favorite-error": "Cannot add auction to favorite. Try again later",
+    "save-auction": "Your auction has not been saved. Try one more time.",
+    "update-auction": "Your auction has not been updated. Try one more time.",
+    "remove-auction": "Your auction has not been removed. Try one more time.",
+    "extend-time": "The auction time has been increased by one month",
+    "extend-time-error": "The auction time has not been increased. Try one more time.",
+    "save-attachment": "The attachment has not been saved. Try one more time.",
+    "update-attachment": "The attachment has not been updated. Try one more time."
   },
   "myAuction": {
     "all": "All",
@@ -127,6 +140,10 @@
     "description": "Describe report reason",
     "email": "e-mail",
     "send": "Send",
-    "auction": "Report auction"
+    "auction": "Report auction",
+    "spam": "Spam",
+    "invalid-content": "Content / Item / Service not allowed",
+    "expired": "Expired auction / sold",
+    "fraud": "Fraud / suspicion of fraud"
   }
 }

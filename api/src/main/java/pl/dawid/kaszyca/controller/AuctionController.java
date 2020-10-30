@@ -75,6 +75,18 @@ public class AuctionController {
         }
     }
 
+    @PutMapping("/auctions/phone/{id}")
+    public ResponseEntity incrementPhoneClick(@PathVariable long id) {
+        try {
+            auctionService.incrementPhoneClick(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Something went wrong during edit Auction Object");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
+        }
+    }
+
+
     @PutMapping("/auctions/{id}")
     public ResponseEntity extendAuctionEndTime(@PathVariable long id) {
         try {

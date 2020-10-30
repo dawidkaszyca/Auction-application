@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {MatSelectChange} from '@angular/material/select';
 import {Pagination} from '../../../../shared/models/pagination';
 import {AuctionService} from '../../../../shared/services/auction.service';
+import {EnumsHelper, Order, PageSize, SortField, SortKey} from '../../../../shared/config/enums';
 
 @Component({
   selector: 'app-pagination-bar',
@@ -9,14 +10,15 @@ import {AuctionService} from '../../../../shared/services/auction.service';
   styleUrls: ['./pagination-bar.component.scss']
 })
 export class PaginationBarComponent implements OnInit, OnChanges {
+
   @Input()
   numberOfAuctions: number;
+  @Input()
+  isSortDisabled: false;
   sortValue = 'sort.newest';
   amountOfPages: number;
   pagination: Pagination;
   pageSizeList: any;
-  @Input()
-  isSortDisabled: false;
   sortList: any;
   inputValue: any;
 
@@ -30,7 +32,7 @@ export class PaginationBarComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      this.setDataAfterChanges();
+    this.setDataAfterChanges();
   }
 
   private addPaginationListener() {
@@ -59,23 +61,23 @@ export class PaginationBarComponent implements OnInit, OnChanges {
     this.setDataAfterChanges();
   }
 
-  selectValue(event: MatSelectChange) {
+  selectSort(event: MatSelectChange) {
     this.sortValue = event.value;
-    if (event.value === 'sort.minPrice') {
-      this.pagination.sort = 'DESC';
-      this.pagination.sortByFieldName = 'price';
-    } else if (event.value === 'sort.maxPrice') {
-      this.pagination.sort = 'ASC';
-      this.pagination.sortByFieldName = 'price';
-    } else if (event.value === 'sort.popularity') {
-      this.pagination.sort = 'DESC';
-      this.pagination.sortByFieldName = 'viewers';
-    } else if (event.value === 'sort.newest') {
-      this.pagination.sort = 'DESC';
-      this.pagination.sortByFieldName = 'createdDate';
-    } else if (event.value === 'sort.latest') {
-      this.pagination.sort = 'ASC';
-      this.pagination.sortByFieldName = 'createdDate';
+    if (event.value === SortKey.MIN_PRICE_KEY) {
+      this.pagination.sort = Order.DESC;
+      this.pagination.sortByFieldName = SortField.PRICE;
+    } else if (event.value === SortKey.MAX_PRICE_KEY) {
+      this.pagination.sort = Order.ASC;
+      this.pagination.sortByFieldName = SortField.PRICE;
+    } else if (event.value === SortKey.POPULARITY_KEY) {
+      this.pagination.sort = Order.DESC;
+      this.pagination.sortByFieldName = SortField.VIEWERS;
+    } else if (event.value === SortKey.NEWEST_KEY) {
+      this.pagination.sort = Order.DESC;
+      this.pagination.sortByFieldName = SortField.CREATED_DATE;
+    } else if (event.value === SortKey.LATEST_KEY) {
+      this.pagination.sort = Order.ASC;
+      this.pagination.sortByFieldName = SortField.CREATED_DATE;
     }
     this.auctionService.pagination.next(this.pagination);
   }
@@ -87,17 +89,7 @@ export class PaginationBarComponent implements OnInit, OnChanges {
   }
 
   private loadMaps() {
-    this.sortList = [];
-    this.sortList.push('sort.minPrice');
-    this.sortList.push('sort.maxPrice');
-    this.sortList.push('sort.newest');
-    this.sortList.push('sort.latest');
-    this.sortList.push('sort.popularity');
-    this.pageSizeList = [];
-    this.pageSizeList.push(10);
-    this.pageSizeList.push(15);
-    this.pageSizeList.push(20);
-    this.pageSizeList.push(25);
-    this.pageSizeList.push(30);
+    this.sortList = EnumsHelper.getValuesByEnumName(SortKey);
+    this.pageSizeList = EnumsHelper.getValuesByEnumName(PageSize);
   }
 }

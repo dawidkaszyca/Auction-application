@@ -6,6 +6,7 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./sent-message.component.css']
 })
 export class SentMessageComponent {
+
   @Input()
   public message: string;
   @Input()

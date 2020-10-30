@@ -32,10 +32,10 @@ export class SendMessageComponent implements OnInit {
     }
     this.chatService.sendMessage(message).subscribe(
       res => {
-        this.content = this.translate.instant('dialog.after-sent')
+        this.content = this.translate.instant('dialog.after-sent');
       },
       err => {
-        alert('TODO');
+
       });
   }
 

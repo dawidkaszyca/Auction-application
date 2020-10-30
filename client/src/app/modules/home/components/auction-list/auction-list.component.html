@@ -11,7 +11,7 @@
           <div class="col-8 position-relative">
             <mat-card-title class="mt-2 text-left font-size">{{auction.title}}</mat-card-title>
             <p
-              class="text-right pr-5 m-0 text font-weight-bold pt-1 font-size">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</p>
+              class="text-right pr-5 m-0 text font-weight-bold pt-1 font-size">{{auction.price|currency:"zł"|splitCurrency:auction.price}}</p>
             <p class="text-right pr-5 m-0 font-size">{{auction.city?.name}}</p>
             <div class="hide-params row position-absolute fixed-bottom ">
               <div class="col-md-4">

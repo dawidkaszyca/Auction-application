@@ -31,10 +31,11 @@
               </div>
               <div class="col-6 h-100">
                 <p *ngIf="auction?.price"
-                   class="text-right pr-2">{{auction.price|currency:"zł": true|splitCurrency:auction.price}}</p>
+                   class="text-right pr-2">{{auction.price|currency:"zł"
+                  |splitCurrency:auction.price}}</p>
                 <button *ngIf="!call" class="btn btn-primary w-100 mt-1"
-                        (click)="call = true">{{'myProfile.call' | translate}}</button>
-                <button *ngIf="call" (click)="call = false"
+                        (click)="incrementCall(true)">{{'myProfile.call' | translate}}</button>
+                <button *ngIf="call" (click)="incrementCall(false)"
                         class="btn btn-primary w-100 mt-1">{{auction?.phone}}</button>
                 <button class="btn btn-primary w-100 mt-2"
                         (click)="routeToUserClassFields()">{{'myProfile.classifieds' | translate}}</button>
