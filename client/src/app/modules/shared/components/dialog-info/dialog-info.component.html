@@ -1,0 +1,20 @@
+<div class="text-center font-weight-bold">
+
+  <h1 mat-dialog-title *ngIf="data.isWarning" else info>
+    {{'dialog.warning'| translate}}
+    <fa-icon [icon]="faExclamation" style="color: #ff9800"></fa-icon>
+  </h1>
+  <h1 mat-dialog-title #info>
+    {{'dialog.info'| translate}}
+    <fa-icon [icon]="faEnvelopeOpen" style="color: #2196F3"></fa-icon>
+  </h1>
+  <div mat-dialog-content class="mt-5">
+    <p>{{data?.message| translate}}</p>
+  </div>
+  <div mat-dialog-actions class="mt-5 row">
+    <div class="col-8"></div>
+    <div class="col-4">
+      <button class="btn btn-danger text-center w-100" [mat-dialog-close]>{{'dialog.close'| translate}}</button>
+    </div>
+  </div>
+</div>
