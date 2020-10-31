@@ -117,7 +117,9 @@
     "extend-time": "The auction time has been increased by one month",
     "extend-time-error": "The auction time has not been increased. Try one more time.",
     "save-attachment": "The attachment has not been saved. Try one more time.",
-    "update-attachment": "The attachment has not been updated. Try one more time."
+    "update-attachment": "The attachment has not been updated. Try one more time.",
+    "message-to-yourself-error": "Cannot sent message to yourself.",
+    "message-to-error": "Message has not been sent. Try one more time."
   },
   "myAuction": {
     "all": "All",

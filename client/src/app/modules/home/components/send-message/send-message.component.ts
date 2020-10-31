@@ -3,7 +3,8 @@ import {ChatService} from '../../../shared/services/chat.service';
 import {NewMessage} from '../../../shared/models/new-message';
 import {AuthService} from '../../../core/security/auth.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Router, RouterStateSnapshot} from '@angular/router';
+import {Router} from '@angular/router';
+import {DialogService} from '../../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-send-message',
@@ -17,7 +18,7 @@ export class SendMessageComponent implements OnInit {
   content: string;
 
   constructor(private chatService: ChatService, private authService: AuthService, private translate: TranslateService,
-              private router: Router) {
+              private router: Router, private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
@@ -35,14 +36,18 @@ export class SendMessageComponent implements OnInit {
         this.content = this.translate.instant('dialog.after-sent');
       },
       err => {
-
+        if (err.error === 'Cannot send message to Yourself!!!') {
+          this.dialogService.openWarningDialog('dialog.message-to-yourself-error');
+        } else {
+          this.dialogService.openWarningDialog('dialog.message-error');
+        }
       });
   }
 
 
   loginUser() {
     if (!this.authService.isLogged()) {
-      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
+      this.router.navigate(['/login'], {queryParams: {returnUrl: this.router.url}});
     }
   }
 }

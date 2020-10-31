@@ -117,7 +117,9 @@
     "extend-time": "Czas ważności aukcji został zwiększony o miesiąc",
     "extend-time-error": "Czas ważności aukcji nie został zwiększony. Spróbuj jeszcze raz.",
     "save-attachment": "Załączniki nie zostały zapisane. Spróbuj jeszcze raz.",
-    "update-attachment": "Załączniki nie zostały zmienione. Spróbuj jeszcze raz."
+    "update-attachment": "Załączniki nie zostały zmienione. Spróbuj jeszcze raz.",
+    "message-to-yourself-error": "Nie można wysyłać wiadomości do siebie.",
+    "message-to-error": "Wiadomośc nie została wysłana. Spróbuj jeszcze raz"
   },
   "myAuction": {
     "all": "Wszystkie",

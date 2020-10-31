@@ -156,6 +156,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
     this.attachmentService.getAuctionPhotosById(this.auctionId).subscribe(
       res => {
         if (!res) {
+          this.images = [];
           return;
         }
         this.images = res;
