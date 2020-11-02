@@ -8,7 +8,7 @@ import {MatSelectChange} from '@angular/material/select';
 import {MatDialog} from '@angular/material/dialog';
 import {StatisticDialogComponent} from '../../../shared/components/statistic-dialog/statistic-dialog.component';
 import {EditAuctionComponent} from '../../pages/edit-auction/edit-auction.component';
-import {EnumsHelper, Order, PageSize, SortKey, StateKey, SortField, DialogKey, State} from '../../../shared/config/enums';
+import {DialogKey, EnumsHelper, Order, PageSize, SortField, SortKey, State, StateKey} from '../../../shared/config/enums';
 import {DialogService} from '../../../shared/services/dialog.service';
 
 @Component({
@@ -189,7 +189,7 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
       this.selectedAuctions = [];
       this.loadAuctionsData();
     }, error => {
-      this.dialogService.openWarningDialog(DialogKey.REMOVE_AUCTION_ERROR);
+      this.dialogService.openWarningDialog(DialogKey.REMOVE_AUCTION_ERROR, false, null);
     });
   }
 
@@ -208,9 +208,9 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   extendAuctionTime(auction: AuctionBaseField) {
     this.auctionService.extendAuctionTime(auction.id).subscribe(res => {
       auction.expiredDate = res;
-      this.dialogService.openInfoDialog(DialogKey.EXTEND_AUCTION_TIME);
+      this.dialogService.openInfoDialog(DialogKey.EXTEND_AUCTION_TIME, false, null);
     }, error => {
-      this.dialogService.openWarningDialog(DialogKey.EXTEND_AUCTION_TIME_ERROR);
+      this.dialogService.openWarningDialog(DialogKey.EXTEND_AUCTION_TIME_ERROR, false, null);
     });
   }
 

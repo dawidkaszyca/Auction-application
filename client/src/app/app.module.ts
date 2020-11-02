@@ -23,29 +23,11 @@ import {CoreModule} from './modules/core/core.module';
 import {HomeModule} from './modules/home/home.module';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
-
-const appRoutes: Routes = [
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
-  },
-  {
-    path: 'api/confirm-registration/:text',
-    component: ConfirmRegisterComponent
-  }
-  /*{
-    path: '**',
-    component: NotFoundComponent
-  }*/
-];
 
 @NgModule({
   declarations: [
@@ -57,30 +39,31 @@ const appRoutes: Routes = [
     RegisterComponent,
     ConfirmRegisterComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    NgxWebstorageModule.forRoot(),
-    RouterModule.forRoot(appRoutes, {enableTracing: true}),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    FormsModule,
-    MatIconModule,
-    MatMenuModule,
-    CoreModule,
-    HomeModule,
-    FontAwesomeModule,
-    GooglePlaceModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        NgxWebstorageModule.forRoot(),
+        AppRoutingModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        FormsModule,
+        MatIconModule,
+        MatMenuModule,
+        CoreModule,
+        HomeModule,
+        FontAwesomeModule,
+        GooglePlaceModule,
+        MatProgressSpinnerModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

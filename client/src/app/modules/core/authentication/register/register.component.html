@@ -99,11 +99,11 @@
             <div *ngIf="lastName.errors?.required">{{'register.isEmpty' | translate}}</div>
           </div>
         </div>
-
-        <button type="submit" class="btn btn-info pull-right float-right">
+        <button type="submit" class="btn btn-info pull-right float-right" [disabled]="isRequestPending">
           <span> {{'register.createAccount' | translate}}</span>
         </button>
       </form>
     </div>
   </div>
+  <mat-spinner *ngIf="isRequestPending" class="spinner-center"></mat-spinner>
 </div>

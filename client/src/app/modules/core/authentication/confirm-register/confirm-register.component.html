@@ -1,5 +1,7 @@
 <div class="text-center mt-5 font-weight-bold" *ngIf="correctActive">
-  Your account has been activated successfully. You can now login
+  {{"activate.success"| translate}}
 </div>
-
+<div class="text-center mt-5 font-weight-bold" *ngIf="!correctActive">
+  {{"activate.error"| translate}}
+</div>
 

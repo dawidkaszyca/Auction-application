@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {User} from '../../shared/models/user';
 import {WebsocketService} from '../../shared/services/web-socket.service';
+import {ResetPassword} from '../../shared/models/reset-password';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -22,10 +23,14 @@ interface JwtToken {
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
-  private CREATE_NEW_USER = `${SERVER_API_URL}/register`;
+  private CREATE_NEW_USER = `${SERVER_API_URL}/account/register`;
   private LOGIN = `${SERVER_API_URL}/authenticate`;
-  private PROFILE = `${SERVER_API_URL}/profile`;
-  private UPDATE = `${SERVER_API_URL}/update`;
+  private PROFILE = `${SERVER_API_URL}/account/profile`;
+  private UPDATE = `${SERVER_API_URL}/account/update`;
+  private REMIND_PASSWORD = `${SERVER_API_URL}/account/password`;
+  private CHECK_RESET_KEY = `${SERVER_API_URL}/account/check-reset-key/`;
+  private RESET_PASSWORD = `${SERVER_API_URL}/account/password`;
+  private CHANGE_PASSWORD = `${SERVER_API_URL}/account/password`;
   private returnUrl: string;
 
   constructor(
@@ -47,12 +52,30 @@ export class AuthService {
     return this.http.post<string>(this.CREATE_NEW_USER, user, httpOptions);
   }
 
-  logout(): void {
-    this.localStorage.clear('authenticationToken');
-    this.sessionStorage.clear('authenticationToken');
-    this.websocketService._disconnect();
-    this.websocketService.notification.next(0);
-    this.router.navigateByUrl('/');
+  getUserData(): Observable<User> {
+    return this.http.get<User>(this.PROFILE);
+  }
+
+  updateUserData(user: User) {
+    return this.http.post(this.UPDATE, user);
+  }
+
+  remindPassword(email: string) {
+    return this.http.delete(this.REMIND_PASSWORD + '/' + email);
+  }
+
+  activateAccount() {
+    const url = SERVER_API_URL + window.location.pathname + window.location.search;
+    return this.http.get(url);
+  }
+
+  checkResetKey(key: string) {
+    const url = this.CHECK_RESET_KEY + key;
+    return this.http.get(url);
+  }
+
+  resetPassword(resetPassword: ResetPassword) {
+    return this.http.post(this.RESET_PASSWORD, resetPassword);
   }
 
   private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
@@ -65,21 +88,44 @@ export class AuthService {
       this.sessionStorage.store('authenticationToken', jwt);
     }
     this.websocketService._connect(this.getLoginFromToken(), this.getTokenFromStorage());
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
     this.router.navigateByUrl(this.returnUrl);
   }
 
-  getTokenFromStorage(): string {
-    return this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
+  logout(): void {
+    this.localStorage.clear('authenticationToken');
+    this.sessionStorage.clear('authenticationToken');
+    this.websocketService._disconnect();
+    this.websocketService.notification.next(0);
+    this.router.navigateByUrl('/');
   }
 
-  checkIfTokenIsNotExpired(): boolean {
+  isLogged(): boolean {
+    if (this.isAuthenticated()) {
+      this.reConnectIfIsRequired();
+      return true;
+    }
+    return false;
+  }
+
+  isAuthenticated(): boolean {
     const token = this.getTokenFromStorage();
     if (token != null) {
       const helper = new JwtHelperService();
       return !helper.isTokenExpired(token);
     }
     return false;
+  }
+
+
+  getTokenFromStorage(): string {
+    return this.localStorage.retrieve('authenticationToken') || this.sessionStorage.retrieve('authenticationToken');
+  }
+
+  private reConnectIfIsRequired() {
+    if (this.websocketService.isConnected === false && this.websocketService.isReconnecting === false) {
+      this.websocketService._connect(this.getLoginFromToken(), this.getTokenFromStorage());
+    }
   }
 
   getLoginFromToken(): string {
@@ -89,27 +135,5 @@ export class AuthService {
       return helper.decodeToken(token).sub;
     }
     return null;
-  }
-
-  isLogged(): boolean {
-    if (this.checkIfTokenIsNotExpired()) {
-      this.reConnectIfIsRequired();
-      return true;
-    }
-    return false;
-  }
-
-  private reConnectIfIsRequired() {
-    if (this.websocketService.isConnected === false && this.websocketService.isReconnecting === false) {
-      this.websocketService._connect(this.getLoginFromToken(), this.getTokenFromStorage());
-    }
-  }
-
-  getUserData(): Observable<User> {
-    return this.http.get<User>(this.PROFILE);
-  }
-
-  updateUserData(user: User) {
-    return this.http.post(this.UPDATE, user);
   }
 }

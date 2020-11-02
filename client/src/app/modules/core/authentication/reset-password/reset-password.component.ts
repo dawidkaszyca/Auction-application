@@ -16,6 +16,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   resetPassword: ResetPassword;
   repeatedPassword: string;
   isKeyCorrect = false;
+  isRequestPending = false;
 
   constructor(private authService: AuthService, private router: Router, private navigationService: NavigationService,
               private dialogService: DialogService) {
@@ -33,9 +34,12 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   }
 
   changePassword() {
+    this.isRequestPending = true;
     this.authService.resetPassword(this.resetPassword).subscribe(res => {
+      this.isRequestPending = false;
       this.dialogService.openInfoDialog(DialogKey.AFTER_PASSWORD_CHANGED, true, '/login');
     }, err => {
+      this.isRequestPending = false;
       this.dialogService.openInfoDialog(DialogKey.AFTER_PASSWORD_CHANGED_ERROR, false, null);
     });
     return false;

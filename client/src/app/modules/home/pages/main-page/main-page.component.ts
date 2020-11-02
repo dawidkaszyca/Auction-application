@@ -93,13 +93,15 @@ export class MainPageComponent implements OnInit {
   }
 
   private loadPhotos() {
-    this.attachmentService.getPhotos(this.getAuctionIdList()).subscribe(
-      res => {
-        if (res) {
-        const response = new Map(Object.entries(res));
-        this.setImages(response);
-        }
-      });
+    if (this.getAuctionIdList().length > 0) {
+      this.attachmentService.getPhotos(this.getAuctionIdList()).subscribe(
+        res => {
+          if (res) {
+            const response = new Map(Object.entries(res));
+            this.setImages(response);
+          }
+        });
+    }
   }
 
   private setImages(response: Map<string, string>) {

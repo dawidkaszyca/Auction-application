@@ -3,6 +3,7 @@
     <div class="col-10 col-sm-10 col-md-7 col-lg-5 mt-3">
       <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && login()" novalidate class="feedback-form">
         <div *ngIf="invalidSignIn" class="invalid-input text-danger">{{'register.incorrect' | translate}}</div>
+        <div *ngIf="accountNotActivated" class="invalid-input text-danger">{{'auth.account.inactive' | translate}}</div>
         <!-- Username -->
         <div class="form-group">
           <label for="username">{{'register.login' | translate}}</label>
@@ -44,17 +45,28 @@
             <div *ngIf="username.errors?.minlength">{{'register.toSmall7' | translate}}</div>
           </div>
         </div>
-        <div>
-          <label class="form-check-label ml-4 mt-2 float-left" for="rememberMe">
-            <input class="form-check-input " [(ngModel)]="model.rememberMe" type="checkbox" name="rememberMe" id="rememberMe">
-            <span>{{'register.remember' | translate}}</span>
-          </label>
-          <button type="submit" class="btn btn-info ml-3 float-right">
-            <span>{{'register.signIn' | translate}}</span>
-          </button>
-          <button routerLink="/register" class="btn btn-info float-right">
-            <span>{{'register.signUp' | translate}}</span>
-          </button>
+        <div class="row">
+          <div class="col-5">
+            <label class="form-check-label ml-4 mt-2 cursor-pointer" for="rememberMe">
+              <input class="form-check-input cursor-pointer" [(ngModel)]="model.rememberMe" type="checkbox" name="rememberMe" id="rememberMe">
+              <span>{{'register.remember' | translate}}</span>
+            </label>
+          </div>
+          <div class="col-3 without-left-right-padding">
+            <button  class="btn btn-info w-100" (click)="navigateToRegister($event)">
+              <span>{{'register.signUp' | translate}}</span>
+            </button>
+          </div>
+          <div class="col-4">
+            <button type="submit" class="btn btn-info w-100">
+              <span>{{'register.signIn' | translate}}</span>
+            </button>
+          </div>
+          <div class="col-5 mt-3">
+            <label class="form-check-label ml-2 cursor-pointer" routerLink="/account/remind-password">
+              <span>{{'register.remind.password' | translate}}</span>
+            </label>
+          </div>
         </div>
       </form>
     </div>

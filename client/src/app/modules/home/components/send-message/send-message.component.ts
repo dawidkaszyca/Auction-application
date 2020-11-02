@@ -5,6 +5,7 @@ import {AuthService} from '../../../core/security/auth.service';
 import {TranslateService} from '@ngx-translate/core';
 import {Router} from '@angular/router';
 import {DialogService} from '../../../shared/services/dialog.service';
+import {DialogKey} from '../../../shared/config/enums';
 
 @Component({
   selector: 'app-send-message',
@@ -37,9 +38,9 @@ export class SendMessageComponent implements OnInit {
       },
       err => {
         if (err.error === 'Cannot send message to Yourself!!!') {
-          this.dialogService.openWarningDialog('dialog.message-to-yourself-error');
+          this.dialogService.openWarningDialog(DialogKey.AFTER_MESSAGE_SENT_TO_YOURSELF, false, null);
         } else {
-          this.dialogService.openWarningDialog('dialog.message-error');
+          this.dialogService.openWarningDialog(DialogKey.AFTER_MESSAGE_ERROR, false, null);
         }
       });
   }

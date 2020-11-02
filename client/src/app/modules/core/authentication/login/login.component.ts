@@ -16,11 +16,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
 
   invalidSignIn = false;
+  accountNotActivated = false;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router, private navigationService: NavigationService
-  ) {
+  constructor(private authService: AuthService, private router: Router, private navigationService: NavigationService) {
     navigationService.show = false;
   }
 
@@ -33,9 +31,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login(): void {
-    this.authService.login(this.model).subscribe();
+    this.authService.login(this.model).subscribe(res => {
+
+    }, err => {
+      if (err.error === 'Niepoprawne dane uwierzytelniające') {
+        this.invalidSignIn = true;
+      } else {
+        this.invalidSignIn = false;
+        this.accountNotActivated = true;
+      }
+    });
   }
 
+  navigateToRegister($event: MouseEvent) {
+    if ($event.detail !== 0) {
+      this.router.navigate(['/register']);
+    }
+  }
 }
 
 export interface LoginViewModel {

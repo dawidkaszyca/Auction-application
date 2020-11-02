@@ -186,7 +186,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
       },
       err => {
         this.isSaving = false;
-        this.dialogService.openWarningDialog(DialogKey.UPDATE_AUCTION_ERROR);
+        this.dialogService.openWarningDialog(DialogKey.UPDATE_AUCTION_ERROR, false, null);
       });
   }
 
@@ -221,7 +221,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
       },
       err => {
         this.isSaving = false;
-        this.dialogService.openWarningDialog(DialogKey.UPDATE_ATTACHMENT_ERROR);
+        this.dialogService.openWarningDialog(DialogKey.UPDATE_ATTACHMENT_ERROR, false, null);
       });
   }
 

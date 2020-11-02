@@ -71,7 +71,14 @@ export enum DialogKey {
   EXTEND_AUCTION_TIME = 'dialog.extend-time',
   EXTEND_AUCTION_TIME_ERROR = 'dialog.extend-time-error',
   SAVE_ATTACHMENT_ERROR = 'dialog.save-attachment',
-  UPDATE_ATTACHMENT_ERROR = 'dialog.update-attachment'
+  UPDATE_ATTACHMENT_ERROR = 'dialog.update-attachment',
+  AFTER_REGISTER = 'auth.register.success',
+  AFTER_REGISTER_ERROR = 'auth.register.error',
+  AFTER_MESSAGE_SENT_TO_YOURSELF = 'dialog.message-to-yourself-error',
+  AFTER_MESSAGE_ERROR = 'dialog.message-error',
+  AFTER_PASSWORD_CHANGED = 'reset.password.changed',
+  AFTER_PASSWORD_CHANGED_ERROR = 'reset.password.changed.error',
+
 }
 
 export class EnumsHelper {
