@@ -218,6 +218,7 @@ class DbSeeder implements CommandLineRunner {
         List<AuctionDetails> auctionDetails;
         for (int i = 0; i < 100; i++) {
             auction = new Auction();
+            auction.setDataAfterMapper();
             Condition condition;
             if (i % 2 == 0)
                 condition = new Condition("Używany");

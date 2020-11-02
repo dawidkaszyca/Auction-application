@@ -8,7 +8,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.dawid.kaszyca.dto.MessageDTO;
 import pl.dawid.kaszyca.model.Message;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 import pl.dawid.kaszyca.vm.StatusVM;
 
 import java.time.Instant;
@@ -36,7 +36,7 @@ public class WebSocketService {
         StatusVM statusVM = new StatusVM();
         statusVM.setId(id);
         removeNano(message);
-        statusVM.setMessage(MapperUtils.map(message, MessageDTO.class));
+        statusVM.setMessage(MapperUtil.map(message, MessageDTO.class));
         simpMessagingTemplate.convertAndSend(WS_MESSAGE_TRANSFER_DESTINATION + to, statusVM);
     }
 

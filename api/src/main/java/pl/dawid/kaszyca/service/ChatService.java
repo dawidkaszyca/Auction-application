@@ -12,7 +12,7 @@ import pl.dawid.kaszyca.model.Conversation;
 import pl.dawid.kaszyca.model.Message;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.repository.ConversationRepository;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 import pl.dawid.kaszyca.vm.ConversationVM;
 import pl.dawid.kaszyca.vm.MessageDispatchVM;
 
@@ -83,7 +83,7 @@ public class ChatService {
             conversationRepository.save(conversation);
             webSocketService.sendMessages(recipient.getLogin(), conversation.getRecipientMessage().getId(), message);
             statisticService.incrementDailyMessages();
-            return MapperUtils.map(message, MessageDTO.class);
+            return MapperUtil.map(message, MessageDTO.class);
         } else {
             throw new RecipientNotExistException();
         }
@@ -184,7 +184,7 @@ public class ChatService {
     }
 
     private List<MessageDTO> getMessagesDTOFromConversation(Conversation conversation) {
-        List<MessageDTO> messages = MapperUtils.mapAll(conversation.getSentMessages(), MessageDTO.class);
+        List<MessageDTO> messages = MapperUtil.mapAll(conversation.getSentMessages(), MessageDTO.class);
         messages.sort(Comparator.comparing(MessageDTO::getSentDate));
         return messages;
     }

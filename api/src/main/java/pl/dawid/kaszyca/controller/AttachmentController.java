@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dawid.kaszyca.service.AttachmentService;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 import pl.dawid.kaszyca.vm.AttachmentVM;
 import pl.dawid.kaszyca.vm.ImageVM;
 
@@ -29,7 +29,7 @@ public class AttachmentController {
     public ResponseEntity saveAttachments(@RequestParam("files") List<MultipartFile> files,
                                           @RequestParam("data") String data) {
         try {
-            AttachmentVM attachmentToSaveVM = MapperUtils.mapJsonToObject(data, AttachmentVM.class);
+            AttachmentVM attachmentToSaveVM = MapperUtil.mapJsonToObject(data, AttachmentVM.class);
             attachmentService.saveAuctionAttachments(files, attachmentToSaveVM);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class AttachmentController {
     public ResponseEntity updateAttachments(@RequestParam("files") List<MultipartFile> files,
                                             @RequestParam("data") String data) {
         try {
-            AttachmentVM attachment = MapperUtils.mapJsonToObject(data, AttachmentVM.class);
+            AttachmentVM attachment = MapperUtil.mapJsonToObject(data, AttachmentVM.class);
             attachmentService.updateAuctionAttachments(files, attachment);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {

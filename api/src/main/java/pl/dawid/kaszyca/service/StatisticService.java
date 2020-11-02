@@ -12,7 +12,7 @@ import pl.dawid.kaszyca.model.auction.Auction;
 import pl.dawid.kaszyca.repository.MessageRepository;
 import pl.dawid.kaszyca.repository.StatisticRepository;
 import pl.dawid.kaszyca.repository.UserRepository;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -240,7 +240,7 @@ public class StatisticService {
     private void putAuctionStatisticByKey(Map<StatisticKeyEnum, List<StatisticDTO>> result, StatisticKeyEnum key, Long id) {
         List<Statistic> savedStatistics = statisticRepository.findAllByEnumKeyAndAuctionId(key.name(), id);
         if (!savedStatistics.isEmpty()) {
-            List<StatisticDTO> statisticDTOS = MapperUtils.mapAll(savedStatistics, StatisticDTO.class);
+            List<StatisticDTO> statisticDTOS = MapperUtil.mapAll(savedStatistics, StatisticDTO.class);
             result.put(key, statisticDTOS);
         }
     }

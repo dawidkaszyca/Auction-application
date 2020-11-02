@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.dawid.kaszyca.dto.CategoryDTO;
 import pl.dawid.kaszyca.model.auction.Category;
 import pl.dawid.kaszyca.repository.CategoryRepository;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +23,13 @@ public class CategoryService {
     }
 
     public void saveCategory(CategoryDTO categoryDTO) {
-        Category category = MapperUtils.map(categoryDTO, Category.class);
+        Category category = MapperUtil.map(categoryDTO, Category.class);
         categoryRepository.save(category);
     }
 
     public CategoryDTO getCategoryDTOById(String id) {
         Optional<Category> category = categoryRepository.findFirstByCategory(id);
-        return category.map(value -> MapperUtils.map(value, CategoryDTO.class)).orElse(null);
+        return category.map(value -> MapperUtil.map(value, CategoryDTO.class)).orElse(null);
     }
 
     public Category getCategoryById(String id) {
@@ -38,7 +38,7 @@ public class CategoryService {
     }
 
     public void updateCategoryById(CategoryDTO categoryDTO, String name) {
-        Category category = MapperUtils.map(categoryDTO, Category.class);
+        Category category = MapperUtil.map(categoryDTO, Category.class);
         category.setCategory(name);
         categoryRepository.save(category);
     }
