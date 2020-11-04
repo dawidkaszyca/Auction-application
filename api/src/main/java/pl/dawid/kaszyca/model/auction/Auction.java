@@ -78,7 +78,7 @@ public class Auction implements Serializable {
     private Instant expiredDate;
 
     public void setDataAfterMapper() {
-        if (id != null) {
+        if (id == null) {
             createdDate = Instant.now();
         }
         expiredDate = getCurrentDatePlusOneMonth();

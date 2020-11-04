@@ -26,7 +26,6 @@ export class AuthService {
   private CREATE_NEW_USER = `${SERVER_API_URL}/account/register`;
   private LOGIN = `${SERVER_API_URL}/authenticate`;
   private PROFILE = `${SERVER_API_URL}/account/profile`;
-  private UPDATE = `${SERVER_API_URL}/account/update`;
   private REMIND_PASSWORD = `${SERVER_API_URL}/account/password`;
   private CHECK_RESET_KEY = `${SERVER_API_URL}/account/check-reset-key/`;
   private RESET_PASSWORD = `${SERVER_API_URL}/account/password`;
@@ -57,7 +56,7 @@ export class AuthService {
   }
 
   updateUserData(user: User) {
-    return this.http.post(this.UPDATE, user);
+    return this.http.put(this.PROFILE, user);
   }
 
   remindPassword(email: string) {

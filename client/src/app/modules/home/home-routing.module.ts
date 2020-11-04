@@ -16,13 +16,17 @@ const routes: Routes = [
     component: MainPageComponent,
   },
   {
+    path: 'auction',
+    component: AuctionPreviewComponent,
+  },
+  {
+    path: 'auction-user',
+    component: UserAuctionsComponent,
+  },
+  {
     path: 'new-auction',
     component: NewAuctionComponent,
     canActivate: [CanActivateRouteGuard]
-  },
-  {
-    path: 'auction',
-    component: AuctionPreviewComponent,
   },
   {
     path: 'my-profile',
@@ -43,10 +47,6 @@ const routes: Routes = [
     path: 'edit-auction',
     component: EditAuctionComponent,
     canActivate: [CanActivateRouteGuard]
-  },
-  {
-    path: 'auction-user',
-    component: UserAuctionsComponent,
   },
   {
     path: '**',

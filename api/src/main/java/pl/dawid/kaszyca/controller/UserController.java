@@ -57,7 +57,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/update")
+    @PutMapping("/profile")
     public ResponseEntity updateUser(@RequestBody UserDTO user) {
         try {
             userService.updateUser(user.getFirstName(), user.getLastName(), user.getEmail());

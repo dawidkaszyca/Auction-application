@@ -41,6 +41,7 @@ class DbSeeder implements CommandLineRunner {
     Random random;
     @Autowired
     PasswordEncoder encoder;
+
     public DbSeeder(AuthorityRepository authorityRepository, CategoryRepository categoryRepository,
                     AuctionRepository auctionRepository, PasswordEncoder password, UserRepository userRepository,
                     AttachmentService attachmentService, ConversationRepository conversationRepository,
@@ -361,9 +362,9 @@ class DbSeeder implements CommandLineRunner {
 
     private void createExampleAuctionStatistic() {
         List<Auction> auctions = auctionRepository.findAll();
-        for(Auction auction: auctions) {
+        for (Auction auction : auctions) {
             Date date = new Date();
-            for(int i=0;i<50;i++) {
+            for (int i = 0; i < 50; i++) {
                 Statistic statistic = new Statistic();
                 statistic.setEnumKey(StatisticKeyEnum.DAILY_AUCTION_VIEWS_BY_ID.value);
                 date = DateUtils.addDays(date, 1);
