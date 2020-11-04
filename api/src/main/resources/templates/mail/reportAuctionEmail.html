@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{email.report.title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" th:href="@{|${baseUrl}/favicon.ico|}" />
 </head>
 <body>
-
+    <p th:text="#{email.signature.greeting(${email})}">
+</p>
+    <p th:text="#{email.report.text(${title})}">
+</p>
+<p>
+    <span th:text="#{email.signature.text}"></span>
+    <br/>
+    <em th:text="#{email.signature}"></em>
+</p>
 </body>
 </html>

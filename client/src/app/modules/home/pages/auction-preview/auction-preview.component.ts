@@ -101,7 +101,7 @@ export class AuctionPreviewComponent implements OnInit {
     this.dialog.open(ReportAuctionComponent,
       {
         width: '750px',
-        height: '530px',
+        height: '460px',
         data: {
           auctionId: this.auctionId
         }

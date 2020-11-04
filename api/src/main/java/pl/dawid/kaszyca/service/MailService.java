@@ -27,12 +27,12 @@ import java.util.Properties;
 public class MailService {
 
     private JavaMailSenderImpl mailSender;
-
     private static final String USER = "user";
-
     private static final String BASE_URL = "baseUrl";
-
     private static final String CURRENT_DATE = "currentDate";
+    private static final String TITLE = "title";
+    private static final String EMAIL = "email";
+
     @Autowired
     private SpringTemplateEngine templateEngine;
 
@@ -55,33 +55,54 @@ public class MailService {
     @Async
     public void sendActivationEmail(User user, String language) {
         log.debug("Sending activation email to '{}'", user.getEmail());
-        sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title", language);
+        Context context = getUserContext(user, language);
+        sendEmailFromTemplate(user.getEmail(), context, "mail/activationEmail", "email.activation.title", language);
     }
 
     @Async
     public void sendPasswordResetMail(User user, String language) {
         log.debug("Sending password reset email to '{}'", user.getEmail());
-        sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title", language);
+        Context context = getUserContext(user, language);
+        sendEmailFromTemplate(user.getEmail(), context, "mail/passwordResetEmail", "email.reset.title", language);
     }
 
+    @Async
     public void sendPasswordChangedMail(User user, String language) {
         log.debug("Sending password changed email to '{}'", user.getEmail());
-        sendEmailFromTemplate(user, "mail/passwordChangedEmail", "email.password.change.title", language);
+        Context context = getUserContext(user, language);
+        sendEmailFromTemplate(user.getEmail(), context, "mail/passwordChangedEmail", "email.password.change.title", language);
     }
 
-    private void sendEmailFromTemplate(User user, String templateName, String titleKey, String language) {
-        if (user.getEmail() == null) {
-            log.debug("Email doesn't exist for user '{}'", user.getLogin());
-            return;
-        }
+    @Async
+    public void sendReportedAuctionMail(String email, String auctionTitle, String language) {
+        log.debug("Sending password changed email to '{}'", email);
+        Context context = getReportedAuctionContext(email, auctionTitle, language);
+        sendEmailFromTemplate(email, context, "mail/reportAuctionEmail", "email.report.title", language);
+    }
+
+    private Context getUserContext(User user, String language) {
         Locale locale = Locale.forLanguageTag(language);
         Context context = new Context(locale);
         context.setVariable(USER, user);
         context.setVariable(CURRENT_DATE, getCurrentDate());
         context.setVariable(BASE_URL, "http://192.168.1.5:4200");
+        return context;
+    }
+
+    private Context getReportedAuctionContext(String email, String auctionTitle, String language) {
+        Locale locale = Locale.forLanguageTag(language);
+        Context context = new Context(locale);
+        context.setVariable(TITLE, auctionTitle);
+        context.setVariable(CURRENT_DATE, getCurrentDate());
+        context.setVariable(EMAIL, email);
+        context.setVariable(BASE_URL, "http://192.168.1.5:4200");
+        return context;
+    }
+
+    private void sendEmailFromTemplate(String email, Context context, String templateName, String titleKey, String language) {
         String content = templateEngine.process(templateName, context);
-        String subject = messageSource.getMessage(titleKey, null, locale);
-        sendEmail(user.getEmail(), subject, content, false, true);
+        String subject = messageSource.getMessage(titleKey, null, Locale.forLanguageTag(language));
+        sendEmail(email, subject, content, false, true);
     }
 
     private String getCurrentDate() {

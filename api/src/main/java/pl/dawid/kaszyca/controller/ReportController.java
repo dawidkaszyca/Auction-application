@@ -22,9 +22,10 @@ public class ReportController {
     }
 
     @PostMapping("/report/auctions")
-    public ResponseEntity saveNewReport(@RequestBody ReportAuctionDTO reportAuctionDTO) {
+    public ResponseEntity saveNewReport(@RequestHeader("Language") String language,
+                                        @RequestBody ReportAuctionDTO reportAuctionDTO) {
         try {
-            reportService.saveNewReport(reportAuctionDTO);
+            reportService.saveNewReport(reportAuctionDTO, language);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             log.info("Something went wrong during saving new report auction");

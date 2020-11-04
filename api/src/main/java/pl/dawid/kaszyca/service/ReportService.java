@@ -17,21 +17,24 @@ public class ReportService {
     private ReportAuctionRepository reportAuctionRepository;
     private AuctionService auctionService;
     private StatisticService statisticService;
+    private MailService mailService;
 
     public ReportService(ReportAuctionRepository reportAuctionRepository, AuctionService auctionService,
-                         StatisticService statisticService) {
+                         StatisticService statisticService, MailService mailService) {
         this.reportAuctionRepository = reportAuctionRepository;
         this.auctionService = auctionService;
         this.statisticService = statisticService;
+        this.mailService = mailService;
     }
 
-    public void saveNewReport(ReportAuctionDTO reportAuctionDTO) {
+    public void saveNewReport(ReportAuctionDTO reportAuctionDTO, String language) {
         ReportedAuction reportedAuction = MapperUtil.map(reportAuctionDTO, ReportedAuction.class);
         Auction auction = auctionService.getAuctionById(reportAuctionDTO.getAuctionId());
         if (auction != null) {
             reportedAuction.setAuction(auction);
             reportAuctionRepository.save(reportedAuction);
             statisticService.incrementDailyAuctionReports();
+            mailService.sendReportedAuctionMail(reportAuctionDTO.getEmail(), auction.getTitle(), language);
         } else {
             throw new AuctionNotExistException();
         }
