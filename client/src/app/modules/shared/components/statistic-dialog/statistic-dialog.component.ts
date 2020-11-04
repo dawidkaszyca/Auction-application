@@ -28,8 +28,8 @@ export class StatisticDialogComponent implements OnInit {
   private getData() {
     this.statisticService.getAuctionStatisticById(this.data.auctionData.id).subscribe(it => {
       this.convertToData(it[this.dailyViewsKey]);
-      this.renderChart(this.dailyViewData, 'chartContainer1', this.translate.instant('dialog.dailyViews'));
-      this.renderChart(this.dailyViewData, 'chartContainer2', this.translate.instant('dialog.dailyPhone'));
+      this.renderChart(this.dailyViewData, 'chartContainer1', this.translate.instant('dialog.daily-views'));
+      this.renderChart(this.dailyViewData, 'chartContainer2', this.translate.instant('dialog.daily-phone'));
     });
   }
 

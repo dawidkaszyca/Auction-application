@@ -35,8 +35,8 @@ export enum State {
 }
 
 export enum StateKey {
-  ACTIVE = 'myAuction.active',
-  INACTIVE = 'myAuction.inactive',
+  ACTIVE = 'my-auction.active',
+  INACTIVE = 'my-auction.inactive',
 }
 
 export enum ReasonKey {
@@ -47,8 +47,8 @@ export enum ReasonKey {
 }
 
 export enum SortKey {
-  MIN_PRICE_KEY = 'sort.minPrice',
-  MAX_PRICE_KEY = 'sort.maxPrice',
+  MIN_PRICE_KEY = 'sort.min-price',
+  MAX_PRICE_KEY = 'sort.max-price',
   NEWEST_KEY = 'sort.newest',
   LATEST_KEY = 'sort.latest',
   POPULARITY_KEY = 'sort.popularity'

@@ -10,7 +10,7 @@
                  id="userName"
                  class="form-control"
                  name="userName"
-                 placeholder="{{'register.urLogin' | translate}}"
+                 placeholder="{{'register.your-login' | translate}}"
                  [(ngModel)]="model.login"
                  #userName="ngModel"
                  required minlength="5"
@@ -20,7 +20,7 @@
           <div *ngIf="f.submitted && userName.invalid" class="invalid-input">
             <!-- individual validation errors -->
             <div *ngIf="userName.errors?.required">{{'register.isEmpty' | translate}}</div>
-            <div *ngIf="userName.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+            <div *ngIf="userName.errors?.minlength">{{'register.min-field-length-five' | translate}}</div>
           </div>
         </div>
         <!-- Password -->
@@ -30,7 +30,7 @@
                  id="password"
                  class="form-control"
                  name="password"
-                 placeholder="{{'register.urPassword' | translate}}"
+                 placeholder="{{'register.your-password' | translate}}"
 
                  [(ngModel)]="model.password"
                  #password="ngModel"
@@ -41,7 +41,7 @@
           <div *ngIf="f.submitted && password.invalid" class="invalid-input">
             <!-- individual validation errors -->
             <div *ngIf="password.errors?.required">{{'register.isEmpty' | translate}}</div>
-            <div *ngIf="password.errors?.minlength">{{'register.toSmall7' | translate}}</div>
+            <div *ngIf="password.errors?.minlength">{{'register.min-field-length-seven' | translate}}</div>
           </div>
         </div>
         <!-- Email -->
@@ -51,7 +51,7 @@
                  id="email"
                  class="form-control"
                  name="email"
-                 placeholder="{{'register.urEmail' | translate}}"
+                 placeholder="{{'register.your-email' | translate}}"
                  [(ngModel)]="model.email"
                  #email="ngModel"
                  [ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
@@ -60,17 +60,17 @@
           <div *ngIf="f.submitted && email.invalid" class="invalid-input">
             <!-- individual validation errors -->
             <div *ngIf="email.errors?.required">{{'register.isEmpty' | translate}}</div>
-            <div *ngIf="email.errors?.email">{{'register.validEmail' | translate}}</div>
+            <div *ngIf="email.errors?.email">{{'register.valid-email' | translate}}</div>
           </div>
         </div>
         <!-- Name -->
         <div class="form-group">
-          <label for="firstName">{{'register.firstName' | translate}}</label>
+          <label for="firstName">{{'register.first-name' | translate}}</label>
           <input type="text"
                  id="firstName"
                  class="form-control"
                  name="firstname"
-                 placeholder="{{'register.urName' | translate}}"
+                 placeholder="{{'register.your-name' | translate}}"
                  [(ngModel)]="model.firstName"
                  #firstName="ngModel"
                  [ngClass]="{ 'is-invalid': f.submitted && firstName.invalid }"
@@ -83,12 +83,12 @@
         </div>
         <!-- lastname -->
         <div class="form-group">
-          <label for="lastName">{{'register.lastName' | translate}}</label>
+          <label for="lastName">{{'register.last-name' | translate}}</label>
           <input type="text"
                  id="lastname"
                  class="form-control"
                  name="lastname"
-                 placeholder="{{'register.urLastName' | translate}}"
+                 placeholder="{{'register.your-last-name' | translate}}"
                  [(ngModel)]="model.lastName"
                  #lastName="ngModel"
                  [ngClass]="{ 'is-invalid': f.submitted && lastName.invalid }"
@@ -100,7 +100,7 @@
           </div>
         </div>
         <button type="submit" class="btn btn-info pull-right float-right" [disabled]="isRequestPending">
-          <span> {{'register.createAccount' | translate}}</span>
+          <span> {{'register.create-account' | translate}}</span>
         </button>
       </form>
     </div>

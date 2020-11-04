@@ -2,7 +2,7 @@
   <div class="h-100 upload-file-container text-center" appDragDrop
        (files)="fileProgress($event)"
        (click)="fileInput.click()">
-    {{'dragAndDrop.string' | translate}}<br>
+    {{'drag-and-drop.string' | translate}}<br>
     <input hidden #fileInput type="file" name="image" accept="image/png, image/jpeg"
            (change)="fileProgress($event)">
   </div>

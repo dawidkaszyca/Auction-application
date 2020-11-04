@@ -6,7 +6,7 @@
     </a>
     <li [routerLinkActive]="['active']" class="nav-item navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
                                         aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <a class="nav-link" routerLink="/new-auction">{{'Navigation.newAuction' | translate}}</a>
+      <a class="nav-link" routerLink="/new-auction">{{'navigation.new-auction' | translate}}</a>
     </li>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
             aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,7 +28,7 @@
     <div class="collapse navbar-collapse pr-4" id="navbarColor01">
       <ul class="navbar-nav w-100">
         <li [routerLinkActive]="['active']" class="nav-item">
-          <a class="nav-link" routerLink="/new-auction">{{'Navigation.newAuction' | translate}}</a>
+          <a class="nav-link" routerLink="/new-auction">{{'navigation.new-auction' | translate}}</a>
         </li>
         <li class="nav-item  ml-md-auto" *ngIf="!notification || notification === 0">
           <fa-icon class="nav-link" routerLink="/messages" [icon]="faEnvelope">{{notification}}</fa-icon>
@@ -37,10 +37,10 @@
           <fa-icon class="nav-link blink" routerLink="/messages" [icon]="faEnvelope">{{notification}}</fa-icon>
         </li>
         <li [routerLinkActive]="['active']" *ngIf="!authService.isLogged()" class="nav-item">
-        <a class="nav-link" routerLink="/login">{{'Navigation.Myprofile' | translate}}</a>
+        <a class="nav-link" routerLink="/login">{{'navigation.my-profile' | translate}}</a>
         </li>
         <li [routerLinkActive]="['active']" class="nav-item" *ngIf="authService.isLogged()">
-          <a [matMenuTriggerFor]="menu1" class="nav-link">{{'Navigation.Myprofile' | translate}}</a>
+          <a [matMenuTriggerFor]="menu1" class="nav-link">{{'navigation.my-profile' | translate}}</a>
           <mat-menu #menu1="matMenu">
             <button mat-menu-item routerLink="/my-profile">My account</button>
             <button mat-menu-item routerLink="/favorite-auction">Favorite auction</button>

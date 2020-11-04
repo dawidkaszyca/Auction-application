@@ -10,13 +10,13 @@
                      type="checkbox" (click)="selectAllAuctions()"/>
             </div>
             <div class="h-100 w-50 floating-div float-left">
-              {{'myAuction.all' | translate}}
+              {{'my-auction.all' | translate}}
             </div>
           </div>
         </div>
         <div class="col-4 col-lg-3">
           <button class="w-100 h-100 btn btn-primary text-center"
-                  (click)="removeSelectedAuctions()">{{'myAuction.delete' | translate}}</button>
+                  (click)="removeSelectedAuctions()">{{'my-auction.delete' | translate}}</button>
         </div>
         <div class="col-4 col-lg-4">
           <mat-select class="form-control w-100"
@@ -93,30 +93,30 @@
                     <div class="row">
                       <div class="col-xl-3 col-md-6">
                         <button class="btn btn-info text-center w-100"
-                                (click)="openAuctionPage(auction)">{{'myAuction.preview' | translate}}</button>
+                                (click)="openAuctionPage(auction)">{{'my-auction.preview' | translate}}</button>
                       </div>
                       <div class="col-xl-3 col-md-6 col-mt-2">
                         <button class="btn btn-info text-center w-100"
-                                (click)="editAuction(auction)">{{'myAuction.edit' | translate}}</button>
+                                (click)="editAuction(auction)">{{'my-auction.edit' | translate}}</button>
                       </div>
                       <div class="col-xl-3 col-md-6 col-md-6-mt-2">
                         <button class="btn btn-info text-center w-100"
-                                (click)="extendAuctionTime(auction)">{{'myAuction.extend' | translate}}</button>
+                                (click)="extendAuctionTime(auction)">{{'my-auction.extend' | translate}}</button>
                       </div>
                       <div class="col-xl-3 col-md-6 col-md-6-mt-2">
                         <button class="  btn btn-info text-cente w-100"
-                                (click)="getStatisticDialog(auction)">{{'myAuction.statistics' | translate}}</button>
+                                (click)="getStatisticDialog(auction)">{{'my-auction.statistics' | translate}}</button>
                       </div>
                     </div>
                   </div>
                   <div class="col-5 col-md-4">
                     <div class="row">
                       <div class="col-4 text-center d-none d-lg-block">
-                        {{'myAuction.createDate' | translate}}
+                        {{'my-auction.createDate' | translate}}
                         {{auction.createdDate| date:'mediumDate'}}
                       </div>
                       <div class="col-8 text-center">
-                        {{'myAuction.expiredDate' | translate}} <br>
+                        {{'my-auction.expiredDate' | translate}} <br>
                         {{auction.expiredDate| date:'short'}}
                       </div>
                     </div>

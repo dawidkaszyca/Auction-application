@@ -34,11 +34,11 @@
                    class="text-right pr-2">{{auction.price|currency:"zł"
                   |splitCurrency:auction.price}}</p>
                 <button *ngIf="!call" class="btn btn-primary w-100 mt-1"
-                        (click)="incrementCall(true)">{{'myProfile.call' | translate}}</button>
+                        (click)="incrementCall(true)">{{'my-profile.call' | translate}}</button>
                 <button *ngIf="call" (click)="incrementCall(false)"
                         class="btn btn-primary w-100 mt-1">{{auction?.phone}}</button>
                 <button class="btn btn-primary w-100 mt-2"
-                        (click)="routeToUserClassFields()">{{'myProfile.classifieds' | translate}}</button>
+                        (click)="routeToUserClassFields()">{{'my-profile.announcements' | translate}}</button>
                 <button class="btn btn-primary w-100 mt-2"
                         (click)="addToFavorite()">{{'auction.favorite' | translate}}</button>
                 <button class="btn btn-primary w-100 mt-2"
@@ -77,7 +77,7 @@
       </div>
       <div class="col-12 col-md-6">
         <div class="form-group">
-          <label>{{'newAuction.description' | translate}}</label>
+          <label>{{'new-auction.description' | translate}}</label>
           <textarea class="form-control"
                     autosize
                     [value]="auction?.description"

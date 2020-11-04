@@ -17,7 +17,7 @@
         <div *ngIf="f.submitted && description.invalid" class="invalid-input mt-2">
           <!-- individual validation errors -->
           <div *ngIf="description.errors?.required">{{'register.isEmpty' | translate}}</div>
-          <div *ngIf="description.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+          <div *ngIf="description.errors?.minlength">{{'register.min-field-length-five' | translate}}</div>
         </div>
       </div>
       <div class="w-100"></div>

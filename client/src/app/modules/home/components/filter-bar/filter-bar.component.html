@@ -1,6 +1,6 @@
 <mat-card class="w-100">
   <form #f="ngForm" (ngSubmit)="f.form.valid" novalidate class="feedback-form">
-    <label>{{'newAuction.price' | translate}}</label>
+    <label>{{'new-auction.price' | translate}}</label>
     <div class="row">
       <div class="col-lg-6 col-md-12 form-group">
         <input type="number"
@@ -20,10 +20,10 @@
                placeholder="{{'filter.to' | translate}}"/>
       </div>
     </div>
-    <label *ngIf="minPrice > maxPrice">{{'newAuction.price' | translate}}</label>
-
+    <label *ngIf="minPrice > maxPrice">{{'new-auction.price' | translate}}</label>
+    
     <div class="form-group">
-      <label>{{'newAuction.condition' | translate}}</label><br>
+      <label>{{'new-auction.condition' | translate}}</label><br>
       <mat-select class="form-control w-100"
                   [(ngModel)]="selectedCondition"
                   name="condition">
@@ -38,6 +38,6 @@
         </mat-select>
       </div>
     </div>
-    <button (submit)="f" (click)="setFilters()" type="button" class="w-100 h-100 btn btn-primary mt-4">{{"search.Search" | translate}}</button>
+    <button (submit)="f" (click)="setFilters()" type="button" class="w-100 h-100 btn btn-primary mt-4">{{"search" | translate}}</button>
   </form>
 </mat-card>
