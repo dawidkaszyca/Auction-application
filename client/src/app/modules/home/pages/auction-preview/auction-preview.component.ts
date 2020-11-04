@@ -53,7 +53,9 @@ export class AuctionPreviewComponent implements OnInit {
   private loadAuctionPhotos() {
     this.attachmentService.getAuctionPhotosById(this.auctionId).subscribe(
       res => {
-        this.loadImages(res);
+        if (res) {
+          this.loadImages(res);
+        }
       });
   }
 
@@ -86,9 +88,9 @@ export class AuctionPreviewComponent implements OnInit {
   addToFavorite() {
     if (this.authService.isLogged()) {
       this.auctionService.addToFavorite(this.auctionId).subscribe(it => {
-        this.dialogService.openInfoDialog(DialogKey.AFTER_FAVORITE);
+        this.dialogService.openInfoDialog(DialogKey.AFTER_FAVORITE, false, null);
       }, error => {
-        this.dialogService.openWarningDialog(DialogKey.AFTER_FAVORITE_ERROR);
+        this.dialogService.openWarningDialog(DialogKey.AFTER_FAVORITE_ERROR, false, null);
       });
     } else {
       this.route.navigate(['/login'], {queryParams: {returnUrl: this.route.url}});
@@ -99,7 +101,7 @@ export class AuctionPreviewComponent implements OnInit {
     this.dialog.open(ReportAuctionComponent,
       {
         width: '750px',
-        height: '530px',
+        height: '460px',
         data: {
           auctionId: this.auctionId
         }

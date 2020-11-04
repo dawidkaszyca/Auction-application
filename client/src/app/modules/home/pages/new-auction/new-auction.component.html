@@ -1,11 +1,11 @@
 <div class="w-90-center">
-  <h2 class="pt-4 ext-left ml-2"> {{'newAuction.start' | translate}}</h2>
+  <h2 class="pt-4 ext-left ml-2"> {{'new-auction.start' | translate}}</h2>
   <form #f="ngForm" (ngSubmit)="f.form.valid && checkName() && saveAuction()" novalidate class="feedback-form"
         autocomplete="off">
     <mat-card>
       <div class="row">
         <div class="form-group col-12 col-md-8 col-lg-6">
-          <label>{{'newAuction.title' | translate}}</label>
+          <label>{{'new-auction.title' | translate}}</label>
           <input type="text"
                  id="title"
                  class="form-control"
@@ -20,12 +20,12 @@
           <div *ngIf="f.submitted && title.invalid" class="invalid-input mt-2">
             <!-- individual validation errors -->
             <div *ngIf="title.errors?.required">{{'register.isEmpty' | translate}}</div>
-            <div *ngIf="title.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+            <div *ngIf="title.errors?.minlength">{{'register.min-field-length-five' | translate}}</div>
           </div>
         </div>
         <div class="w-100"></div>
         <div class="form-group col-12 col-md-8 col-lg-6">
-          <label>{{'newAuction.category' | translate}}</label><br>
+          <label>{{'new-auction.category' | translate}}</label><br>
           <mat-select class="form-control"
                       [(ngModel)]="auction.category"
                       name="category"
@@ -41,7 +41,7 @@
         </div>
         <div class="w-100"></div>
         <div class="form-group col-6 col-sm-5 col-md-4 col-lg-3">
-          <label>{{'newAuction.price' | translate}}</label>
+          <label>{{'new-auction.price' | translate}}</label>
           <input class="form-control text-right"
                  [(ngModel)]="auction.price"
                  type="number"
@@ -50,7 +50,7 @@
         </div>
         <div class="w-100"></div>
         <div class="form-group col-6 col-sm-5 col-md-4 col-lg-3">
-          <label>{{'newAuction.condition' | translate}}</label><br>
+          <label>{{'new-auction.condition' | translate}}</label><br>
           <mat-select class="form-control"
                       [(ngModel)]="auction.condition"
                       name="condition"
@@ -73,7 +73,7 @@
     <mat-card>
       <div class="row">
         <div class="form-group col-12 col-md-8 col-lg-6">
-          <label for="comment">{{'newAuction.description' | translate}}</label>
+          <label for="comment">{{'new-auction.description' | translate}}</label>
           <textarea class="form-control"
                     rows="7"
                     id="comment"
@@ -86,23 +86,23 @@
           <div *ngIf="f.submitted && description.invalid" class="invalid-input mt-2">
             <!-- individual validation errors -->
             <div *ngIf="description.errors?.required">{{'register.isEmpty' | translate}}</div>
-            <div *ngIf="description.errors?.minlength">{{'register.toSmall5' | translate}}</div>
+            <div *ngIf="description.errors?.minlength">{{'register.min-field-length-five' | translate}}</div>
           </div>
         </div>
       </div>
     </mat-card>
 
     <mat-card>
-      <label>{{'newAuction.contactData' | translate}}</label>
+      <label>{{'new-auction.contactData' | translate}}</label>
       <div class="row">
         <div class="form-group col-8 col-sm-6 col-md-4 col-lg-3 mt-2">
-          <label>{{'newAuction.city' | translate}}</label>
+          <label>{{'new-auction.city' | translate}}</label>
           <input class="form-control"
                  autocomplete="off"
                  ngx-google-places-autocomplete
                  [options]='options'
                  name="input"
-                 placeholder="{{'newAuction.setCity' | translate}}"
+                 placeholder="{{'new-auction.set-city' | translate}}"
                  #placesRef="ngx-places"
                  #city="ngModel"
                  [(ngModel)]="cityName"
@@ -112,12 +112,12 @@
           <div *ngIf="f.submitted && (city.invalid || !checkName())" class="invalid-input mt-2">
             <!-- individual validation errors -->
             <div *ngIf="city.errors?.required">{{'register.isEmpty' | translate}}</div>
-            <div *ngIf="!checkName()">{{'register.cityIsNotProvideByGoogle' | translate}}</div>
+            <div *ngIf="!checkName()">{{'register.city-not-provided-by-google' | translate}}</div>
           </div>
         </div>
         <div class="w-100"></div>
         <div class="form-group col-8 col-sm-6 col-md-4 col-lg-3">
-          <label>{{'newAuction.email' | translate}}</label>
+          <label>{{'new-auction.email' | translate}}</label>
           <input type="text"
                  id="email"
                  class="form-control"
@@ -127,12 +127,12 @@
         </div>
         <div class="w-100"></div>
         <div class="form-group col-8 col-sm-6 col-md-4 col-lg-3">
-          <label>{{'register.urName' | translate}}</label>
+          <label>{{'register.your-name' | translate}}</label>
           <input class="form-control" [(ngModel)]="name" name="name" disabled>
         </div>
         <div class="w-100"></div>
         <div class="form-group col-8 col-sm-6 col-md-4 col-lg-3">
-          <label>{{'newAuction.phone' | translate}}</label>
+          <label>{{'new-auction.phone' | translate}}</label>
           <input class="form-control" [(ngModel)]="auction.phone" name="phone">
         </div>
       </div>
@@ -165,7 +165,7 @@
       <div class="col-3"></div>
       <div class="col-6">
         <mat-card (click)="f.onSubmit($event)" class="submit text-center font-weight-bold">
-          <label>{{'newAuction.save' | translate}}</label>
+          <label>{{'new-auction.save' | translate}}</label>
         </mat-card>
       </div>
       <div class="col-3"></div>

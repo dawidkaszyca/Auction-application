@@ -23,6 +23,11 @@ mat-select {
   border-radius: 35px !important;
 }
 
+.spinner-center {
+  margin-left: calc(50% - 50px);
+  margin-right: calc(50% - 50px);
+}
+
 /*.no-select {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -75,6 +80,19 @@ textarea {
   span {
     position:absolute;
     bottom:0;
+  }
+}
+
+.without-left-right-padding {
+  padding-left: 0 !important;
+  padding-right: 0!important;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.cursor-pointer{
+  &:hover {
+    cursor: pointer;
   }
 }
 

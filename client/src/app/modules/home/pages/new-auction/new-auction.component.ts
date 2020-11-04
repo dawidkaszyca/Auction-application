@@ -128,7 +128,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
       },
       err => {
         this.isSaving = false;
-        this.dialogService.openWarningDialog(DialogKey.SAVE_AUCTION_ERROR);
+        this.dialogService.openWarningDialog(DialogKey.SAVE_AUCTION_ERROR, false, null);
       });
   }
 
@@ -149,7 +149,7 @@ export class NewAuctionComponent implements OnInit, OnDestroy {
           this.openAuctionPage(attachment.auctionId);
         });
       }, error => {
-        this.dialogService.openWarningDialog(DialogKey.SAVE_ATTACHMENT_ERROR);
+        this.dialogService.openWarningDialog(DialogKey.SAVE_ATTACHMENT_ERROR, false, null);
       });
   }
 

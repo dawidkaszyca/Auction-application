@@ -8,7 +8,7 @@ import {MatSelectChange} from '@angular/material/select';
 import {MatDialog} from '@angular/material/dialog';
 import {StatisticDialogComponent} from '../../../shared/components/statistic-dialog/statistic-dialog.component';
 import {EditAuctionComponent} from '../../pages/edit-auction/edit-auction.component';
-import {EnumsHelper, Order, PageSize, SortKey, State, SortField, DialogKey} from '../../../shared/config/enums';
+import {DialogKey, EnumsHelper, Order, PageSize, SortField, SortKey, State, StateKey} from '../../../shared/config/enums';
 import {DialogService} from '../../../shared/services/dialog.service';
 
 @Component({
@@ -83,8 +83,10 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
     if (this.getAuctionIdList().length > 0) {
       this.attachmentService.getPhotos(this.getAuctionIdList()).subscribe(
         res => {
-          const response = new Map(Object.entries(res));
-          this.setImages(response);
+          if (res) {
+            const response = new Map(Object.entries(res));
+            this.setImages(response);
+          }
         });
     }
   }
@@ -134,8 +136,8 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   }
 
   private loadMaps() {
-    this.selectedState.push(State.ACTIVE);
-    this.states = EnumsHelper.getValuesByEnumName(State);
+    this.selectedState.push(StateKey.ACTIVE);
+    this.states = EnumsHelper.getValuesByEnumName(StateKey);
     this.sortList = EnumsHelper.getValuesByEnumName(SortKey);
     this.pageSizeList = EnumsHelper.getValuesByEnumName(PageSize);
   }
@@ -187,15 +189,15 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
       this.selectedAuctions = [];
       this.loadAuctionsData();
     }, error => {
-      this.dialogService.openWarningDialog(DialogKey.REMOVE_AUCTION_ERROR);
+      this.dialogService.openWarningDialog(DialogKey.REMOVE_AUCTION_ERROR, false, null);
     });
   }
 
 
   selectState(event: MatSelectChange) {
     if (event.value.length === 2) {
-      this.filter.state = 'ALL';
-    } else if (event.value[0] === State.INACTIVE) {
+      this.filter.state = State.ALL;
+    } else if (event.value[0] === StateKey.INACTIVE) {
       this.filter.state = State.INACTIVE;
     } else {
       this.filter.state = State.ACTIVE;
@@ -206,9 +208,9 @@ export class MyAuctionListComponent implements OnInit, OnChanges {
   extendAuctionTime(auction: AuctionBaseField) {
     this.auctionService.extendAuctionTime(auction.id).subscribe(res => {
       auction.expiredDate = res;
-      this.dialogService.openInfoDialog(DialogKey.EXTEND_AUCTION_TIME);
+      this.dialogService.openInfoDialog(DialogKey.EXTEND_AUCTION_TIME, false, null);
     }, error => {
-      this.dialogService.openWarningDialog(DialogKey.EXTEND_AUCTION_TIME_ERROR);
+      this.dialogService.openWarningDialog(DialogKey.EXTEND_AUCTION_TIME_ERROR, false, null);
     });
   }
 

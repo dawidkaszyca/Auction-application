@@ -11,14 +11,17 @@ import pl.dawid.kaszyca.config.AuthoritiesConstants;
 import pl.dawid.kaszyca.dto.UserDTO;
 import pl.dawid.kaszyca.exception.EmailAlreadyUsedException;
 import pl.dawid.kaszyca.exception.InvalidPasswordException;
+import pl.dawid.kaszyca.exception.UserNotExistException;
 import pl.dawid.kaszyca.exception.UsernameAlreadyUsedException;
 import pl.dawid.kaszyca.model.Authority;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.repository.AuthorityRepository;
 import pl.dawid.kaszyca.repository.UserRepository;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 import pl.dawid.kaszyca.util.RandomUtil;
-import pl.dawid.kaszyca.util.SecurityUtils;
+import pl.dawid.kaszyca.util.SecurityUtil;
+import pl.dawid.kaszyca.vm.ChangePasswordVM;
+import pl.dawid.kaszyca.vm.ResetPasswordVM;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -66,8 +69,8 @@ public class UserService {
                 });
     }
 
-    public void registerUser(UserDTO userDTO, String password) {
-        if (!checkPasswordLength(userDTO.getPassword())) {
+    public void registerUser(UserDTO userDTO, String password, String language) {
+        if (!checkPasswordLength(password)) {
             throw new InvalidPasswordException();
         }
         userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).ifPresent(existingUser -> {
@@ -99,7 +102,7 @@ public class UserService {
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         log.debug("Send activation mail to ", newUser.getFirstName());
-        //mailService.sendActiveMail(newUser.getFirstName(), newUser.getActivationKey(), userDTO.getEmail());
+        mailService.sendActivationEmail(newUser, language);
         statisticService.incrementDailyRegistration();
     }
 
@@ -110,7 +113,7 @@ public class UserService {
     }
 
     public void updateUser(String firstName, String lastName, String email) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtil.getCurrentUserLogin()
                 .flatMap(userRepository::findOneByLogin)
                 .ifPresent(user -> {
                     user.setFirstName(firstName);
@@ -123,7 +126,7 @@ public class UserService {
     }
 
     public Optional<User> getCurrentUserObject() {
-        Optional<String> login = SecurityUtils.getCurrentUserLogin();
+        Optional<String> login = SecurityUtil.getCurrentUserLogin();
         return login.map(userRepository::findOneByLogin).orElse(null);
     }
 
@@ -147,7 +150,7 @@ public class UserService {
     }
 
     public void changePassword(String currentClearTextPassword, String newPassword) {
-        SecurityUtils.getCurrentUserLogin()
+        SecurityUtil.getCurrentUserLogin()
                 .flatMap(userRepository::findOneByLogin)
                 .ifPresent(user -> {
                     String currentEncryptedPassword = user.getPassword();
@@ -163,7 +166,7 @@ public class UserService {
     public UserDTO getCurrentUser() {
         Optional<User> user = getCurrentUserObject();
         if (user.isPresent())
-            return MapperUtils.map(user.get(), UserDTO.class);
+            return MapperUtil.map(user.get(), UserDTO.class);
         return null;
     }
 
@@ -193,5 +196,59 @@ public class UserService {
     public String getCurrentUserEmail() {
         Optional<User> user = getCurrentUserObject();
         return user.map(User::getEmail).orElse(null);
+    }
+
+    public boolean remindPassword(String email, String language) {
+        Optional<User> optionalUser = userRepository.findOneByEmailIgnoreCase(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setResetKey(RandomUtil.generateResetKey());
+            user.setResetKeyDate(Instant.now());
+            userRepository.save(user);
+            mailService.sendPasswordResetMail(user, language);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkResetKey(String key) {
+        Optional<User> optionalUser = userRepository.findOneByResetKey(key);
+        return optionalUser.isPresent();
+    }
+
+    public void resetPassword(ResetPasswordVM resetPasswordVM, String language) {
+        Optional<User> optionalUser = userRepository.findOneByEmailIgnoreCaseAndResetKey(resetPasswordVM.getEmail(), resetPasswordVM.getResetKey());
+        if (optionalUser.isPresent() && validateResetKeyDate(optionalUser.get())) {
+            User user = optionalUser.get();
+            String encodedPassword = passwordEncoder.encode(resetPasswordVM.getPassword());
+            user.setPassword(encodedPassword);
+            user.setResetKey(null);
+            user.setResetKeyDate(null);
+            userRepository.save(user);
+            mailService.sendPasswordChangedMail(user, language);
+        } else {
+            throw new UserNotExistException();
+        }
+    }
+
+    private boolean validateResetKeyDate(User user) {
+        Instant currentDate = Instant.now().minus(1, ChronoUnit.HOURS);
+        return user.getResetKeyDate().compareTo(currentDate) > 0;
+    }
+
+    public void updatePassword(ChangePasswordVM changePasswordVM, String language) {
+        Optional<User> optionalUser = getCurrentUserObject();
+        if (optionalUser.isPresent() && checkOldPassword(optionalUser.get().getPassword(), changePasswordVM.getOldPassword())) {
+            User user = optionalUser.get();
+            user.setPassword(changePasswordVM.getNewPassword());
+            userRepository.save(user);
+            mailService.sendPasswordChangedMail(user, language);
+        } else {
+            throw new UserNotExistException();
+        }
+    }
+
+    private boolean checkOldPassword(String currentPasswordHash, String oldPassword) {
+        return passwordEncoder.matches(oldPassword, currentPasswordHash);
     }
 }

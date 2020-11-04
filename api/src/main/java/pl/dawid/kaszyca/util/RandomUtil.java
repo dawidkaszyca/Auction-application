@@ -18,10 +18,6 @@ public final class RandomUtil {
         return RandomStringUtils.random(DEF_COUNT, 0, 0, true, true, (char[]) null, SECURE_RANDOM);
     }
 
-    public static String generatePassword() {
-        return generateRandomAlphanumericString();
-    }
-
     public static String generateActivationKey() {
         return generateRandomAlphanumericString();
     }

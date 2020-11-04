@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component
 @NoArgsConstructor
-public class MapperUtils {
+public class MapperUtil {
 
     private static ModelMapper modelMapper = new ModelMapper();
 

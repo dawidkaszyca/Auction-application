@@ -10,7 +10,7 @@
            [options]='options'
            [(ngModel)]="cityName"
            name="input"
-           placeholder="{{'newAuction.setCity' | translate}}"
+           placeholder="{{'new-auction.set-city' | translate}}"
            #placesRef="ngx-places"
            (onAddressChange)="handleAddressChange($event)"
            required/>
@@ -24,6 +24,6 @@
   </div>
   <div class="col-lg-2 col-md-2 col-6 col-md-4-margin-top">
     <button type="button" class="w-100 h-100 btn btn-primary text-center"
-            (click)="updateFilter()">{{"search.Search" | translate}}</button>
+            (click)="updateFilter()">{{"search" | translate}}</button>
   </div>
 </div>

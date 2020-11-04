@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
-import {ApiService} from '../api.service';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from '../../security/auth.service';
 
 @Component({
   selector: 'app-confirm-register',
@@ -8,9 +7,9 @@ import {ApiService} from '../api.service';
   styleUrls: ['./confirm-register.component.scss']
 })
 export class ConfirmRegisterComponent implements OnInit {
-  correctActive: boolean;
+  correctActive = false;
 
-  constructor(private apiService: ApiService, private router: Router) {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -18,14 +17,9 @@ export class ConfirmRegisterComponent implements OnInit {
   }
 
   public getActivateStatus() {
-    this.apiService.getActivateStatus().subscribe(
+    this.authService.activateAccount().subscribe(
       res => {
         this.correctActive = true;
-      },
-      err => {
-        this.router.navigateByUrl('/**');
-      }
-    )
-    ;
+      });
   }
 }

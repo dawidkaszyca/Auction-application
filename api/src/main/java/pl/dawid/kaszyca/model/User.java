@@ -63,6 +63,16 @@ public class User implements Serializable {
     @JsonIgnore
     private String activationKey;
 
+    @Size(max = 20)
+    @Column(name = "reset_key", length = 20)
+    @JsonIgnore
+    private String resetKey;
+
+    @CreatedDate
+    @Column(name = "reset_key_date")
+    @JsonIgnore
+    private Instant resetKeyDate;
+
     @CreatedDate
     @Column(name = "created_date", updatable = false)
     @JsonIgnore

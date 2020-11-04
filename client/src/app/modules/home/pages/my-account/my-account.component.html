@@ -14,9 +14,9 @@
           </div>
           <div class="col-6 nopadding">
             <button type="button" (click)="isPhotoEditAble = true; afterPhotoEdit = false"
-                    class="w-100 mt-4 btn btn-primary float-right mr-2">{{"myProfile.photoButton" | translate}}</button>
+                    class="w-100 mt-4 btn btn-primary float-right mr-2">{{'my-profile.photo-button' | translate}}</button>
             <button (click)="saveUserPhoto()" *ngIf="afterPhotoEdit"
-                    class="w-100 float-right mt-3 btn btn-primary mr-2">{{"newAuction.save" | translate}}</button>
+                    class="w-100 float-right mt-3 btn btn-primary mr-2">{{"new-auction.save" | translate}}</button>
           </div>
         </div>
       </mat-card>
@@ -24,17 +24,17 @@
     <div class="col-5">
       <mat-card class="h-100">
         <div class="h-75">
-          <mat-card-title class="text-center">{{'myProfile.welcome' | translate}}</mat-card-title>
+          <mat-card-title class="text-center">{{'my-profile.welcome' | translate}}</mat-card-title>
           <form id="my-form" name="form" #f="ngForm" (ngSubmit)="f.form.valid && changeUserData()" novalidate
                 class="feedback-form">
             <label class="mt-2">{{"register.login" | translate}}</label>
             <input class="form-control w-100" [value]="user?.login" disabled>
-            <label class="mt-2">{{"register.firstName" | translate}}</label>
+            <label class="mt-2">{{"register.first-name" | translate}}</label>
             <input type="text"
                    id="firstName"
                    class="form-control"
                    name="firstname"
-                   placeholder="{{'register.urName' | translate}}"
+                   placeholder="{{'register.your-name' | translate}}"
                    [(ngModel)]="user.firstName"
                    #firstName="ngModel"
                    [ngClass]="{ 'is-invalid': f.submitted && firstName.invalid }"
@@ -45,12 +45,12 @@
               <!-- individual validation errors -->
               <div *ngIf="firstName.errors?.required">{{'register.isEmpty' | translate}}</div>
             </div>
-            <label class="mt-2">{{"register.lastName" | translate}}</label>
+            <label class="mt-2">{{"register.last-name" | translate}}</label>
             <input type="text"
                    id="lastname"
                    class="form-control"
                    name="lastname"
-                   placeholder="{{'register.urLastName' | translate}}"
+                   placeholder="{{'register.your-last-name' | translate}}"
                    [(ngModel)]="user.lastName"
                    #lastName="ngModel"
                    [ngClass]="{ 'is-invalid': f.submitted && lastName.invalid }"
@@ -66,7 +66,7 @@
                    id="email"
                    class="form-control"
                    name="email"
-                   placeholder="{{'register.urEmail' | translate}}"
+                   placeholder="{{'register.your-email' | translate}}"
                    [(ngModel)]="user.email"
                    #email="ngModel"
                    [ngClass]="{ 'is-invalid': f.submitted && email.invalid }"
@@ -76,16 +76,16 @@
             <div *ngIf="f.submitted && email.invalid" class="invalid-input">
               <!-- individual validation errors -->
               <div *ngIf="email.errors?.required">{{'register.isEmpty' | translate}}</div>
-              <div *ngIf="email.errors?.email">{{'register.validEmail' | translate}}</div>
+              <div *ngIf="email.errors?.email">{{'register.valid-email' | translate}}</div>
             </div>
           </form>
         </div>
         <button type="button" *ngIf="!isEditAble" (click)="isEditAble = true"
-                class="w-100 mt-4 btn btn-primary d-block">{{"myProfile.changeData" | translate}}</button>
+                class="w-100 mt-4 btn btn-primary d-block">{{'my-profile.change-data' | translate}}</button>
         <button type="submit" form="my-form" *ngIf="isEditAble"
-                class="w-100 mt-4 btn btn-primary d-block">{{"newAuction.save" | translate}}</button>
+                class="w-100 mt-4 btn btn-primary d-block">{{"new-auction.save" | translate}}</button>
         <button type="button"
-                class="w-100 mt-3 btn btn-primary d-block">{{"myProfile.changePassword" | translate}}</button>
+                class="w-100 mt-3 btn btn-primary d-block">{{'my-profile.change-password' | translate}}</button>
       </mat-card>
     </div>
   </div>

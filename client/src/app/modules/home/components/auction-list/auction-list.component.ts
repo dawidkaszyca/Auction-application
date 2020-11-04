@@ -28,8 +28,10 @@ export class AuctionListComponent implements OnInit, OnChanges {
     if (this.getAuctionIdList().length > 0) {
       this.attachmentService.getPhotos(this.getAuctionIdList()).subscribe(
         res => {
-          const response = new Map(Object.entries(res));
-          this.setImages(response);
+          if (res) {
+            const response = new Map(Object.entries(res));
+            this.setImages(response);
+          }
         });
     }
   }

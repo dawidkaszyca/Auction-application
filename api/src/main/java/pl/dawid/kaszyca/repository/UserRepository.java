@@ -17,6 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 
+    Optional<User> findOneByEmailIgnoreCaseAndResetKey(String email, String resetKey);
+
+    Optional<User> findOneByResetKey(String resetKey);
+
     Optional<User> findOneByLogin(String login);
 
     Optional<User> findOneWithAuthoritiesByLogin(String login);

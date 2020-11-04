@@ -155,6 +155,10 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
   loadAuctionPhotos(): void {
     this.attachmentService.getAuctionPhotosById(this.auctionId).subscribe(
       res => {
+        if (!res) {
+          this.images = [];
+          return;
+        }
         this.images = res;
         this.previewUrl = [];
         res.forEach(it => {
@@ -182,7 +186,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
       },
       err => {
         this.isSaving = false;
-        this.dialogService.openWarningDialog(DialogKey.UPDATE_AUCTION_ERROR);
+        this.dialogService.openWarningDialog(DialogKey.UPDATE_AUCTION_ERROR, false, null);
       });
   }
 
@@ -217,7 +221,7 @@ export class EditAuctionComponent implements OnInit, OnDestroy {
       },
       err => {
         this.isSaving = false;
-        this.dialogService.openWarningDialog(DialogKey.UPDATE_ATTACHMENT_ERROR);
+        this.dialogService.openWarningDialog(DialogKey.UPDATE_ATTACHMENT_ERROR, false, null);
       });
   }
 

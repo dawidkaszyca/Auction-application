@@ -32,9 +32,7 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
       this.selectedValues = null;
       this.ngOnInit();
     }
-    if (changes.selectedValues) {
-      this.show = true;
-    }
+    this.show = !!(changes.selectedValues && changes.selectedValues.currentValue.length > 0);
   }
 
   getData(): void {
@@ -48,7 +46,9 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
   private prepareObjectToReturn() {
     if (!this.selectedValues) {
       this.selectedValues = [];
-      for (const attribute of this.attributes) {
+    }
+    for (const attribute of this.attributes) {
+      if (!this.checkIfAttributeAlreadyExist(attribute)) {
         const categoryObj = new CategoryAttributes();
         categoryObj.attribute = attribute.attribute;
         categoryObj.isSingleSelect = attribute.isSingleSelect;
@@ -64,6 +64,15 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
     }
     this.show = this.attributes.length > 0;
     this.selectEmitter.emit(this.selectedValues);
+  }
+
+  private checkIfAttributeAlreadyExist(attribute: CategoryAttributes) {
+    for (const obj of this.selectedValues) {
+      if (obj.attribute === attribute.attribute) {
+        return true;
+      }
+    }
+    return false;
   }
 
   selectValue($event: MatSelectChange, id: string) {

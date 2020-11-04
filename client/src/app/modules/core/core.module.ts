@@ -15,10 +15,15 @@ import {AuthInterceptor} from './security/interceptor/auth.interceptor';
 import {FooterComponent} from './footer/footer.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {HomeRoutingModule} from '../home/home-routing.module';
+import { ResetPasswordComponent } from './authentication/reset-password/reset-password.component';
+import { RemindPasswordComponent } from './authentication/remind-password/remind-password.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
-    FooterComponent
+    FooterComponent,
+    ResetPasswordComponent,
+    RemindPasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +37,8 @@ import {HomeRoutingModule} from '../home/home-routing.module';
     HomeRoutingModule,
     MatIconModule,
     MatMenuModule,
-    SharedModule
+    SharedModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     MatSnackBar,

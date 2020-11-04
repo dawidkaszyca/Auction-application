@@ -6,7 +6,7 @@ import pl.dawid.kaszyca.exception.AuctionNotExistException;
 import pl.dawid.kaszyca.model.auction.Auction;
 import pl.dawid.kaszyca.model.auction.ReportedAuction;
 import pl.dawid.kaszyca.repository.ReportAuctionRepository;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,21 +17,24 @@ public class ReportService {
     private ReportAuctionRepository reportAuctionRepository;
     private AuctionService auctionService;
     private StatisticService statisticService;
+    private MailService mailService;
 
     public ReportService(ReportAuctionRepository reportAuctionRepository, AuctionService auctionService,
-                         StatisticService statisticService) {
+                         StatisticService statisticService, MailService mailService) {
         this.reportAuctionRepository = reportAuctionRepository;
         this.auctionService = auctionService;
         this.statisticService = statisticService;
+        this.mailService = mailService;
     }
 
-    public void saveNewReport(ReportAuctionDTO reportAuctionDTO) {
-        ReportedAuction reportedAuction = MapperUtils.map(reportAuctionDTO, ReportedAuction.class);
+    public void saveNewReport(ReportAuctionDTO reportAuctionDTO, String language) {
+        ReportedAuction reportedAuction = MapperUtil.map(reportAuctionDTO, ReportedAuction.class);
         Auction auction = auctionService.getAuctionById(reportAuctionDTO.getAuctionId());
         if (auction != null) {
             reportedAuction.setAuction(auction);
             reportAuctionRepository.save(reportedAuction);
             statisticService.incrementDailyAuctionReports();
+            mailService.sendReportedAuctionMail(reportAuctionDTO.getEmail(), auction.getTitle(), language);
         } else {
             throw new AuctionNotExistException();
         }
@@ -39,7 +42,7 @@ public class ReportService {
 
     public List<ReportAuctionDTO> getReported(Boolean active) {
         List<ReportedAuction> reportedAuctions = reportAuctionRepository.findAllByActive(active);
-        return MapperUtils.mapAll(reportedAuctions, ReportAuctionDTO.class);
+        return MapperUtil.mapAll(reportedAuctions, ReportAuctionDTO.class);
     }
 
     public void updateReport(ReportAuctionDTO reportAuctionDTO) {

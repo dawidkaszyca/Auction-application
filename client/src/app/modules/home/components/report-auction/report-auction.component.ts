@@ -30,7 +30,7 @@ export class ReportAuctionComponent implements OnInit {
   sendReport() {
     this.auctionService.sendNewReport(this.reportAuction).subscribe(it => {
       this.dialogRef.close();
-      this.dialogService.openInfoDialog(DialogKey.AFTER_REPORT);
+      this.dialogService.openInfoDialog(DialogKey.AFTER_REPORT, false, null);
     });
   }
 }

@@ -8,7 +8,7 @@ import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
 import pl.dawid.kaszyca.service.AuctionService;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
 
@@ -31,7 +31,7 @@ public class AuctionController {
     @GetMapping("/auctions")
     public ResponseEntity getAuction(@RequestParam String criteria) {
         try {
-            FilterVM filterVM = MapperUtils.mapJsonToObject(criteria, FilterVM.class);
+            FilterVM filterVM = MapperUtil.mapJsonToObject(criteria, FilterVM.class);
             AuctionVM auction = auctionService.getAuctionsFilter(filterVM);
             return auction != null ?
                     new ResponseEntity(auction, HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);

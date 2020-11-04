@@ -11,9 +11,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Component
-public final class SecurityUtils {
+public final class SecurityUtil {
 
-    private SecurityUtils() {
+    private SecurityUtil() {
     }
 
     public static Optional<String> getCurrentUserLogin() {

@@ -13,7 +13,7 @@ import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.*;
 import pl.dawid.kaszyca.repository.AuctionRepository;
 import pl.dawid.kaszyca.repository.FavoriteAuctionRepository;
-import pl.dawid.kaszyca.util.MapperUtils;
+import pl.dawid.kaszyca.util.MapperUtil;
 import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
 
@@ -48,7 +48,7 @@ public class AuctionService {
         if (auctionOptional.isPresent()) {
             Auction auction = auctionOptional.get();
             incrementViewersAmount(auction);
-            return MapperUtils.map(auction, AuctionWithDetailsDTO.class);
+            return MapperUtil.map(auction, AuctionWithDetailsDTO.class);
         }
         return null;
     }
@@ -60,7 +60,8 @@ public class AuctionService {
     }
 
     public Long saveAuction(AuctionDTO auctionVM) {
-        Auction auction = MapperUtils.map(auctionVM, Auction.class);
+        Auction auction = MapperUtil.map(auctionVM, Auction.class);
+        auction.setDataAfterMapper();
         setDataToNewAuction(auctionVM, auction);
         Optional<User> user = userService.getCurrentUserObject();
         if (user.isPresent()) {
@@ -73,7 +74,8 @@ public class AuctionService {
     }
 
     public Long updateAuction(AuctionDTO auctionVM) {
-        Auction auction = MapperUtils.map(auctionVM, Auction.class);
+        Auction auction = MapperUtil.map(auctionVM, Auction.class);
+        auction.setDataAfterMapper();
         setDataToNewAuction(auctionVM, auction);
         setViewers(auction);
         if (auctionVM.getId() != null) {
@@ -101,7 +103,7 @@ public class AuctionService {
     }
 
     private void setAuctionDetails(Auction auction, AuctionDTO auctionVM) {
-        List<CategoryAttributes> categoryAttributesList = MapperUtils.mapAll(auctionVM.getAttributes(), CategoryAttributes.class);
+        List<CategoryAttributes> categoryAttributesList = MapperUtil.mapAll(auctionVM.getAttributes(), CategoryAttributes.class);
         List<AuctionDetails> detailsToSave = new ArrayList<>();
         for (CategoryAttributes categoryAttributes : categoryAttributesList) {
             for (AttributeValues attributeValues : categoryAttributes.getAttributeValues()) {
@@ -142,7 +144,7 @@ public class AuctionService {
     public AuctionVM getAuctionsFilter(FilterVM filterVM) {
         AuctionVM auctionVM = new AuctionVM();
         List<Auction> auctions = auctionRepository.findByFilters(filterVM);
-        auctionVM.setAuctionListBase(MapperUtils.mapAll(auctions, AuctionBaseDTO.class));
+        auctionVM.setAuctionListBase(MapperUtil.mapAll(auctions, AuctionBaseDTO.class));
         auctionVM.setNumberOfAuctionByProvidedFilters(auctionRepository.countByFilters(filterVM));
         return auctionVM;
     }
@@ -167,7 +169,7 @@ public class AuctionService {
             auctions = auctionRepository.findTop4ByOrderByViewersDesc();
         else
             auctions = auctionRepository.findTop4ByCategoryOrderByViewers(category);
-        return MapperUtils.mapAll(auctions, AuctionBaseDTO.class);
+        return MapperUtil.mapAll(auctions, AuctionBaseDTO.class);
     }
 
     public void removeAuctionsById(List<Integer> ids) {
@@ -245,7 +247,7 @@ public class AuctionService {
             List<FavoriteAuction> favoriteAuctions = favoriteAuctionRepository.findAllByUser(user, pageable);
             List<Auction> auctions = getAuctionFromFavoriteAuctions(favoriteAuctions);
             AuctionVM auctionVM = new AuctionVM();
-            auctionVM.setAuctionListBase(MapperUtils.mapAll(auctions, AuctionBaseDTO.class));
+            auctionVM.setAuctionListBase(MapperUtil.mapAll(auctions, AuctionBaseDTO.class));
             auctionVM.setNumberOfAuctionByProvidedFilters(favoriteAuctionRepository.countByUser(user));
             return auctionVM;
         }
