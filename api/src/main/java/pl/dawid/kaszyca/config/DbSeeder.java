@@ -64,11 +64,11 @@ class DbSeeder implements CommandLineRunner {
         attributesMap = new HashMap<>();
         attachmentMap = getAttachments();
         cityList = getCityList();
-        User sender = addRolesAndUser("testowy@wp.pl", "Dawid", " Kaszyca", "admin", "admin11");
-        User recipient = addRolesAndUser("testowy12@wp.pl", "Stefan", " Wąs", "admin1", "admin11");
-        //createExampleMessage(sender, recipient);
-        recipient = addRolesAndUser("testowy123@wp.pl", "Janusz", " Kors", "admin2", "admin11");
-        //createExampleMessage(sender, recipient);
+        User sender = addRolesAndUser("testowy@wp.pl", "Dawid", " Kaszyca", "admin", "admin11", true);
+        User recipient = addRolesAndUser("testowy12@wp.pl", "Jan", " Nowak", "admin1", "admin11", false);
+        createExampleMessage(sender, recipient);
+        recipient = addRolesAndUser("testowy123@wp.pl", "Janusz", " Kors", "admin2", "admin11", false);
+        createExampleMessage(sender, recipient);
         createCategories();
         createExampleAuctions();
         createExampleAuctionStatistic();
@@ -98,11 +98,18 @@ class DbSeeder implements CommandLineRunner {
         conversationRepository.save(recipientChat);
     }
 
-    private User addRolesAndUser(String email, String firstName, String lastName, String login, String password) {
+    private User addRolesAndUser(String email, String firstName, String lastName, String login, String password, boolean admin) {
         Authority authority = new Authority();
+        authority.setName(AuthoritiesConstants.ADMIN);
+        authorityRepository.save(authority);
         authority.setName(AuthoritiesConstants.USER);
         authorityRepository.save(authority);
-        Set<Authority> authorities = new HashSet<>(authorityRepository.findAll());
+        Set<Authority> authorities = new HashSet<>();
+        if (admin) {
+            authorities.addAll(authorityRepository.findAll());
+        } else {
+            authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        }
         User user = new User();
         user.setActivated(true);
         user.setAuthorities(authorities);
@@ -230,13 +237,13 @@ class DbSeeder implements CommandLineRunner {
             if (category.isPresent())
                 auction.setCategory(category.get());
             auction.setCondition(condition.getCondition());
-            Optional<User> user = userRepository.findOneByLogin("admin");
+            Optional<User> user = userRepository.findOneByLogin("admin2");
             if (user.isPresent())
                 auction.setUser(user.get());
             auction.setCity(getRandomCity());
             auction.setPhone(getRandomPhoneNumber());
             auction.setPrice(getRandomPrice());
-            auction.setViewers(Long.valueOf(getRandomPrice()));
+            auction.setViewers((long) getRandomPrice());
             auction.setDescription(getDescription());
             auction.setTitle(getTitle());
             if (!categoryString.equals("Fotografia")) {
@@ -364,12 +371,27 @@ class DbSeeder implements CommandLineRunner {
         List<Auction> auctions = auctionRepository.findAll();
         for (Auction auction : auctions) {
             Date date = new Date();
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 10; i++) {
                 Statistic statistic = new Statistic();
                 statistic.setEnumKey(StatisticKeyEnum.DAILY_AUCTION_VIEWS_BY_ID.value);
-                date = DateUtils.addDays(date, 1);
+                date = DateUtils.addDays(date, -1);
                 statistic.setDate(date);
                 statistic.setAuction(auction);
+                statistic.setValue(getRandomValue());
+                statisticRepository.save(statistic);
+                statistic.setId(null);
+                statistic.setEnumKey(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS_BY_ID.value);
+                statistic.setValue(getRandomValue());
+                statisticRepository.save(statistic);
+            }
+        }
+        for(StatisticKeyEnum it: StatisticKeyEnum.values()) {
+            Date date = new Date();
+            for (int i = 0; i < 19; i++) {
+                Statistic statistic = new Statistic();
+                statistic.setEnumKey(it.value);
+                date = DateUtils.addDays(date, -1);
+                statistic.setDate(date);
                 statistic.setValue(getRandomValue());
                 statisticRepository.save(statistic);
             }

@@ -1,0 +1,28 @@
+<div class="row w-100">
+  <ng-container *ngFor="let stat of statisticData">
+    <div class="col-6 col-sm-6 col-md-4 col-lg-3 mt-3 cursor-pointer">
+      <mat-card (click)="selectStatistic(stat)"
+                [ngClass]="{'selected': stat?.translateKey == selectedStatistic?.translateKey}">
+        <mat-card-title>{{stat.translateKey | translate}}</mat-card-title>
+        <div class="mt-3">
+          <mat-card-content>{{stat.value}}</mat-card-content>
+        </div>
+      </mat-card>
+    </div>
+  </ng-container>
+</div>
+<div class="row w-100 mt-1">
+  <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+    <button class="btn btn-primary w-100 mt-2" [disabled]="disabled"  (click)="newWeek(1)">{{"admin.statistic.previous" | translate}}</button>
+  </div>
+  <div class="col-6 d-none d-xl-block d-lg-block"></div>
+  <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+    <button class="btn btn-primary w-100 mt-2" [disabled]="week == 0" (click)="newWeek(-1)">{{"admin.statistic.next" | translate}}</button>
+  </div>
+</div>
+<div class="h-40 w-75 margin-content">
+  <div id="chartContainer1"
+       style="height: 100%;
+      width: 100%;">
+  </div>
+</div>

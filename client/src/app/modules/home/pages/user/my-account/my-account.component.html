@@ -85,7 +85,7 @@
         <button type="submit" form="my-form" *ngIf="isEditAble"
                 class="w-100 mt-4 btn btn-primary d-block">{{"new-auction.save" | translate}}</button>
         <button type="button"
-                class="w-100 mt-3 btn btn-primary d-block">{{'my-profile.change-password' | translate}}</button>
+                class="w-100 mt-3 btn btn-primary d-block" (click)="changePassword()">{{'my-profile.change-password' | translate}}</button>
       </mat-card>
     </div>
   </div>

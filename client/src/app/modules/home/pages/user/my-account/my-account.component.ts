@@ -1,8 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavigationService} from '../../../core/header/navigation/navigation.service';
-import {User} from '../../../shared/models/user';
-import {AuthService} from '../../../core/security/auth.service';
-import {AttachmentService} from '../../../shared/services/attachment.service';
+import {NavigationService} from '../../../../core/header/navigation/navigation.service';
+import {User} from '../../../../shared/models/user';
+import {AuthService} from '../../../../core/security/auth.service';
+import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {MatDialog} from '@angular/material/dialog';
+import {StatisticDialogComponent} from '../../../../shared/components/statistic-dialog/statistic-dialog.component';
+import {ChangePassword} from '../../../../shared/models/change-password';
+import {ChangePasswordComponent} from '../../../components/change-password/change-password.component';
 
 @Component({
   selector: 'app-my-account',
@@ -18,7 +22,8 @@ export class MyAccountComponent implements OnInit, OnDestroy {
   isPhotoEditAble = false;
   afterPhotoEdit = false;
 
-  constructor(private navigationService: NavigationService, private authService: AuthService, private attachmentService: AttachmentService) {
+  constructor(private navigationService: NavigationService, private authService: AuthService, private attachmentService: AttachmentService,
+              public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -72,5 +77,9 @@ export class MyAccountComponent implements OnInit, OnDestroy {
       this.isPhotoEditAble = false;
       this.afterPhotoEdit = false;
     });
+  }
+
+  changePassword() {
+    this.dialog.open(ChangePasswordComponent, {});
   }
 }

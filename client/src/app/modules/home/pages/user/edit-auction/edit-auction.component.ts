@@ -1,21 +1,21 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {CategoryAttributes} from '../../../shared/models/category-attributes';
-import {NewAuction} from '../../../shared/models/new-auction';
-import {City} from '../../../shared/models/auction-base-field';
+import {CategoryAttributes} from '../../../../shared/models/category-attributes';
+import {NewAuction} from '../../../../shared/models/new-auction';
+import {City} from '../../../../shared/models/auction-base-field';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
-import {NavigationService} from '../../../core/header/navigation/navigation.service';
-import {AuctionService} from '../../../shared/services/auction.service';
-import {AttachmentService} from '../../../shared/services/attachment.service';
+import {NavigationService} from '../../../../core/header/navigation/navigation.service';
+import {AuctionService} from '../../../../shared/services/auction.service';
+import {AttachmentService} from '../../../../shared/services/attachment.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AttachmentToUpdate} from '../../../shared/models/attachment';
+import {AttachmentToUpdate} from '../../../../shared/models/attachment';
 import {timer} from 'rxjs';
-import {AuctionDetails} from '../../../shared/models/auction-details';
-import {AttributesValues} from '../../../shared/models/attributes-values';
-import {Auction} from '../../../shared/models/auction';
-import {Image} from '../../../shared/models/image';
+import {AuctionDetails} from '../../../../shared/models/auction-details';
+import {AttributesValues} from '../../../../shared/models/attributes-values';
+import {Auction} from '../../../../shared/models/auction';
+import {Image} from '../../../../shared/models/image';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {DialogService} from '../../../shared/services/dialog.service';
-import {DialogKey} from '../../../shared/config/enums';
+import {DialogService} from '../../../../shared/services/dialog.service';
+import {DialogKey} from '../../../../shared/config/enums';
 
 @Component({
   selector: 'app-edit-auction',

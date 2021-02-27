@@ -66,22 +66,14 @@ export class DynamicPanelComponent implements OnInit, OnChanges {
     this.selectEmitter.emit(this.selectedValues);
   }
 
-  private checkIfAttributeAlreadyExist(attribute: CategoryAttributes) {
-    for (const obj of this.selectedValues) {
-      if (obj.attribute === attribute.attribute) {
-        return true;
-      }
-    }
-    return false;
+  private checkIfAttributeAlreadyExist(attribute: CategoryAttributes): boolean {
+    return !!this.selectedValues.find(it => it.attribute === attribute.attribute);
   }
 
   selectValue($event: MatSelectChange, id: string) {
-    for (const attribute of this.selectedValues) {
-      if (attribute.attribute === id) {
-        attribute.attributeValues[0].value = $event.value;
-        break;
-      }
-    }
+    this.selectedValues.filter(it => it.attribute === id).forEach(it => {
+      it.attributeValues[0].value = $event.value;
+    });
   }
 
   getSelectedValue(attribute: CategoryAttributes): string {

@@ -17,16 +17,16 @@ import java.util.List;
 @RequestMapping("/api")
 public class ChatController {
 
-    ChatService messageService;
+    ChatService chatService;
 
     public ChatController(ChatService messageService) {
-        this.messageService = messageService;
+        this.chatService = messageService;
     }
 
     @GetMapping("/messages")
     public ResponseEntity getMessagesByUser() {
         try {
-            List<ConversationVM> messages = messageService.getAllMessageRelatedWithCurrentUser();
+            List<ConversationVM> messages = chatService.getAllMessageRelatedWithCurrentUser();
             return messages.isEmpty() ? new ResponseEntity(HttpStatus.NO_CONTENT) : new ResponseEntity(messages, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during getting  messages");
@@ -37,7 +37,7 @@ public class ChatController {
     @PostMapping("/messages")
     public ResponseEntity sendMessage(@RequestBody MessageDispatchVM messageDispatchVM) {
         try {
-            MessageDTO messageDTO = messageService.sendMessage(messageDispatchVM);
+            MessageDTO messageDTO = chatService.sendMessage(messageDispatchVM);
             return new ResponseEntity(messageDTO, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during sending message");
@@ -48,7 +48,7 @@ public class ChatController {
     @PutMapping("/messages")
     public ResponseEntity setDisplayMessage(@RequestBody Long id) {
         try {
-            messageService.updateDisplayMessagesById(id);
+            chatService.updateDisplayMessagesById(id);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             log.info("Something went wrong during update message display");
@@ -59,7 +59,7 @@ public class ChatController {
     @GetMapping("/messages/{id}")
     public ResponseEntity getConversationById(@PathVariable long id) {
         try {
-            ConversationVM conversation = messageService.getConversationById(id);
+            ConversationVM conversation = chatService.getConversationById(id);
             return new ResponseEntity(conversation, HttpStatus.OK);
         } catch (Exception e) {
             log.info("Cannot get conversation by id");

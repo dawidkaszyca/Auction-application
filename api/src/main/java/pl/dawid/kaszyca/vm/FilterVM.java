@@ -16,38 +16,18 @@ import java.util.List;
 public class FilterVM {
 
     String category;
-
     String sortByFieldName;
-
     Integer pageSize;
-
     Integer page;
-
     SortEnum sort;
-
     StateEnum state;
-
     Long userId;
-
-    /**
-     * Map for filters fields single select attributes
-     * key - filter field name
-     * value - list of filters value (OR)
-     */
     List<CategoryAttributesDTO> filters;
-
     List<String> searchWords;
-
     CityDTO city;
-
     String condition;
-
     boolean priceFilter;
-
     Float minPrice;
-
     Float maxPrice;
-
     int kilometers;
-
 }

@@ -15,10 +15,13 @@ export class StatisticDialogComponent implements OnInit {
 
   faRemove = faTimes;
   dailyViewsKey = 'DAILY_AUCTION_VIEWS_BY_ID';
+  dailyPhoneClickKey = 'DAILY_AUCTION_PHONE_CLICKS_BY_ID';
   dailyViewData: Graph[];
+  dailyPhoneClick: Graph[];
 
   constructor(private statisticService: StatisticService, @Inject(MAT_DIALOG_DATA) public data: any, private translate: TranslateService) {
     this.dailyViewData = [];
+    this.dailyPhoneClick = [];
     this.getData();
   }
 
@@ -27,18 +30,19 @@ export class StatisticDialogComponent implements OnInit {
 
   private getData() {
     this.statisticService.getAuctionStatisticById(this.data.auctionData.id).subscribe(it => {
-      this.convertToData(it[this.dailyViewsKey]);
+      this.convertToData(it[this.dailyViewsKey], this.dailyViewData);
+      this.convertToData(it[this.dailyPhoneClickKey], this.dailyPhoneClick);
       this.renderChart(this.dailyViewData, 'chartContainer1', this.translate.instant('dialog.daily-views'));
-      this.renderChart(this.dailyViewData, 'chartContainer2', this.translate.instant('dialog.daily-phone'));
+      this.renderChart(this.dailyPhoneClick, 'chartContainer2', this.translate.instant('dialog.daily-phone'));
     });
   }
 
-  private convertToData(data: any[]) {
+  private convertToData(data: any[], list: Graph[]) {
     data.forEach(it => {
       const graph = new Graph();
       graph.y = it.value;
       graph.label = it.date;
-      this.dailyViewData.push(graph);
+      list.push(graph);
     });
   }
 

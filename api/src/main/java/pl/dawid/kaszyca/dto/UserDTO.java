@@ -27,11 +27,10 @@ public class UserDTO {
 
     private String email;
 
-    @JsonIgnore
-    private boolean activated = false;
+    private Set<String> authorities;
 
     @JsonIgnore
-    private Set<String> authorities;
+    private boolean activated = false;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

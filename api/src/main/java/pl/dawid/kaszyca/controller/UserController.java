@@ -10,6 +10,7 @@ import pl.dawid.kaszyca.service.UserService;
 import pl.dawid.kaszyca.vm.ChangePasswordVM;
 import pl.dawid.kaszyca.vm.ResetPasswordVM;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -68,6 +69,17 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity updateUser(@PathVariable long id) {
+        try {
+            userService.removeUserById(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot remove user");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
+        }
+    }
+
     @DeleteMapping("/password/{email}")
     public ResponseEntity remindPassword(@RequestHeader("Language") String language, @PathVariable String email) {
         try {
@@ -110,6 +122,39 @@ public class UserController {
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             log.error("Cannot change user data");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
+        }
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity getAllUsersData() {
+        try {
+            List<UserDTO> users = userService.allUsers();
+            return users.isEmpty() ? new ResponseEntity(HttpStatus.NO_CONTENT) : new ResponseEntity(users, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot find users");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
+        }
+    }
+
+    @PutMapping(value = {"/grant/users/{id}"})
+    public ResponseEntity grantPermissionToAdminById(@PathVariable long id) {
+        try {
+            userService.grantUserPermissionById(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot grant permission");
+            return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
+        }
+    }
+
+    @PutMapping(value = {"/revoke/users/{id}"})
+    public ResponseEntity revokePermissionToAdminById(@PathVariable long id) {
+        try {
+            userService.revokeUserPermissionById(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot grant permission");
             return new ResponseEntity(e.getMessage(), HttpStatus.valueOf(500));
         }
     }
