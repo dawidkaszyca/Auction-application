@@ -21,5 +21,7 @@ public class ReportAuctionDTO {
 
     private String description;
 
+    private String substantiation;
+
     private String decision;
 }

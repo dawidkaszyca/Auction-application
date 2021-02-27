@@ -3,6 +3,8 @@ package pl.dawid.kaszyca.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.NonNull;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,9 +27,7 @@ import pl.dawid.kaszyca.vm.ResetPasswordVM;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -44,12 +44,19 @@ public class UserService {
 
     private MailService mailService;
 
+    AuctionService auctionService;
+
+    AttachmentService attachmentService;
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       AuthorityRepository authorityRepository, MailService mailService) {
+                       AuthorityRepository authorityRepository, MailService mailService, @NonNull @Lazy AuctionService auctionService,
+                       @NonNull @Lazy AttachmentService attachmentService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.mailService = mailService;
+        this.auctionService = auctionService;
+        this.attachmentService = attachmentService;
     }
 
     @Autowired
@@ -250,5 +257,51 @@ public class UserService {
 
     private boolean checkOldPassword(String currentPasswordHash, String oldPassword) {
         return passwordEncoder.matches(oldPassword, currentPasswordHash);
+    }
+
+    public List<UserDTO> allUsers() {
+        List<User> users = userRepository.findAll();
+        if (!users.isEmpty())
+            return MapperUtil.mapAll(users, UserDTO.class);
+        return new ArrayList<>();
+    }
+
+    public void removeUserById(long id) {
+        Optional<User> optionalUser = userRepository.findOneById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            auctionService.removeUserAuction(user);
+            attachmentService.removeUserPhoto(user);
+            userRepository.delete(user);
+        }
+    }
+
+    public boolean userContainsAuthority(User user, String role) {
+        Optional<Authority> authority = authorityRepository.findById(role);
+        return authority.isPresent() && user.getAuthorities().contains(authority.get());
+    }
+
+    public void grantUserPermissionById(long id) {
+        setUserAdmin(id, true);
+    }
+
+    public void revokeUserPermissionById(long id) {
+        setUserAdmin(id, false);
+    }
+
+    private void setUserAdmin(long id, boolean isGrant) {
+        Optional<User> optionalUser = userRepository.findOneById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Set<Authority> authorities = user.getAuthorities();
+            if (isGrant)
+                authorityRepository.findById(AuthoritiesConstants.ADMIN).ifPresent(authorities::add);
+            else
+                authorityRepository.findById(AuthoritiesConstants.ADMIN).ifPresent(authorities::remove);
+            user.setAuthorities(authorities);
+            userRepository.save(user);
+        } else {
+            throw new UserNotExistException();
+        }
     }
 }

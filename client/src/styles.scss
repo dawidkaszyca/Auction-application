@@ -110,6 +110,9 @@ body {
   justify-content: center;
   overflow-y: auto;
   min-height: calc(100vh - 60px);
+  .modal-content {
+    border-radius: 35px !important;
+  }
 }
 @media (max-width: 767px) {
   .modal-dialog {

@@ -4,6 +4,6 @@ export class ReportAuction {
   email: string;
   reason: string;
   description: string;
-  decision: string;
-  active: boolean;
+  decision: boolean;
+  substantiation: string;
 }

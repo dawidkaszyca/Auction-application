@@ -24,6 +24,7 @@ import {HomeModule} from './modules/home/home.module';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {GooglePlaceModule} from 'ngx-google-places-autocomplete';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatListModule} from '@angular/material/list';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -62,7 +63,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         HomeModule,
         FontAwesomeModule,
         GooglePlaceModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatListModule
     ],
   providers: [],
   bootstrap: [AppComponent]

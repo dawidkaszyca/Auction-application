@@ -3,24 +3,26 @@ import {DialogInfoComponent} from '../components/dialog-info/dialog-info.compone
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ConfirmDialogComponent} from '../components/confirm-dialog/confirm-dialog.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DialogService {
 
-  constructor(public dialog: MatDialog, private router: Router, private translateService: TranslateService) {
+  constructor(public dialog: MatDialog, private router: Router, private translateService: TranslateService, private modalService: NgbModal) {
   }
 
   public openWarningDialog(messageKey: string, navigateAfterClose: boolean, navigateLink: string): void {
-    this.openDialog(messageKey, true, navigateAfterClose, navigateLink);
+    this.openMessageDialog(messageKey, true, navigateAfterClose, navigateLink);
   }
 
   public openInfoDialog(messageKey: string, navigateAfterClose: boolean, navigateLink: string): void {
-    this.openDialog(messageKey, false, navigateAfterClose, navigateLink);
+    this.openMessageDialog(messageKey, false, navigateAfterClose, navigateLink);
   }
 
-  private openDialog(messageKey: string, isWarning_: boolean, navigateAfterClose: boolean, navigateLink: string): void {
+  private openMessageDialog(messageKey: string, isWarning_: boolean, navigateAfterClose: boolean, navigateLink: string): void {
     const height_ = this.countHeight(messageKey);
     const dialogRef = this.dialog.open(DialogInfoComponent,
       {
@@ -40,8 +42,16 @@ export class DialogService {
 
   private countHeight(messageKey: string): string {
     let a = 200;
-    const message = this.translateService.instant(messageKey)
+    const message = this.translateService.instant(messageKey);
     a += ((message.length / 39) * 18);
     return Math.round(a).toString() + 'px';
+  }
+
+  public openConfirmDialog(
+    message: string,
+    dialogSize: 'sm'|'lg' = 'sm'): Promise<boolean> {
+    const modalRef = this.modalService.open(ConfirmDialogComponent, { size: dialogSize });
+    modalRef.componentInstance.message = message;
+    return modalRef.result;
   }
 }

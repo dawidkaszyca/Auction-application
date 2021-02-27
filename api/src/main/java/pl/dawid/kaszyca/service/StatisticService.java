@@ -3,6 +3,9 @@ package pl.dawid.kaszyca.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.dawid.kaszyca.config.StatisticKeyEnum;
@@ -10,9 +13,11 @@ import pl.dawid.kaszyca.dto.StatisticDTO;
 import pl.dawid.kaszyca.model.Statistic;
 import pl.dawid.kaszyca.model.auction.Auction;
 import pl.dawid.kaszyca.repository.MessageRepository;
+import pl.dawid.kaszyca.repository.ReportAuctionRepository;
 import pl.dawid.kaszyca.repository.StatisticRepository;
 import pl.dawid.kaszyca.repository.UserRepository;
 import pl.dawid.kaszyca.util.MapperUtil;
+import pl.dawid.kaszyca.vm.StatisticVM;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -21,6 +26,8 @@ import java.util.*;
 @Service
 @Slf4j
 public class StatisticService {
+
+    private static final Integer WEEK_DAY = 7;
 
     private Map<StatisticKeyEnum, Long> statistics;
 
@@ -36,13 +43,24 @@ public class StatisticService {
 
     private MessageRepository messageRepository;
 
-    StatisticService(StatisticRepository statisticRepository, UserRepository userRepository, MessageRepository messageRepository) {
+    private ReportAuctionRepository reportAuctionRepository;
+
+    @Autowired
+    private SimpUserRegistry simpUserRegistry;
+
+    public int getNumberOfSessions() {
+        return simpUserRegistry.getUserCount();
+    }
+
+    StatisticService(StatisticRepository statisticRepository, UserRepository userRepository,
+                     MessageRepository messageRepository, ReportAuctionRepository reportAuctionRepository) {
         this.statisticRepository = statisticRepository;
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
         createNewEmptyMapWithKeys();
         createNewEmptyStatisticsWithIdMap();
         statisticCollectDate = new Date();
+        this.reportAuctionRepository = reportAuctionRepository;
     }
 
     @Autowired
@@ -102,7 +120,9 @@ public class StatisticService {
         incrementValueByKey(StatisticKeyEnum.DAILY_REMOVED_AUCTIONS);
     }
 
-    private void incrementDailyAuctionPhoneClicks() { incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS); }
+    private void incrementDailyAuctionPhoneClicks() {
+        incrementValueByKey(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS);
+    }
 
     private void incrementValueByKey(StatisticKeyEnum statisticKeyEnum) {
         statistics.put(statisticKeyEnum, statistics.get(statisticKeyEnum) + 1);
@@ -243,5 +263,27 @@ public class StatisticService {
             List<StatisticDTO> statisticDTOS = MapperUtil.mapAll(savedStatistics, StatisticDTO.class);
             result.put(key, statisticDTOS);
         }
+    }
+
+    public Map<StatisticKeyEnum, Long> getAdminStatistic() {
+        Map<StatisticKeyEnum, Long> statistics = new HashMap<>(this.statistics);
+        Long amountOfAuction = auctionService.getTotalAmountOfAuction();
+        Long amountOfUser = userRepository.count();
+        Long amountOfMessage = messageRepository.count();
+        Long activeReports = reportAuctionRepository.countAllByActive(true);
+        statistics.put(StatisticKeyEnum.TOTAL_AUCTIONS, amountOfAuction);
+        statistics.put(StatisticKeyEnum.TOTAL_USERS, amountOfUser);
+        statistics.put(StatisticKeyEnum.TOTAL_MESSAGES, amountOfMessage);
+        statistics.put(StatisticKeyEnum.TOTAL_ACTIVE_REPORTS, activeReports);
+        statistics.put(StatisticKeyEnum.CURRENT_LOGIN_USERS, (long) getNumberOfSessions());
+        statistics.remove(StatisticKeyEnum.DAILY_AUCTION_PHONE_CLICKS);
+        statistics.remove(StatisticKeyEnum.DAILY_AUCTION_VIEWS);
+        return statistics;
+    }
+
+    public List<StatisticDTO> getStatisticByObject(StatisticVM statistic) {
+        Pageable pageable = PageRequest.of(statistic.getWeek(), WEEK_DAY);
+        List<Statistic> statistics = statisticRepository.findAllByEnumKeyOrderByDateDesc(statistic.getKey(), pageable);
+        return MapperUtil.mapAll(statistics, StatisticDTO.class);
     }
 }

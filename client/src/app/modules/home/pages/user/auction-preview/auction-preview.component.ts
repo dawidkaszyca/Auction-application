@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, Injector, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Auction} from '../../../shared/models/auction';
-import {AuctionService} from '../../../shared/services/auction.service';
-import {AttachmentService} from '../../../shared/services/attachment.service';
-import {AuctionDetails} from '../../../shared/models/auction-details';
-import {AuthService} from '../../../core/security/auth.service';
+import {Auction} from '../../../../shared/models/auction';
+import {AuctionService} from '../../../../shared/services/auction.service';
+import {AttachmentService} from '../../../../shared/services/attachment.service';
+import {AuctionDetails} from '../../../../shared/models/auction-details';
+import {AuthService} from '../../../../core/security/auth.service';
 import {TranslateService} from '@ngx-translate/core';
-import {Image} from '../../../shared/models/image';
-import {MatDialog} from '@angular/material/dialog';
-import {ReportAuctionComponent} from '../../components/report-auction/report-auction.component';
-import {DialogService} from '../../../shared/services/dialog.service';
-import {DialogKey} from '../../../shared/config/enums';
+import {Image} from '../../../../shared/models/image';
+import {MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
+import {ReportAuctionComponent} from '../../../components/report-auction/report-auction.component';
+import {DialogService} from '../../../../shared/services/dialog.service';
+import {DialogKey} from '../../../../shared/config/enums';
 
 @Component({
   selector: 'app-auction-preview',
@@ -24,17 +24,22 @@ export class AuctionPreviewComponent implements OnInit {
   auction: Auction;
   images: Image[];
   selected: Image;
-  call: any;
+  call = false;
   userPhoto: any;
+  data: any;
 
   constructor(private router: ActivatedRoute, private auctionService: AuctionService, private attachmentService: AttachmentService,
               private authService: AuthService, private translate: TranslateService, private route: Router, public dialog: MatDialog,
-              private dialogService: DialogService) {
-    this.call = false;
+              private dialogService: DialogService, private injector: Injector) {
+    this.data = this.injector.get(MAT_DIALOG_DATA, null);
   }
 
   ngOnInit(): void {
-    this.auctionId = this.router.snapshot.queryParams.id;
+    if (this.data) {
+      this.auctionId = this.data.auctionData;
+    } else {
+      this.auctionId = this.router.snapshot.queryParams.id;
+    }
     this.category = this.router.snapshot.queryParams.category;
     this.loadAuction();
     this.loadAuctionPhotos();

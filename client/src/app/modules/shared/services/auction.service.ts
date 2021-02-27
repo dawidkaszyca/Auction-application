@@ -20,7 +20,7 @@ export class AuctionService {
   private INCREMENT_PHONE_CLICK = `${SERVER_API_URL}/auctions/phone/`;
   private AUCTIONS_TO_EDIT = this.AUCTIONS + '/edit';
   private FAVORITE_AUCTIONS = `${SERVER_API_URL}/auction` + '/favorites';
-  private REPORT_AUCTION = `${SERVER_API_URL}/report` + '/auctions/';
+  private REPORT_AUCTION = `${SERVER_API_URL}/report` + '/auctions';
 
   filter: BehaviorSubject<Filter>;
   pagination: BehaviorSubject<Pagination>;
@@ -101,5 +101,13 @@ export class AuctionService {
 
   incrementPhoneClick(auctionId: number) {
     return this.http.put(this.INCREMENT_PHONE_CLICK + auctionId, null);
+  }
+
+  getAllReports() {
+    return this.http.get<ReportAuction[]>(this.REPORT_AUCTION);
+  }
+
+  sendReportDecision(selectedRecord: ReportAuction) {
+    return this.http.put(this.REPORT_AUCTION, selectedRecord);
   }
 }

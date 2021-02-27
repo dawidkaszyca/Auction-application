@@ -11,6 +11,7 @@ import {JwtHelperService} from '@auth0/angular-jwt';
 import {User} from '../../shared/models/user';
 import {WebsocketService} from '../../shared/services/web-socket.service';
 import {ResetPassword} from '../../shared/models/reset-password';
+import {ChangePassword} from '../../shared/models/change-password';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -30,6 +31,10 @@ export class AuthService {
   private CHECK_RESET_KEY = `${SERVER_API_URL}/account/check-reset-key/`;
   private RESET_PASSWORD = `${SERVER_API_URL}/account/password`;
   private CHANGE_PASSWORD = `${SERVER_API_URL}/account/password`;
+  private GET_ALL_USERS = `${SERVER_API_URL}/account/users`;
+  private GRANT_TO_ADMIN = `${SERVER_API_URL}/account/grant/users/`;
+  private REVOKE_TO_ADMIN = `${SERVER_API_URL}/account/revoke/users/`;
+  private REMOVE_USER = `${SERVER_API_URL}/account/users/`;
   private returnUrl: string;
 
   constructor(
@@ -49,6 +54,10 @@ export class AuthService {
 
   signUp(user: UserViewModel): Observable<string> {
     return this.http.post<string>(this.CREATE_NEW_USER, user, httpOptions);
+  }
+
+  isAdmin(): boolean {
+    return this.getRoleFromToken() != null && this.getRoleFromToken().includes('ROLE_ADMIN');
   }
 
   getUserData(): Observable<User> {
@@ -134,5 +143,34 @@ export class AuthService {
       return helper.decodeToken(token).sub;
     }
     return null;
+  }
+
+  getRoleFromToken(): string {
+    const token = this.getTokenFromStorage();
+    if (token != null) {
+      const helper = new JwtHelperService();
+      return helper.decodeToken(token).auth;
+    }
+    return null;
+  }
+
+  getAllUsers() {
+    return this.http.get<User[]>(this.GET_ALL_USERS);
+  }
+
+  grantPermission(id: number) {
+    return this.http.put(this.GRANT_TO_ADMIN + id, null);
+  }
+
+  revokePermission(id: number) {
+    return this.http.put(this.REVOKE_TO_ADMIN + id, null);
+  }
+
+  removeUser(id: number) {
+    return this.http.delete(this.REMOVE_USER + id);
+  }
+
+  changePassword(data: ChangePassword) {
+    return this.http.put(this.CHANGE_PASSWORD, data);
   }
 }

@@ -18,6 +18,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import pl.dawid.kaszyca.exception.LoginFromTokenDoNotMatchToWebSocketChannelException;
 import pl.dawid.kaszyca.security.jwt.TokenProvider;
+import pl.dawid.kaszyca.service.StatisticService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,8 +31,16 @@ import java.util.Objects;
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConfigurer {
 
+
     @Autowired
     TokenProvider tokenProvider;
+
+    StatisticService statisticService;
+
+    @Autowired
+    public void setStatisticService(StatisticService statisticService) {
+        this.statisticService = statisticService;
+    }
 
     private static final String SESSION_ID = "simpSessionId";
 

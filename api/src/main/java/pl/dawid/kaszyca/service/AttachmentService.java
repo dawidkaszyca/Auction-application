@@ -7,6 +7,7 @@ import pl.dawid.kaszyca.model.Attachment;
 import pl.dawid.kaszyca.model.Image;
 import pl.dawid.kaszyca.model.User;
 import pl.dawid.kaszyca.model.auction.Auction;
+import pl.dawid.kaszyca.repository.AttachmentRepository;
 import pl.dawid.kaszyca.repository.AuctionRepository;
 import pl.dawid.kaszyca.repository.ImageRepository;
 import pl.dawid.kaszyca.vm.AttachmentVM;
@@ -22,13 +23,16 @@ public class AttachmentService {
 
     ImageRepository imageRepository;
 
+    AttachmentRepository attachmentRepository;
+
     UserService userService;
 
     public AttachmentService(AuctionRepository auctionRepository,
-                             ImageRepository imageRepository, UserService userService) {
+                             ImageRepository imageRepository, UserService userService, AttachmentRepository attachmentRepository) {
         this.auctionRepository = auctionRepository;
         this.imageRepository = imageRepository;
         this.userService = userService;
+        this.auctionRepository = auctionRepository;
     }
 
     public void saveAuctionAttachments(List<MultipartFile> files, AttachmentVM attachmentToSaveVM) throws IOException {
@@ -163,5 +167,11 @@ public class AttachmentService {
             imageList.add(image);
         }
         return imageList;
+    }
+
+    public void removeUserPhoto(User user) {
+        Attachment attachment = user.getProfileImage();
+        if (attachment != null)
+            attachmentRepository.delete(attachment);
     }
 }

@@ -12,6 +12,7 @@ import pl.dawid.kaszyca.util.MapperUtil;
 import pl.dawid.kaszyca.vm.AuctionVM;
 import pl.dawid.kaszyca.vm.FilterVM;
 
+import javax.persistence.criteria.CriteriaQuery;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,12 @@ public class AuctionController {
     @GetMapping("/auctions")
     public ResponseEntity getAuction(@RequestParam String criteria) {
         try {
+            long start = System.currentTimeMillis();
             FilterVM filterVM = MapperUtil.mapJsonToObject(criteria, FilterVM.class);
             AuctionVM auction = auctionService.getAuctionsFilter(filterVM);
+            long end = System.currentTimeMillis();
+            long diff= (end - start);
+            log.warn("Czas trwania requestu pobierz aukcje po filtrze :" + diff);
             return auction != null ?
                     new ResponseEntity(auction, HttpStatus.OK) : new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

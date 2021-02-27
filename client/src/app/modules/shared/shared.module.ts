@@ -19,6 +19,7 @@ import {StatisticDialogComponent} from './components/statistic-dialog/statistic-
 import {DialogInfoComponent} from './components/dialog-info/dialog-info.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {HomeRoutingModule} from '../home/home-routing.module';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {HomeRoutingModule} from '../home/home-routing.module';
     MapPreviewComponent,
     SplitCurrencyPipe,
     StatisticDialogComponent,
-    DialogInfoComponent
+    DialogInfoComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     CommonModule,

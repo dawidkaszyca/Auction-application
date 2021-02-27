@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dawid.kaszyca.dto.ReportAuctionDTO;
+import pl.dawid.kaszyca.service.ChatService;
 import pl.dawid.kaszyca.service.ReportService;
 
 import java.util.List;
@@ -34,9 +35,9 @@ public class ReportController {
     }
 
     @GetMapping("/report/auctions")
-    public ResponseEntity getReports(@RequestParam String activeOnly) {
+    public ResponseEntity getReports() {
         try {
-            List<ReportAuctionDTO> reports = reportService.getReported(Boolean.valueOf(activeOnly));
+            List<ReportAuctionDTO> reports = reportService.getReports();
             return !reports.isEmpty() ?
                     new ResponseEntity(reports, HttpStatus.CREATED) : new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -46,9 +47,9 @@ public class ReportController {
     }
 
     @PutMapping("/report/auctions")
-    public ResponseEntity updateReport(ReportAuctionDTO reportAuctionDTO) {
+    public ResponseEntity updateReport(@RequestHeader("Language") String language, @RequestBody ReportAuctionDTO reportAuctionDTO) {
         try {
-            reportService.updateReport(reportAuctionDTO);
+            reportService.updateReport(reportAuctionDTO, language);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
             log.info("Something went wrong during saving new report auction");

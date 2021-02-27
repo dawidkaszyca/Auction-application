@@ -1,6 +1,7 @@
 package pl.dawid.kaszyca.model.auction;
 
 import lombok.Data;
+import pl.dawid.kaszyca.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -32,6 +33,11 @@ public class ReportedAuction implements Serializable {
     private String description;
 
     private String decision;
+
+    private String substantiation;
+
+    @ManyToOne
+    private User decisivePerson;
 
     private boolean active = true;
 }

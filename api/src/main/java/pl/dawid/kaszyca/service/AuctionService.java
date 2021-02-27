@@ -1,10 +1,12 @@
 package pl.dawid.kaszyca.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import pl.dawid.kaszyca.config.AuthoritiesConstants;
 import pl.dawid.kaszyca.dto.AuctionBaseDTO;
 import pl.dawid.kaszyca.dto.AuctionDTO;
 import pl.dawid.kaszyca.dto.AuctionWithDetailsDTO;
@@ -21,6 +23,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Service
+@Slf4j
 public class AuctionService {
 
     AuctionRepository auctionRepository;
@@ -176,11 +179,15 @@ public class AuctionService {
         for (Integer id : ids) {
             Optional<Auction> auction = auctionRepository.findById(Long.valueOf(id));
             if (auction.isPresent() && checkPermissionToEdit(auction.get().getUser().getId())) {
-                removeAuctionFromFavoritesList(auction.get());
-                auctionRepository.delete(auction.get());
-                statisticService.incrementDailyRemovedAuction();
+                removeAnyAuctionData(auction.get());
             }
         }
+    }
+
+    private void removeAnyAuctionData(Auction auction) {
+        removeAuctionFromFavoritesList(auction);
+        auctionRepository.delete(auction);
+        statisticService.incrementDailyRemovedAuction();
     }
 
     private void removeAuctionFromFavoritesList(Auction auction) {
@@ -213,7 +220,11 @@ public class AuctionService {
     }
 
     private boolean isUserAuctionId(Optional<User> optionalUser, Long auction) {
-        return optionalUser.isPresent() && optionalUser.get().getId().equals(auction);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return user.getId().equals(auction) || userService.userContainsAuthority(user, AuthoritiesConstants.ADMIN);
+        }
+        return false;
     }
 
     public Long getTotalAmountOfAuction() {
@@ -270,6 +281,13 @@ public class AuctionService {
             auction.setPhoneClicks(phoneClicks);
             auctionRepository.save(auction);
             statisticService.incrementDailyAuctionPhoneClicksById(id);
+        }
+    }
+
+    public void removeUserAuction(User user) {
+        List<Auction> auctions = auctionRepository.findAllByUser(user);
+        for (Auction auction : auctions) {
+            removeAnyAuctionData(auction);
         }
     }
 }

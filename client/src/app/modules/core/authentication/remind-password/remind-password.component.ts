@@ -34,11 +34,8 @@ export class RemindPasswordComponent implements OnInit, OnDestroy {
       this.dialogService.openInfoDialog('remind.password.success', false, null);
     }, err => {
       this.isRequestPending = false;
-      if (err.status) {
-        this.dialogService.openWarningDialog('remind.password.email-not-exist', false, null);
-      } else {
-        this.dialogService.openWarningDialog('remind.password.error', false, null);
-      }
+      const msgKey = err.status ? 'remind.password.email-not-exist' : 'remind.password.error';
+      this.dialogService.openWarningDialog(msgKey, false, null);
     });
   }
 }

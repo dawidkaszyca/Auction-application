@@ -1,5 +1,6 @@
 package pl.dawid.kaszyca.repository.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.util.SloppyMath;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,9 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -29,7 +32,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
     @Override
     public List findTop4ByCategoryOrderByViewers(String category) {
         cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery criteriaQuery = cb.createQuery();
+        CriteriaQuery<Object> criteriaQuery = cb.createQuery();
         Root<Auction> auction = criteriaQuery.from(Auction.class);
         Predicate predicate = getCategoryPredicate(category, auction, cb);
         criteriaQuery.orderBy(cb.desc(auction.get("viewers")));
@@ -42,52 +45,24 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
 
     @Override
     public List findByFilters(FilterVM filterVM) {
-        CriteriaQuery criteriaQuery = getCriteriaQuery(filterVM);
-        if (filterVM.getCity() == null) {
-            return entityManager.createQuery(criteriaQuery)
-                    .setFirstResult(filterVM.getPage() * filterVM.getPageSize())
-                    .setMaxResults(filterVM.getPageSize())
-                    .getResultList();
-        } else {
-            List auctions = entityManager.createQuery(criteriaQuery)
-                    .getResultList();
-            return getAuctionsByCityFilter(auctions, filterVM);
-        }
-    }
-
-    private List getAuctionsByCityFilter(List<Auction> auctions, FilterVM filterVM) {
-        List auctionsAfterFilter = getFilteredByCityAuctions(auctions, filterVM);
-        int indexOfFirst = filterVM.getPage() * filterVM.getPageSize();
-        int indexOfLast = indexOfFirst + filterVM.getPageSize();
-        if (auctionsAfterFilter.size() < indexOfLast) {
-            return auctionsAfterFilter.subList(indexOfFirst, auctionsAfterFilter.size());
-        }
-        return auctionsAfterFilter.subList(indexOfFirst, indexOfLast);
-    }
-
-    private List getFilteredByCityAuctions(List<Auction> auctions, FilterVM filterVM) {
-        return getAuctionsFilteredByCity(auctions, filterVM);
+        CriteriaQuery<Object> criteriaQuery = getCriteriaQuery(filterVM);
+        return entityManager.createQuery(criteriaQuery)
+                .setFirstResult(filterVM.getPage() * filterVM.getPageSize())
+                .setMaxResults(filterVM.getPageSize())
+                .getResultList();
     }
 
     @Override
     public Long countByFilters(FilterVM filterVM) {
-        if (filterVM.getCity() == null) {
-            cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
-            Root<Auction> auction = criteriaQuery.from(Auction.class);
-            Predicate predicate = getPredicateByFilters(filterVM, auction, cb);
-            criteriaQuery.select(cb.count(auction)).where(predicate);
-            if (filterVM.getFilters() != null && filterVM.getFilters().size() > 1) {
-                addGroupBy(cb, criteriaQuery, filterVM, auction);
-                return Long.valueOf(entityManager.createQuery(criteriaQuery).getResultList().size());
-            }
-            return entityManager.createQuery(criteriaQuery).getSingleResult();
-        } else {
-            CriteriaQuery criteriaQuery = getCriteriaQuery(filterVM);
-            List<Auction> auctions = entityManager.createQuery(criteriaQuery)
-                    .getResultList();
-            return getAuctionsByCityFilterCount(auctions, filterVM);
+        cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
+        Root<Auction> auction = criteriaQuery.from(Auction.class);
+        Predicate predicate = getPredicateByFilters(filterVM, auction, cb);
+        criteriaQuery.select(cb.count(auction)).where(predicate);
+        if (filterVM.getFilters() != null && filterVM.getFilters().size() > 1) {
+            addGroupBy(cb, criteriaQuery, filterVM, auction);
         }
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     private CriteriaQuery getCriteriaQuery(FilterVM filterVM) {
@@ -122,7 +97,17 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         if (filterVM.getState() != StateEnum.ALL) {
             predicates.add(getState(cb, filterVM.getState(), auction));
         }
-        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+        if (filterVM.getCity() != null) {
+            Expression<Auction> point1 = cb.function("point", Auction.class,
+                    auction.get("city").get("longitude"), auction.get("city").get("latitude"));
+            Expression<Double> point2 = cb.function("point", Double.class,
+                    cb.literal(filterVM.getCity().getLongitude()), cb.literal(filterVM.getCity().getLatitude()));
+            Expression<Number> distance = cb.function("ST_Distance_Sphere", Number.class,
+                    point1, point2);
+            int kilometersDiff = filterVM.getKilometers() * 1000;
+            predicates.add(cb.le(distance, kilometersDiff));
+        }
+        return cb.and(predicates.toArray(new Predicate[0]));
     }
 
     private Predicate getEqualPredicate(String fieldName, String condition, Root<Auction> auction, CriteriaBuilder cb) {
@@ -134,7 +119,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         for (String word : filterVM.getSearchWords()) {
             titleOrPredicates.add(cb.or(cb.like(auction.get("title"), "%" + word + "%")));
         }
-        return cb.or(titleOrPredicates.toArray(new Predicate[titleOrPredicates.size()]));
+        return cb.or(titleOrPredicates.toArray(new Predicate[0]));
     }
 
     private Predicate getPricePredicate(FilterVM filterVM, Root<Auction> auction, CriteriaBuilder cb) {
@@ -145,7 +130,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         if (filterVM.getMaxPrice() != null) {
             pricePredicate.add(cb.lessThanOrEqualTo(auction.get("price"), filterVM.getMaxPrice()));
         }
-        return cb.and(pricePredicate.toArray(new Predicate[pricePredicate.size()]));
+        return cb.and(pricePredicate.toArray(new Predicate[0]));
     }
 
     private void setSort(CriteriaQuery criteriaQuery, FilterVM filterVM, CriteriaBuilder cb, Root<Auction> auction) {
@@ -168,7 +153,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         for (CategoryAttributesDTO obj : filterVM.getFilters()) {
             addAttributePredicate(cb, attributesPredicate, join, obj);
         }
-        return cb.or(attributesPredicate.toArray(new Predicate[attributesPredicate.size()]));
+        return cb.or(attributesPredicate.toArray(new Predicate[0]));
     }
 
     private void addAttributePredicate(CriteriaBuilder cb, List<Predicate> attributesPredicate, Join<Auction,
@@ -178,7 +163,7 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
         for (AttributeValuesDTO value : obj.getAttributeValues()) {
             att.add(cb.or(cb.equal(join.get("attributeValue"), value.getValue())));
         }
-        Predicate attr = cb.or(att.toArray(new Predicate[att.size()]));
+        Predicate attr = cb.or(att.toArray(new Predicate[0]));
         attributesPredicate.add(cb.and(attr, predicate));
     }
 
@@ -197,30 +182,6 @@ public class AuctionRepositoryImpl implements AuctionRepositoryCustom {
             return cb.lessThanOrEqualTo(auction.<Instant>get("expiredDate"), new Date().toInstant());
         }
         return null;
-    }
-
-    private Long getAuctionsByCityFilterCount(List<Auction> auctions, FilterVM filterVM) {
-        List auctionsAfterFilter = getAuctionsFilteredByCity(auctions, filterVM);
-        return Long.valueOf(auctionsAfterFilter.size());
-    }
-
-    private List getAuctionsFilteredByCity(List<Auction> auctions, FilterVM filterVM) {
-        List auctionsAfterFilter = new ArrayList();
-        for (Auction auction : auctions) {
-            if (calculateDistanceInKilometers(auction, filterVM) <= filterVM.getKilometers()) {
-                auctionsAfterFilter.add(auction);
-            }
-        }
-        return auctionsAfterFilter;
-    }
-
-    public double calculateDistanceInKilometers(Auction auction, FilterVM filterVM) {
-        double auctionLat = auction.getCity().getLatitude();
-        double auctionLong = auction.getCity().getLongitude();
-        double filterLat = filterVM.getCity().getLatitude();
-        double filterLong = filterVM.getCity().getLongitude();
-        double dist = SloppyMath.haversinMeters(auctionLat, auctionLong, filterLat, filterLong);
-        return dist / 1000;
     }
 
     private void addGroupBy(CriteriaBuilder cb, CriteriaQuery criteriaQuery, FilterVM filterVM, Root<Auction> auction) {

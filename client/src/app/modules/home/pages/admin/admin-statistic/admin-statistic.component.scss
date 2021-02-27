@@ -1,0 +1,21 @@
+mat-card {
+    height: 100px!important;
+}
+
+mat-card-title {
+  font-size: medium;
+}
+
+mat-card-content{
+  font-weight: bold;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.selected {
+  background: #a4d4ff;
+}
+.margin-content {
+  padding-top: 3vh;
+  margin: auto;
+}

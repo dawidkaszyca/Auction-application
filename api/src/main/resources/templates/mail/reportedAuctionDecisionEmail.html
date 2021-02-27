@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
+<head>
+    <title th:text="#{email.report.title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p th:text="#{email.signature.greeting(${email})}">
+</p>
+    <p th:text="#{email.report.decision.text(${title}, ${decision}, ${description})}">
+</p>
+<p>
+    <span th:text="#{email.signature.text}"></span>
+    <br/>
+    <em th:text="#{email.signature}"></em>
+</p>
+</body>
+</html>

@@ -7,7 +7,7 @@ import {Filter} from '../../../shared/models/filter';
 import {MatSelectChange} from '@angular/material/select';
 import {MatDialog} from '@angular/material/dialog';
 import {StatisticDialogComponent} from '../../../shared/components/statistic-dialog/statistic-dialog.component';
-import {EditAuctionComponent} from '../../pages/edit-auction/edit-auction.component';
+import {EditAuctionComponent} from '../../pages/user/edit-auction/edit-auction.component';
 import {DialogKey, EnumsHelper, Order, PageSize, SortField, SortKey, State, StateKey} from '../../../shared/config/enums';
 import {DialogService} from '../../../shared/services/dialog.service';
 

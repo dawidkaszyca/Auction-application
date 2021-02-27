@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import pl.dawid.kaszyca.exception.MailSendingException;
 import pl.dawid.kaszyca.model.User;
 
 import javax.mail.MessagingException;
@@ -32,6 +33,8 @@ public class MailService {
     private static final String CURRENT_DATE = "currentDate";
     private static final String TITLE = "title";
     private static final String EMAIL = "email";
+    private static final String DECISION = "decision";
+    private static final String DESCRIPTION = "description";
 
     @Autowired
     private SpringTemplateEngine templateEngine;
@@ -80,23 +83,61 @@ public class MailService {
         sendEmailFromTemplate(email, context, "mail/reportAuctionEmail", "email.report.title", language);
     }
 
+    @Async
+    public void sendReportedAuctionDecisionEmail(String email, String auctionTitle, String language, String decision, String description) {
+        log.debug("Sending password changed email to '{}'", email);
+        Context context = getReportedAuctionDecisionEmailContext(email, auctionTitle, language, decision, description);
+        sendEmailFromTemplate(email, context, "mail/reportedAuctionDecisionEmail", "email.report.title", language);
+    }
+
+    @Async
+    public void sendReportedAuctionDecisionNotificationEmail(String email, String auctionTitle, String language, String description) {
+        log.debug("Sending password changed email to '{}'", email);
+        Context context = getReportedAuctionNotificationEmailContext(email, auctionTitle, language, description);
+        sendEmailFromTemplate(email, context, "mail/reportedAuctionDecisionEmailNotification", "email.report.title", language);
+    }
+
     private Context getUserContext(User user, String language) {
-        Locale locale = Locale.forLanguageTag(language);
-        Context context = new Context(locale);
+        Context context = getContext(language);
         context.setVariable(USER, user);
         context.setVariable(CURRENT_DATE, getCurrentDate());
-        context.setVariable(BASE_URL, "http://192.168.1.5:4200");
+        context.setVariable(BASE_URL, "http://localhost:4200");
         return context;
     }
 
     private Context getReportedAuctionContext(String email, String auctionTitle, String language) {
-        Locale locale = Locale.forLanguageTag(language);
-        Context context = new Context(locale);
+        Context context = getContext(language);
         context.setVariable(TITLE, auctionTitle);
         context.setVariable(CURRENT_DATE, getCurrentDate());
         context.setVariable(EMAIL, email);
-        context.setVariable(BASE_URL, "http://192.168.1.5:4200");
+        context.setVariable(BASE_URL, "http://localhost:4200");
         return context;
+    }
+
+    private Context getReportedAuctionDecisionEmailContext(String email, String auctionTitle, String language, String decision, String description) {
+        Context context = getContext(language);
+        context.setVariable(TITLE, auctionTitle);
+        context.setVariable(DECISION, decision);
+        context.setVariable(DESCRIPTION, description);
+        context.setVariable(CURRENT_DATE, getCurrentDate());
+        context.setVariable(EMAIL, email);
+        context.setVariable(BASE_URL, "http://localhost:4200");
+        return context;
+    }
+
+    private Context getReportedAuctionNotificationEmailContext(String email, String auctionTitle, String language, String description) {
+        Context context = getContext(language);
+        context.setVariable(TITLE, auctionTitle);
+        context.setVariable(DESCRIPTION, description);
+        context.setVariable(CURRENT_DATE, getCurrentDate());
+        context.setVariable(EMAIL, email);
+        context.setVariable(BASE_URL, "http://localhost:4200");
+        return context;
+    }
+
+    private Context getContext(String language) {
+        Locale locale = Locale.forLanguageTag(language);
+        return new Context(locale);
     }
 
     private void sendEmailFromTemplate(String email, Context context, String templateName, String titleKey, String language) {
@@ -124,7 +165,8 @@ public class MailService {
             mailSender.send(mimeMessage);
             log.debug("Sent email to User '{}'", to);
         } catch (MailException | MessagingException e) {
-            log.warn("Email could not be sent to user '{}'", to, e);
+            e.printStackTrace();
+            throw new MailSendingException();
         }
     }
 }

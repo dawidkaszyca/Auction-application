@@ -13,4 +13,6 @@ public interface ReportAuctionRepository extends JpaRepository<ReportedAuction, 
     List<ReportedAuction> findAllByActive(boolean active);
 
     Optional<ReportedAuction> findFirstById(Long id);
+
+    Long countAllByActive(Boolean active);
 }

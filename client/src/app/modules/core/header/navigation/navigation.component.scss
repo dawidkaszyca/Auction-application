@@ -16,3 +16,7 @@ fa-icon {
     visibility: hidden;
   }
 }
+
+fa-icon, button:focus, button:active:focus, button.active:focus  {
+  outline: none;
+}

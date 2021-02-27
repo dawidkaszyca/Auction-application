@@ -1,0 +1,61 @@
+<div class="row w-100 mt-5">
+  <div class="col-6">
+    <div class="content w-100 mt-3">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0 w-100">
+
+        <ng-container matColumnDef="id" class="w-25">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> id</th>
+          <td mat-cell class="text-truncate" *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reason" class="w-25">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ "report-admin.reason" | translate}}</th>
+          <td mat-cell class="text-truncate" *matCellDef="let element"> {{element.reason | translate}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            (click)="selectRecord(row)"
+            [ngClass]="{hovered: row.hovered, selected: selectedRecord.id == row.id, deselected: selectedRecord.id != row.id}"
+            (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+        </tr>
+      </table>
+      <mat-paginator [hidePageSize]="true" [pageSizeOptions]="[10]"></mat-paginator>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-group">
+      <label>{{ "report-admin.description" | translate}}</label>
+      <textarea class="form-control"
+                autosize
+                rows="7"
+                [value]="selectedRecord?.description"
+                name="description" disabled></textarea>
+    </div>
+    <div class="row">
+      <div class="col-12 col-sm-12 col-md-7 col-lg-5 col-xl-5">
+        <button type="button" class="btn btn-dark w-100"
+                (click)="showAuction()">{{ "report-admin.show-auction" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="form-group mt-5">
+      <label>{{'report-admin.substantiation' | translate}}</label>
+      <textarea class="form-control"
+                autosize
+                rows="7"
+                [(ngModel)]="substantiation"
+                name="description"></textarea>
+    </div>
+    <div class="row">
+      <div class="col-12 col-sm-12 col-md-7 col-lg-5 col-xl-5">
+        <button type="button" class="btn btn-danger w-100"
+                (click)="sendDecision(false)">{{'report-admin.cancel' | translate}}</button>
+      </div>
+      <div class="col-12 col-sm-12 col-md-5 col-lg-4 col-xl-3 col-mt-2">
+        <button type="button" class="btn btn-success w-100"
+                (click)="sendDecision(true)">{{'report-admin.approve' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>

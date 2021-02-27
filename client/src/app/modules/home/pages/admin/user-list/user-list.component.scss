@@ -1,0 +1,34 @@
+
+table {
+  background-color: #F8F9FA;
+  text-align: center !important;
+}
+
+.mat-header-cell, .mat-paginator {
+  background-color: #F8F9FA;
+}
+
+:host ::ng-deep .mat-sort-header-container {
+  display: flex;
+  justify-content: center;
+}
+
+.hovered {
+  background-color: #F1F1F1;
+}
+
+.selected {
+  background-color: #F1F1F1;
+}
+
+@media (max-width: 992px) {
+  .col-mt-2 {
+    margin-top: 1vh;
+  }
+}
+
+@media (max-width: 576px) {
+  .col-md-mt-2 {
+    margin-top: 1vh;
+  }
+}
